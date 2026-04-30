@@ -18,7 +18,6 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.0' # Matches pubspec.yaml environment sdk range if possible, or latest stable
           channel: 'stable'
 
       - name: Install dependencies
