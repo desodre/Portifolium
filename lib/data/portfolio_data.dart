@@ -141,16 +141,16 @@ const List<ProjectEntry> kProjects = [
   ),
   ProjectEntry(
     name: 'adb_utils',
-    url: 'https://github.com/desodre/adb_utils',
+    url: 'https://pub.dev/packages/adb_utils',
     description:
         'Open-source Dart library wrapping ADB commands for seamless Android device interaction from Dart code.',
-    techs: ['Dart', 'ADB'],
+    techs: ['Dart', 'ADB', 'Pub.dev'],
   ),
   ProjectEntry(
     name: 'fast_bridge',
     url: 'https://github.com/desodre/fast_bridge',
     description:
-        'Cross-platform Android device debugger with screen mirroring, ADB controls, and a FastAPI + UIAutomator2 backend.',
+        'Cross-platform Android device debugger, ADB controls, and a FastAPI + UIAutomator2.',
     techs: ['Flutter', 'Android', 'Python', 'FastAPI', 'UIAutomator2'],
   ),
   ProjectEntry(

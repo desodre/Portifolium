@@ -156,47 +156,39 @@ class _ExperienceCardState extends State<_ExperienceCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header row
+            // Header
             Wrap(
-              alignment: WrapAlignment.spaceBetween,
               crossAxisAlignment: WrapCrossAlignment.center,
               spacing: 8,
-              runSpacing: 4,
+              runSpacing: 8,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      widget.entry.role,
-                      style: GoogleFonts.spaceGrotesk(
-                        color: AppColors.textPrimary,
-                        fontSize: 17,
+                Text(
+                  widget.entry.role,
+                  style: GoogleFonts.spaceGrotesk(
+                    color: AppColors.textPrimary,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (widget.entry.isCurrent)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: AppColors.accent.withValues(alpha: 0.15),
+                      border: Border.all(
+                          color: AppColors.accent.withValues(alpha: 0.4)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      'Current',
+                      style: GoogleFonts.inter(
+                        color: AppColors.accent,
+                        fontSize: 11,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    if (widget.entry.isCurrent) ...[
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: AppColors.accent.withValues(alpha: 0.15),
-                          border: Border.all(
-                              color: AppColors.accent.withValues(alpha: 0.4)),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          'Current',
-                          style: GoogleFonts.inter(
-                            color: AppColors.accent,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
+                  ),
               ],
             ),
             const SizedBox(height: 4),

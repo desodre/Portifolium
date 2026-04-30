@@ -45,7 +45,7 @@ class ProjectsSection extends StatelessWidget {
                         crossAxisCount: crossAxisCount,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
-                        childAspectRatio: crossAxisCount == 1 ? 2.2 : 1.4,
+                        childAspectRatio: crossAxisCount == 1 ? 1.8 : 1.4,
                       ),
                       itemCount: kProjects.length,
                       itemBuilder: (context, i) =>
