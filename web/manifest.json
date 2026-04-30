@@ -1,6 +1,6 @@
 {
-    "name": "sodres_page",
-    "short_name": "sodres_page",
+    "name": "sodre_portifolium",
+    "short_name": "sodre_portifolium",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
