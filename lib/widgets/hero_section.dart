@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
 import '../data/portfolio_data.dart';
+import '../main.dart';
 
 class HeroSection extends StatelessWidget {
   final void Function(String section) onScrollToSection;
@@ -15,64 +16,70 @@ class HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 768;
-        final screenH = MediaQuery.of(context).size.height;
+    return ValueListenableBuilder<String>(
+      valueListenable: languageNotifier,
+      builder: (context, lang, _) {
+        final content = kContent[lang]!;
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 768;
+            final screenH = MediaQuery.of(context).size.height;
 
-        return Container(
-          constraints: BoxConstraints(minHeight: screenH - 64),
-          padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? 24 : 40,
-            vertical: isMobile ? 60 : 80,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1100),
-              child: isMobile
-                  ? _buildMobileLayout(context)
-                  : _buildDesktopLayout(context),
-            ),
-          ),
+            return Container(
+              constraints: BoxConstraints(minHeight: screenH - 64),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 24 : 40,
+                vertical: isMobile ? 60 : 80,
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1100),
+                  child: isMobile
+                      ? _buildMobileLayout(context, content)
+                      : _buildDesktopLayout(context, content),
+                ),
+              ),
+            );
+          },
         );
       },
     );
   }
 
-  Widget _buildDesktopLayout(BuildContext context) {
+  Widget _buildDesktopLayout(BuildContext context, PortfolioContent content) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           flex: 3,
-          child: _buildTextContent(context, isMobile: false),
+          child: _buildTextContent(context, content, isMobile: false),
         ),
         const SizedBox(width: 60),
-        _buildAvatar(radius: 110),
+        _buildAvatar(context, radius: 110),
       ],
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context) {
+  Widget _buildMobileLayout(BuildContext context, PortfolioContent content) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _buildAvatar(radius: 80),
+        _buildAvatar(context, radius: 80),
         const SizedBox(height: 40),
-        _buildTextContent(context, isMobile: true),
+        _buildTextContent(context, content, isMobile: true),
       ],
     );
   }
 
-  Widget _buildAvatar({required double radius}) {
+  Widget _buildAvatar(BuildContext context, {required double radius}) {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: AppColors.accent, width: 3),
+        border: Border.all(color: AppColors.accentMode(context), width: 3),
         boxShadow: [
           BoxShadow(
-            color: AppColors.accent.withValues(alpha: 0.35),
+            color: AppColors.accentMode(context).withValues(alpha: 0.35),
             blurRadius: 40,
             spreadRadius: 6,
           ),
@@ -81,12 +88,16 @@ class HeroSection extends StatelessWidget {
       child: CircleAvatar(
         radius: radius,
         backgroundImage: const NetworkImage(kAvatarUrl),
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.surfaceMode(context),
       ),
     );
   }
 
-  Widget _buildTextContent(BuildContext context, {required bool isMobile}) {
+  Widget _buildTextContent(
+    BuildContext context,
+    PortfolioContent content, {
+    required bool isMobile,
+  }) {
     return Column(
       crossAxisAlignment:
           isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
@@ -95,14 +106,15 @@ class HeroSection extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: AppColors.accent.withValues(alpha: 0.1),
-            border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
+            color: AppColors.accentMode(context).withValues(alpha: 0.1),
+            border: Border.all(
+                color: AppColors.accentMode(context).withValues(alpha: 0.3)),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
-            '👋  Hello, World!',
+            content.heroGreeting,
             style: GoogleFonts.inter(
-              color: AppColors.accent,
+              color: AppColors.accentMode(context),
               fontSize: 13,
               fontWeight: FontWeight.w500,
             ),
@@ -115,7 +127,7 @@ class HeroSection extends StatelessWidget {
           kName,
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
           style: GoogleFonts.spaceGrotesk(
-            color: AppColors.textPrimary,
+            color: AppColors.textPrimaryMode(context),
             fontSize: isMobile ? 36 : 52,
             fontWeight: FontWeight.w800,
             height: 1.1,
@@ -126,10 +138,10 @@ class HeroSection extends StatelessWidget {
 
         // Title
         Text(
-          kTitle,
+          content.title,
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
           style: GoogleFonts.spaceGrotesk(
-            color: AppColors.accent,
+            color: AppColors.accentMode(context),
             fontSize: isMobile ? 15 : 18,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.3,
@@ -142,13 +154,13 @@ class HeroSection extends StatelessWidget {
           mainAxisAlignment:
               isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: [
-            const Icon(Icons.location_on_outlined,
-                size: 15, color: AppColors.textSecondary),
+            Icon(Icons.location_on_outlined,
+                size: 15, color: AppColors.textSecondaryMode(context)),
             const SizedBox(width: 4),
             Text(
               kLocation,
               style: GoogleFonts.inter(
-                color: AppColors.textSecondary,
+                color: AppColors.textSecondaryMode(context),
                 fontSize: 13,
               ),
             ),
@@ -160,10 +172,10 @@ class HeroSection extends StatelessWidget {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 560),
           child: Text(
-            kBio,
+            content.bio,
             textAlign: isMobile ? TextAlign.center : TextAlign.start,
             style: GoogleFonts.inter(
-              color: AppColors.textSecondary,
+              color: AppColors.textSecondaryMode(context),
               fontSize: 15,
               height: 1.75,
             ),
@@ -204,16 +216,16 @@ class HeroSection extends StatelessWidget {
                 isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
             children: [
               Text(
-                'View my work',
+                content.heroViewWork,
                 style: GoogleFonts.inter(
-                  color: AppColors.accent,
+                  color: AppColors.accentMode(context),
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(width: 6),
-              const Icon(Icons.arrow_downward,
-                  size: 16, color: AppColors.accent),
+              Icon(Icons.arrow_downward,
+                  size: 16, color: AppColors.accentMode(context)),
             ],
           ),
         ),
@@ -251,15 +263,15 @@ class _SocialButtonState extends State<_SocialButton> {
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
-            color: _hovering ? AppColors.accent : AppColors.surface,
+            color: _hovering ? AppColors.accentMode(context) : AppColors.surfaceMode(context),
             border: Border.all(
-              color: _hovering ? AppColors.accent : AppColors.border,
+              color: _hovering ? AppColors.accentMode(context) : AppColors.borderMode(context),
             ),
             borderRadius: BorderRadius.circular(8),
             boxShadow: _hovering
                 ? [
                     BoxShadow(
-                      color: AppColors.accent.withValues(alpha: 0.25),
+                      color: AppColors.accentMode(context).withValues(alpha: 0.25),
                       blurRadius: 12,
                     )
                   ]
@@ -271,14 +283,13 @@ class _SocialButtonState extends State<_SocialButton> {
               Icon(
                 widget.icon,
                 size: 16,
-                color: _hovering ? AppColors.background : AppColors.textPrimary,
+                color: _hovering ? AppColors.backgroundMode(context) : AppColors.textPrimaryMode(context),
               ),
               const SizedBox(width: 8),
               Text(
                 widget.label,
                 style: GoogleFonts.inter(
-                  color:
-                      _hovering ? AppColors.background : AppColors.textPrimary,
+                  color: _hovering ? AppColors.backgroundMode(context) : AppColors.textPrimaryMode(context),
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),

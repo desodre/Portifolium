@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
 import '../data/portfolio_data.dart';
+import '../main.dart';
 import 'section_title.dart';
 
 class ProjectsSection extends StatelessWidget {
@@ -10,54 +11,62 @@ class ProjectsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isMobile = constraints.maxWidth < 768;
-          final crossAxisCount = constraints.maxWidth < 600
-              ? 1
-              : constraints.maxWidth < 1000
-                  ? 2
-                  : 3;
+    return ValueListenableBuilder<String>(
+      valueListenable: languageNotifier,
+      builder: (context, lang, _) {
+        final content = kContent[lang]!;
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.surfaceMode(context),
+          ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isMobile = constraints.maxWidth < 768;
+              final crossAxisCount = constraints.maxWidth < 600
+                  ? 1
+                  : constraints.maxWidth < 1000
+                      ? 2
+                      : 3;
 
-          return Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 24 : 40,
-              vertical: isMobile ? 60 : 80,
-            ),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1100),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SectionTitle(
-                      title: 'Projects',
-                      subtitle: 'Open-source work & personal builds',
-                    ),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                        childAspectRatio: crossAxisCount == 1 ? 1.8 : 1.4,
-                      ),
-                      itemCount: kProjects.length,
-                      itemBuilder: (context, i) =>
-                          _ProjectCard(project: kProjects[i]),
-                    ),
-                  ],
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 24 : 40,
+                  vertical: isMobile ? 60 : 80,
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1100),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SectionTitle(
+                          title: content.sectionProjects,
+                          subtitle: content.sectionProjectsSubtitle,
+                        ),
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: crossAxisCount,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio:
+                                crossAxisCount == 1 ? 1.8 : 1.4,
+                          ),
+                          itemCount: content.projects.length,
+                          itemBuilder: (context, i) =>
+                              _ProjectCard(project: content.projects[i]),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -90,18 +99,18 @@ class _ProjectCardState extends State<_ProjectCard> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: _hovering ? AppColors.cardElevated : AppColors.background,
+            color: _hovering ? AppColors.card(context) : AppColors.backgroundMode(context),
             border: Border.all(
               color: _hovering
-                  ? AppColors.accent.withValues(alpha: 0.5)
-                  : AppColors.border,
+                  ? AppColors.accentMode(context).withValues(alpha: 0.5)
+                  : AppColors.borderMode(context),
               width: _hovering ? 1.5 : 1,
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: _hovering
                 ? [
                     BoxShadow(
-                      color: AppColors.accent.withValues(alpha: 0.12),
+                      color: AppColors.accentMode(context).withValues(alpha: 0.12),
                       blurRadius: 24,
                       spreadRadius: 4,
                     ),
@@ -117,12 +126,12 @@ class _ProjectCardState extends State<_ProjectCard> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppColors.accent.withValues(alpha: 0.1),
+                      color: AppColors.accentMode(context).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.folder_outlined,
-                      color: AppColors.accent,
+                      color: AppColors.accentMode(context),
                       size: 20,
                     ),
                   ),
@@ -130,9 +139,9 @@ class _ProjectCardState extends State<_ProjectCard> {
                   AnimatedOpacity(
                     opacity: _hovering ? 1.0 : 0.5,
                     duration: const Duration(milliseconds: 200),
-                    child: const Icon(
+                    child: Icon(
                       Icons.open_in_new,
-                      color: AppColors.accent,
+                      color: AppColors.accentMode(context),
                       size: 18,
                     ),
                   ),
@@ -144,7 +153,7 @@ class _ProjectCardState extends State<_ProjectCard> {
               Text(
                 widget.project.name,
                 style: GoogleFonts.spaceGrotesk(
-                  color: _hovering ? AppColors.accent : AppColors.textPrimary,
+                  color: _hovering ? AppColors.accentMode(context) : AppColors.textPrimaryMode(context),
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -158,7 +167,7 @@ class _ProjectCardState extends State<_ProjectCard> {
                 child: Text(
                   widget.project.description,
                   style: GoogleFonts.inter(
-                    color: AppColors.textSecondary,
+                    color: AppColors.textSecondaryMode(context),
                     fontSize: 13,
                     height: 1.6,
                   ),
@@ -194,14 +203,14 @@ class _SmallChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: AppColors.accent.withValues(alpha: 0.07),
-        border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
+        color: AppColors.accentMode(context).withValues(alpha: 0.07),
+        border: Border.all(color: AppColors.accentMode(context).withValues(alpha: 0.2)),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         label,
         style: GoogleFonts.inter(
-          color: AppColors.textSecondary,
+          color: AppColors.textSecondaryMode(context),
           fontSize: 11,
           fontWeight: FontWeight.w500,
         ),

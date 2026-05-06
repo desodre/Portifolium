@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'theme_mode_switch.dart';
+import 'language_switch.dart';
 import '../theme/app_theme.dart';
 
 const double _kNavHeight = 64;
@@ -33,14 +35,19 @@ class _NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final txtPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final isMobile = constraints.maxWidth < 768;
         return Container(
           decoration: BoxDecoration(
-            color: AppColors.background.withValues(alpha: 0.95),
-            border: const Border(
-              bottom: BorderSide(color: AppColors.border, width: 1),
+            color: bgColor.withValues(alpha: 0.95),
+            border: Border(
+              bottom: BorderSide(color: borderColor, width: 1),
             ),
           ),
           child: Column(
@@ -58,7 +65,7 @@ class _NavBarState extends State<NavBar> {
                         child: Text(
                           'JCS',
                           style: GoogleFonts.spaceGrotesk(
-                            color: AppColors.accent,
+                            color: AppColors.accentMode(context),
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 2,
@@ -67,22 +74,34 @@ class _NavBarState extends State<NavBar> {
                       ),
                       const Spacer(),
                       if (isMobile)
-                        IconButton(
-                          icon: Icon(
-                            _menuOpen ? Icons.close : Icons.menu,
-                            color: AppColors.textPrimary,
-                          ),
-                          onPressed: () =>
-                              setState(() => _menuOpen = !_menuOpen),
+                        Row(
+                          children: [
+                            const LanguageSwitch(),
+                            const SizedBox(width: 4),
+                            const ThemeModeSwitch(),
+                            IconButton(
+                              icon: Icon(
+                                _menuOpen ? Icons.close : Icons.menu,
+                                color: txtPrimary,
+                              ),
+                              onPressed: () =>
+                                  setState(() => _menuOpen = !_menuOpen),
+                            ),
+                          ],
                         )
                       else
                         Row(
-                          children: _kNavItems
-                              .map((item) => _DesktopNavButton(
-                                    item: item,
-                                    onTap: widget.onNavTap,
-                                  ))
-                              .toList(),
+                          children: [
+                            ..._kNavItems
+                                .map((item) => _DesktopNavButton(
+                                      item: item,
+                                      onTap: widget.onNavTap,
+                                    )),
+                            const SizedBox(width: 8),
+                            const ThemeModeSwitch(),
+                            const SizedBox(width: 4),
+                            const LanguageSwitch(),
+                          ],
                         ),
                     ],
                   ),
@@ -90,9 +109,9 @@ class _NavBarState extends State<NavBar> {
               ),
               if (isMobile && _menuOpen)
                 Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
-                      top: BorderSide(color: AppColors.border),
+                      top: BorderSide(color: borderColor),
                     ),
                   ),
                   child: Column(
@@ -112,7 +131,7 @@ class _NavBarState extends State<NavBar> {
                               child: Text(
                                 item.label,
                                 style: GoogleFonts.inter(
-                                  color: AppColors.textPrimary,
+                                  color: txtPrimary,
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -146,6 +165,9 @@ class _DesktopNavButtonState extends State<_DesktopNavButton> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final txtSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _hovering = true),
       onExit: (_) => setState(() => _hovering = false),
@@ -157,13 +179,13 @@ class _DesktopNavButtonState extends State<_DesktopNavButton> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
             color: _hovering
-                ? AppColors.accent.withValues(alpha: 0.08)
+                ? AppColors.accentMode(context).withValues(alpha: 0.08)
                 : Colors.transparent,
           ),
           child: Text(
             widget.item.label,
             style: GoogleFonts.inter(
-              color: _hovering ? AppColors.accent : AppColors.textSecondary,
+              color: _hovering ? AppColors.accentMode(context) : txtSecondary,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),

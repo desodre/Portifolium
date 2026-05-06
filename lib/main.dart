@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 import 'pages/home_page.dart';
 
+final themeNotifier = ValueNotifier<ThemeMode>(ThemeMode.dark);
+final languageNotifier = ValueNotifier<String>('pt');
+
 void main() {
   runApp(const MyApp());
 }
@@ -11,11 +14,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Jhonatha Sodre – Portfolio',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.dark,
-      home: const HomePage(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (_, mode, __) {
+        return MaterialApp(
+          title: 'Jhonatha Sodre – Portfolio',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: mode,
+          home: const HomePage(),
+        );
+      },
     );
   }
 }

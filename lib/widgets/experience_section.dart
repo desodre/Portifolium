@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import '../data/portfolio_data.dart';
+import '../main.dart';
 import 'section_title.dart';
 
 class ExperienceSection extends StatelessWidget {
@@ -9,36 +10,42 @@ class ExperienceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 768;
-        return Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? 24 : 40,
-            vertical: isMobile ? 60 : 80,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1100),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SectionTitle(
-                    title: 'Experience',
-                    subtitle: 'My professional journey',
-                  ),
-                  ...List.generate(kExperiences.length, (i) {
-                    final isLast = i == kExperiences.length - 1;
-                    return _TimelineEntry(
-                      entry: kExperiences[i],
-                      isLast: isLast,
-                      isMobile: isMobile,
-                    );
-                  }),
-                ],
+    return ValueListenableBuilder<String>(
+      valueListenable: languageNotifier,
+      builder: (context, lang, _) {
+        final content = kContent[lang]!;
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 768;
+            return Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 24 : 40,
+                vertical: isMobile ? 60 : 80,
               ),
-            ),
-          ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1100),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SectionTitle(
+                        title: content.sectionExperience,
+                        subtitle: content.sectionExperienceSubtitle,
+                      ),
+                      ...List.generate(content.experiences.length, (i) {
+                        final isLast = i == content.experiences.length - 1;
+                        return _TimelineEntry(
+                          entry: content.experiences[i],
+                          isLast: isLast,
+                          isMobile: isMobile,
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -73,9 +80,9 @@ class _TimelineEntry extends StatelessWidget {
                   height: 14,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: entry.isCurrent ? AppColors.accent : AppColors.surface,
+                    color: entry.isCurrent ? AppColors.accentMode(context) : AppColors.surfaceMode(context),
                     border: Border.all(
-                      color: AppColors.accent,
+                      color: AppColors.accentMode(context),
                       width: 2,
                     ),
                     boxShadow: entry.isCurrent
@@ -94,7 +101,7 @@ class _TimelineEntry extends StatelessWidget {
                   Expanded(
                     child: Container(
                       width: 2,
-                      color: AppColors.border,
+                      color: AppColors.borderMode(context),
                       margin: const EdgeInsets.only(top: 4, bottom: 0),
                     ),
                   ),
@@ -138,9 +145,9 @@ class _ExperienceCardState extends State<_ExperienceCard> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: _hovering ? AppColors.cardElevated : AppColors.surface,
+          color: _hovering ? AppColors.card(context) : AppColors.surfaceMode(context),
           border: Border.all(
-            color: _hovering ? AppColors.accent.withValues(alpha: 0.4) : AppColors.border,
+            color: _hovering ? AppColors.accent.withValues(alpha: 0.4) : AppColors.borderMode(context),
           ),
           borderRadius: BorderRadius.circular(12),
           boxShadow: _hovering
@@ -165,7 +172,7 @@ class _ExperienceCardState extends State<_ExperienceCard> {
                 Text(
                   widget.entry.role,
                   style: GoogleFonts.spaceGrotesk(
-                    color: AppColors.textPrimary,
+                    color: AppColors.textPrimaryMode(context),
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
                   ),
@@ -183,7 +190,7 @@ class _ExperienceCardState extends State<_ExperienceCard> {
                     child: Text(
                       'Current',
                       style: GoogleFonts.inter(
-                        color: AppColors.accent,
+                        color: AppColors.accentMode(context),
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                       ),
@@ -197,18 +204,18 @@ class _ExperienceCardState extends State<_ExperienceCard> {
                 Text(
                   widget.entry.company,
                   style: GoogleFonts.inter(
-                    color: AppColors.accent,
+                    color: AppColors.accentMode(context),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text('·', style: GoogleFonts.inter(color: AppColors.border)),
+                Text('·', style: GoogleFonts.inter(color: AppColors.borderMode(context))),
                 const SizedBox(width: 8),
                 Text(
                   widget.entry.period,
                   style: GoogleFonts.inter(
-                    color: AppColors.textSecondary,
+                    color: AppColors.textSecondaryMode(context),
                     fontSize: 13,
                   ),
                 ),
@@ -239,7 +246,7 @@ class _ExperienceCardState extends State<_ExperienceCard> {
                       child: Text(
                         b,
                         style: GoogleFonts.inter(
-                          color: AppColors.textSecondary,
+                          color: AppColors.textSecondaryMode(context),
                           fontSize: 14,
                           height: 1.6,
                         ),
@@ -283,7 +290,7 @@ class _TechChip extends StatelessWidget {
       child: Text(
         label,
         style: GoogleFonts.inter(
-          color: AppColors.accent,
+          color: AppColors.accentMode(context),
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
