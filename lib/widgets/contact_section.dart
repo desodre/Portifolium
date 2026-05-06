@@ -79,7 +79,7 @@ class ContactSection extends StatelessWidget {
                               icon: Icons.phone_outlined,
                               label: 'Phone',
                               sublabel: kPhone,
-                              onTap: () => _openUrl('tel:$kPhone'),
+                              onTap: () => _openUrl('tel:${kPhone.replaceAll(RegExp(r"[^\d+]"), "")}'),
                             ),
                           ],
                         ),
@@ -148,65 +148,62 @@ class _ContactButtonState extends State<_ContactButton> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovering = true),
-      onExit: (_) => setState(() => _hovering = false),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: 180,
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          decoration: BoxDecoration(
-            color: _hovering ? AppColors.accent : AppColors.surface,
-            border: Border.all(
-              color: _hovering ? AppColors.accent : AppColors.border,
+    return InkWell(
+      onTap: widget.onTap,
+      onHover: (value) => setState(() => _hovering = value),
+      borderRadius: BorderRadius.circular(12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 180,
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        decoration: BoxDecoration(
+          color: _hovering ? AppColors.accent : AppColors.surface,
+          border: Border.all(
+            color: _hovering ? AppColors.accent : AppColors.border,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: _hovering
+              ? [
+                  BoxShadow(
+                    color: AppColors.accent.withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    spreadRadius: 2,
+                  ),
+                ]
+              : [],
+        ),
+        child: Column(
+          children: [
+            Icon(
+              widget.icon,
+              color:
+                  _hovering ? AppColors.background : AppColors.accent,
+              size: 28,
             ),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: _hovering
-                ? [
-                    BoxShadow(
-                      color: AppColors.accent.withValues(alpha: 0.3),
-                      blurRadius: 20,
-                      spreadRadius: 2,
-                    ),
-                  ]
-                : [],
-          ),
-          child: Column(
-            children: [
-              Icon(
-                widget.icon,
+            const SizedBox(height: 10),
+            Text(
+              widget.label,
+              style: GoogleFonts.spaceGrotesk(
                 color:
-                    _hovering ? AppColors.background : AppColors.accent,
-                size: 28,
+                    _hovering ? AppColors.background : AppColors.textPrimary,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
               ),
-              const SizedBox(height: 10),
-              Text(
-                widget.label,
-                style: GoogleFonts.spaceGrotesk(
-                  color:
-                      _hovering ? AppColors.background : AppColors.textPrimary,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              widget.sublabel,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: _hovering
+                    ? AppColors.background.withValues(alpha: 0.7)
+                    : AppColors.textSecondary,
+                fontSize: 11,
               ),
-              const SizedBox(height: 4),
-              Text(
-                widget.sublabel,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  color: _hovering
-                      ? AppColors.background.withValues(alpha: 0.7)
-                      : AppColors.textSecondary,
-                  fontSize: 11,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ),
       ),
     );

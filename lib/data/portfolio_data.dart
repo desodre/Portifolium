@@ -166,6 +166,12 @@ const List<ProjectEntry> kProjects = [
     description:
         'Android application for reading, writing, and managing NFC tags with an intuitive Flutter UI.',
     techs: ['Flutter', 'Android', 'NFC'],
+  ),ProjectEntry(
+    name: 'Geppetto',
+    url: 'https://github.com/desodre/Geppetto',
+    description:
+        'Geppetto is an Android UI automation framework that orchestrates and executes your test suite with precision and care. It provides a high-level Python API for controlling Android devices via ADB, Fastboot, and UIAutomator2..',
+    techs: ['Python', 'Android', 'UIAutomator2', 'ADB', 'Fastboot'],
   ),
 ];
 
