@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import '../data/portfolio_data.dart';
+import '../main.dart';
 import 'section_title.dart';
 
 class SkillsSection extends StatelessWidget {
@@ -9,35 +10,41 @@ class SkillsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 768;
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? 24 : 40,
-            vertical: isMobile ? 60 : 80,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1100),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SectionTitle(
-                    title: 'Skills',
-                    subtitle: 'Technologies and tools I work with',
-                  ),
-                  Wrap(
-                    spacing: 16,
-                    runSpacing: 16,
-                    children: kSkills
-                        .map((cat) => _SkillCategoryCard(category: cat))
-                        .toList(),
-                  ),
-                ],
+    return ValueListenableBuilder<String>(
+      valueListenable: languageNotifier,
+      builder: (context, lang, _) {
+        final content = kContent[lang]!;
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 768;
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 24 : 40,
+                vertical: isMobile ? 60 : 80,
               ),
-            ),
-          ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1100),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SectionTitle(
+                        title: content.sectionSkills,
+                        subtitle: content.sectionSkillsSubtitle,
+                      ),
+                      Wrap(
+                        spacing: 16,
+                        runSpacing: 16,
+                        children: content.skills
+                            .map((cat) => _SkillCategoryCard(category: cat))
+                            .toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -69,17 +76,17 @@ class _SkillCategoryCardState extends State<_SkillCategoryCard> {
             constraints: const BoxConstraints(minWidth: 220),
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: _hovering ? AppColors.cardElevated : AppColors.surface,
+              color: _hovering ? AppColors.card(context) : AppColors.surfaceMode(context),
               border: Border.all(
                 color: _hovering
-                    ? AppColors.accent.withValues(alpha: 0.35)
-                    : AppColors.border,
+                    ? AppColors.accentMode(context).withValues(alpha: 0.35)
+                    : AppColors.borderMode(context),
               ),
               borderRadius: BorderRadius.circular(12),
               boxShadow: _hovering
                   ? [
                       BoxShadow(
-                        color: AppColors.accent.withValues(alpha: 0.07),
+                        color: AppColors.accentMode(context).withValues(alpha: 0.07),
                         blurRadius: 20,
                       ),
                     ]
@@ -96,7 +103,7 @@ class _SkillCategoryCardState extends State<_SkillCategoryCard> {
                       width: 3,
                       height: 16,
                       decoration: BoxDecoration(
-                        color: AppColors.accent,
+                        color: AppColors.accentMode(context),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -104,7 +111,7 @@ class _SkillCategoryCardState extends State<_SkillCategoryCard> {
                     Text(
                       widget.category.label,
                       style: GoogleFonts.spaceGrotesk(
-                        color: AppColors.textPrimary,
+                        color: AppColors.textPrimaryMode(context),
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,
@@ -151,19 +158,19 @@ class _SkillChipState extends State<_SkillChip> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: _hovering
-              ? AppColors.accent.withValues(alpha: 0.15)
-              : AppColors.background,
+              ? AppColors.accentMode(context).withValues(alpha: 0.15)
+              : AppColors.backgroundMode(context),
           border: Border.all(
             color: _hovering
-                ? AppColors.accent
-                : AppColors.border,
+                ? AppColors.accentMode(context)
+                : AppColors.borderMode(context),
           ),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Text(
           widget.label,
           style: GoogleFonts.inter(
-            color: _hovering ? AppColors.accent : AppColors.textSecondary,
+            color: _hovering ? AppColors.accentMode(context) : AppColors.textSecondaryMode(context),
             fontSize: 13,
             fontWeight: FontWeight.w500,
           ),

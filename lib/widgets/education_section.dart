@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import '../data/portfolio_data.dart';
+import '../main.dart';
 import 'section_title.dart';
 
 class EducationSection extends StatelessWidget {
@@ -9,46 +10,61 @@ class EducationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(color: AppColors.surface),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isMobile = constraints.maxWidth < 768;
-          return Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 24 : 40,
-              vertical: isMobile ? 60 : 80,
-            ),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1100),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SectionTitle(
-                      title: 'Education',
-                      subtitle: 'Academic background & training',
-                    ),
-                    Wrap(
-                      spacing: 16,
-                      runSpacing: 16,
+    return ValueListenableBuilder<String>(
+      valueListenable: languageNotifier,
+      builder: (context, lang, _) {
+        final content = kContent[lang]!;
+        return Container(
+          decoration: BoxDecoration(color: AppColors.surfaceMode(context)),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isMobile = constraints.maxWidth < 768;
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 24 : 40,
+                  vertical: isMobile ? 60 : 80,
+                ),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1100),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ...kEducation.map(
-                          (e) => _EducationCard(entry: e, isMobile: isMobile),
+                        SectionTitle(
+                          title: content.sectionEducation,
+                          subtitle: content.sectionEducationSubtitle,
+                        ),
+                        Wrap(
+                          spacing: 16,
+                          runSpacing: 16,
+                          children: [
+                            ...content.education.map(
+                              (e) =>
+                                  _EducationCard(entry: e, isMobile: isMobile),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 48),
+                        _CoursesBlock(
+                          heading: content.coursesHeading,
+                          courses: content.courses,
+                          isMobile: isMobile,
+                        ),
+                        const SizedBox(height: 48),
+                        _LanguagesBlock(
+                          heading: content.spokenLanguagesHeading,
+                          languages: content.languages,
+                          isMobile: isMobile,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 48),
-                    _CoursesBlock(isMobile: isMobile),
-                    const SizedBox(height: 48),
-                    _LanguagesBlock(isMobile: isMobile),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -79,10 +95,10 @@ class _EducationCardState extends State<_EducationCard> {
         ),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: _hovering ? AppColors.cardElevated : AppColors.background,
+          color: _hovering ? AppColors.card(context) : AppColors.backgroundMode(context),
           border: Border.all(
             color:
-                _hovering ? AppColors.accent.withValues(alpha: 0.4) : AppColors.border,
+                _hovering ? AppColors.accent.withValues(alpha: 0.4) : AppColors.borderMode(context),
           ),
           borderRadius: BorderRadius.circular(12),
           boxShadow: _hovering
@@ -107,9 +123,9 @@ class _EducationCardState extends State<_EducationCard> {
                   color: AppColors.accent.withValues(alpha: 0.25),
                 ),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.school_outlined,
-                color: AppColors.accent,
+                color: AppColors.accentMode(context),
                 size: 22,
               ),
             ),
@@ -121,7 +137,7 @@ class _EducationCardState extends State<_EducationCard> {
                   Text(
                     widget.entry.degree,
                     style: GoogleFonts.spaceGrotesk(
-                      color: AppColors.textPrimary,
+                      color: AppColors.textPrimaryMode(context),
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -130,7 +146,7 @@ class _EducationCardState extends State<_EducationCard> {
                   Text(
                     widget.entry.institution,
                     style: GoogleFonts.inter(
-                      color: AppColors.accent,
+                      color: AppColors.accentMode(context),
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                     ),
@@ -139,7 +155,7 @@ class _EducationCardState extends State<_EducationCard> {
                   Text(
                     widget.entry.period,
                     style: GoogleFonts.inter(
-                      color: AppColors.textSecondary,
+                      color: AppColors.textSecondaryMode(context),
                       fontSize: 12,
                     ),
                   ),
@@ -148,7 +164,7 @@ class _EducationCardState extends State<_EducationCard> {
                     Text(
                       widget.entry.note!,
                       style: GoogleFonts.inter(
-                        color: AppColors.textSecondary.withValues(alpha: 0.7),
+                        color: AppColors.textSecondaryMode(context).withValues(alpha: 0.7),
                         fontSize: 12,
                         fontStyle: FontStyle.italic,
                       ),
@@ -165,9 +181,15 @@ class _EducationCardState extends State<_EducationCard> {
 }
 
 class _CoursesBlock extends StatelessWidget {
+  final String heading;
+  final List<CourseEntry> courses;
   final bool isMobile;
 
-  const _CoursesBlock({required this.isMobile});
+  const _CoursesBlock({
+    required this.heading,
+    required this.courses,
+    required this.isMobile,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -180,15 +202,15 @@ class _CoursesBlock extends StatelessWidget {
               width: 3,
               height: 18,
               decoration: BoxDecoration(
-                color: AppColors.accent,
+                color: AppColors.accentMode(context),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             const SizedBox(width: 10),
             Text(
-              'Courses & Certifications',
+              heading,
               style: GoogleFonts.spaceGrotesk(
-                color: AppColors.textPrimary,
+                color: AppColors.textPrimaryMode(context),
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -199,21 +221,21 @@ class _CoursesBlock extends StatelessWidget {
         Wrap(
           spacing: 12,
           runSpacing: 12,
-          children: kCourses
+          children: courses
               .map(
                 (c) => Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
-                    color: AppColors.background,
-                    border: Border.all(color: AppColors.border),
+                    color: AppColors.backgroundMode(context),
+                    border: Border.all(color: AppColors.borderMode(context)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.verified_outlined,
-                          color: AppColors.accent, size: 16),
+                      Icon(Icons.verified_outlined,
+                          color: AppColors.accentMode(context), size: 16),
                       const SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +243,7 @@ class _CoursesBlock extends StatelessWidget {
                           Text(
                             c.title,
                             style: GoogleFonts.inter(
-                              color: AppColors.textPrimary,
+                              color: AppColors.textPrimaryMode(context),
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                             ),
@@ -229,7 +251,7 @@ class _CoursesBlock extends StatelessWidget {
                           Text(
                             '${c.provider} · ${c.year}',
                             style: GoogleFonts.inter(
-                              color: AppColors.textSecondary,
+                              color: AppColors.textSecondaryMode(context),
                               fontSize: 11,
                             ),
                           ),
@@ -247,9 +269,15 @@ class _CoursesBlock extends StatelessWidget {
 }
 
 class _LanguagesBlock extends StatelessWidget {
+  final String heading;
+  final List<Map<String, String>> languages;
   final bool isMobile;
 
-  const _LanguagesBlock({required this.isMobile});
+  const _LanguagesBlock({
+    required this.heading,
+    required this.languages,
+    required this.isMobile,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -262,15 +290,15 @@ class _LanguagesBlock extends StatelessWidget {
               width: 3,
               height: 18,
               decoration: BoxDecoration(
-                color: AppColors.accent,
+                color: AppColors.accentMode(context),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             const SizedBox(width: 10),
             Text(
-              'Languages',
+              heading,
               style: GoogleFonts.spaceGrotesk(
-                color: AppColors.textPrimary,
+                color: AppColors.textPrimaryMode(context),
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -281,26 +309,26 @@ class _LanguagesBlock extends StatelessWidget {
         Wrap(
           spacing: 10,
           runSpacing: 10,
-          children: kLanguages
+          children: languages
               .map(
                 (lang) => Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
-                    color: AppColors.background,
-                    border: Border.all(color: AppColors.border),
+                    color: AppColors.backgroundMode(context),
+                    border: Border.all(color: AppColors.borderMode(context)),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.language,
-                          color: AppColors.accent, size: 15),
+                      Icon(Icons.language,
+                          color: AppColors.accentMode(context), size: 15),
                       const SizedBox(width: 8),
                       Text(
                         lang['name']!,
                         style: GoogleFonts.inter(
-                          color: AppColors.textPrimary,
+                          color: AppColors.textPrimaryMode(context),
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                         ),
@@ -309,7 +337,7 @@ class _LanguagesBlock extends StatelessWidget {
                       Text(
                         '· ${lang['level']!}',
                         style: GoogleFonts.inter(
-                          color: AppColors.textSecondary,
+                          color: AppColors.textSecondaryMode(context),
                           fontSize: 12,
                         ),
                       ),

@@ -19,7 +19,7 @@ class SectionTitle extends StatelessWidget {
               width: 4,
               height: 32,
               decoration: BoxDecoration(
-                color: AppColors.accent,
+                color: AppColors.accentMode(context),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -27,7 +27,7 @@ class SectionTitle extends StatelessWidget {
             Text(
               title,
               style: GoogleFonts.spaceGrotesk(
-                color: AppColors.textPrimary,
+                color: AppColors.textPrimaryMode(context),
                 fontSize: 32,
                 fontWeight: FontWeight.w700,
               ),
@@ -41,7 +41,7 @@ class SectionTitle extends StatelessWidget {
             child: Text(
               subtitle!,
               style: GoogleFonts.inter(
-                color: AppColors.textSecondary,
+                color: AppColors.textSecondaryMode(context),
                 fontSize: 15,
                 height: 1.6,
               ),
