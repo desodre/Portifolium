@@ -7,6 +7,7 @@ import '../widgets/projects_section.dart';
 import '../widgets/skills_section.dart';
 import '../widgets/education_section.dart';
 import '../widgets/contact_section.dart';
+import '../widgets/contribution_graph_section.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -74,6 +75,7 @@ class _HomePageState extends State<HomePage> {
                   key: _keys['skills'],
                   child: const SkillsSection(),
                 ),
+                const ContributionGraphSection(),
                 const EducationSection(),
                 Container(
                   key: _keys['contact'],
