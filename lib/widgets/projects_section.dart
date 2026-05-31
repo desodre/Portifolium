@@ -1,220 +1,56 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../theme/app_theme.dart';
+import 'package:jaspr/jaspr.dart';
+import 'package:jaspr/dom.dart';
 import '../data/portfolio_data.dart';
-import '../main.dart';
 import 'section_title.dart';
 
-class ProjectsSection extends StatelessWidget {
-  const ProjectsSection({super.key});
+class ProjectsSection extends StatelessComponent {
+  final String lang;
+
+  const ProjectsSection({super.key, required this.lang});
 
   @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<String>(
-      valueListenable: languageNotifier,
-      builder: (context, lang, _) {
-        final content = kContent[lang]!;
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.surfaceMode(context),
-          ),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final isMobile = constraints.maxWidth < 768;
-              final crossAxisCount = constraints.maxWidth < 600
-                  ? 1
-                  : constraints.maxWidth < 1000
-                      ? 2
-                      : 3;
+  Component build(BuildContext context) {
+    final content = kContent[lang]!;
 
-              return Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isMobile ? 24 : 40,
-                  vertical: isMobile ? 60 : 80,
-                ),
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1100),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SectionTitle(
-                          title: content.sectionProjects,
-                          subtitle: content.sectionProjectsSubtitle,
-                        ),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: crossAxisCount,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio:
-                                crossAxisCount == 1 ? 1.8 : 1.4,
-                          ),
-                          itemCount: content.projects.length,
-                          itemBuilder: (context, i) =>
-                              _ProjectCard(project: content.projects[i]),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _ProjectCard extends StatefulWidget {
-  final ProjectEntry project;
-
-  const _ProjectCard({required this.project});
-
-  @override
-  State<_ProjectCard> createState() => _ProjectCardState();
-}
-
-class _ProjectCardState extends State<_ProjectCard> {
-  bool _hovering = false;
-
-  Future<void> _openUrl(String url) async {
-    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovering = true),
-      onExit: (_) => setState(() => _hovering = false),
-      child: GestureDetector(
-        onTap: () => _openUrl(widget.project.url),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: _hovering ? AppColors.card(context) : AppColors.backgroundMode(context),
-            border: Border.all(
-              color: _hovering
-                  ? AppColors.accentMode(context).withValues(alpha: 0.5)
-                  : AppColors.borderMode(context),
-              width: _hovering ? 1.5 : 1,
+    return div(classes: 'surface-bg', [
+      div(classes: 'section-padding container-box', [
+        SectionTitle(
+          title: content.sectionProjects,
+          subtitle: content.sectionProjectsSubtitle,
+        ),
+        div(classes: 'projects-grid', [
+          for (final proj in content.projects)
+            a(
+              href: proj.url,
+              target: Target.blank,
+              classes: 'project-card',
+              [
+                // Card Header (Folder and link-out indicators)
+                div(classes: 'proj-header', [
+                  div(classes: 'proj-icon-wrapper', [
+                    span(classes: 'material-symbols-outlined icon', [Component.text('folder')]),
+                  ]),
+                  div(classes: 'nav-spacer', []),
+                  div(classes: 'proj-open-icon', [
+                    span(classes: 'material-symbols-outlined icon', [Component.text('open_in_new')]),
+                  ]),
+                ]),
+                
+                // Project Title
+                h3(classes: 'proj-title', [Component.text(proj.name)]),
+                
+                // Description
+                p(classes: 'proj-desc', [Component.text(proj.description)]),
+                
+                // Tech tags
+                div(classes: 'tech-chips-wrap', [
+                  for (final tech in proj.techs)
+                    div(classes: 'small-chip', [Component.text(tech)]),
+                ]),
+              ],
             ),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: _hovering
-                ? [
-                    BoxShadow(
-                      color: AppColors.accentMode(context).withValues(alpha: 0.12),
-                      blurRadius: 24,
-                      spreadRadius: 4,
-                    ),
-                  ]
-                : [],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.accentMode(context).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      Icons.folder_outlined,
-                      color: AppColors.accentMode(context),
-                      size: 20,
-                    ),
-                  ),
-                  const Spacer(),
-                  AnimatedOpacity(
-                    opacity: _hovering ? 1.0 : 0.5,
-                    duration: const Duration(milliseconds: 200),
-                    child: Icon(
-                      Icons.open_in_new,
-                      color: AppColors.accentMode(context),
-                      size: 18,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Name
-              Text(
-                widget.project.name,
-                style: GoogleFonts.spaceGrotesk(
-                  color: _hovering ? AppColors.accentMode(context) : AppColors.textPrimaryMode(context),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 8),
-
-              // Description
-              Expanded(
-                child: Text(
-                  widget.project.description,
-                  style: GoogleFonts.inter(
-                    color: AppColors.textSecondaryMode(context),
-                    fontSize: 13,
-                    height: 1.6,
-                  ),
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              // Tech chips
-              Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: widget.project.techs
-                    .map((t) => _SmallChip(label: t))
-                    .toList(),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SmallChip extends StatelessWidget {
-  final String label;
-
-  const _SmallChip({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: AppColors.accentMode(context).withValues(alpha: 0.07),
-        border: Border.all(color: AppColors.accentMode(context).withValues(alpha: 0.2)),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        label,
-        style: GoogleFonts.inter(
-          color: AppColors.textSecondaryMode(context),
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
+        ]),
+      ]),
+    ]);
   }
 }

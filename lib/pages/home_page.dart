@@ -1,98 +1,68 @@
-import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import 'package:jaspr/jaspr.dart';
+import 'package:jaspr/dom.dart';
 import '../widgets/nav_bar.dart';
 import '../widgets/hero_section.dart';
 import '../widgets/experience_section.dart';
 import '../widgets/projects_section.dart';
 import '../widgets/skills_section.dart';
+import '../widgets/contribution_graph_section.dart';
 import '../widgets/education_section.dart';
 import '../widgets/contact_section.dart';
-import '../widgets/contribution_graph_section.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessComponent {
+  final String lang;
+  final String theme;
+  final VoidCallback toggleTheme;
+  final VoidCallback toggleLanguage;
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final ScrollController _scrollController = ScrollController();
-
-  final Map<String, GlobalKey> _keys = {
-    'home': GlobalKey(),
-    'experience': GlobalKey(),
-    'projects': GlobalKey(),
-    'skills': GlobalKey(),
-    'contact': GlobalKey(),
-  };
-
-  void _scrollToSection(String section) {
-    final key = _keys[section];
-    if (key?.currentContext == null) return;
-    final box = key!.currentContext!.findRenderObject() as RenderBox;
-    final offset =
-        _scrollController.offset + box.localToGlobal(Offset.zero).dy - NavBar.height;
-    _scrollController.animateTo(
-      offset.clamp(0.0, _scrollController.position.maxScrollExtent),
-      duration: const Duration(milliseconds: 600),
-      curve: Curves.easeInOut,
-    );
-  }
+  const HomePage({
+    super.key,
+    required this.lang,
+    required this.theme,
+    required this.toggleTheme,
+    required this.toggleLanguage,
+  });
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundMode(context),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Spacer so content starts below the fixed navbar
-                SizedBox(height: NavBar.height),
-                Container(
-                  key: _keys['home'],
-                  child: HeroSection(onScrollToSection: _scrollToSection),
-                ),
-                Container(
-                  key: _keys['experience'],
-                  child: const ExperienceSection(),
-                ),
-                Container(
-                  key: _keys['projects'],
-                  child: const ProjectsSection(),
-                ),
-                Container(
-                  key: _keys['skills'],
-                  child: const SkillsSection(),
-                ),
-                const ContributionGraphSection(),
-                const EducationSection(),
-                Container(
-                  key: _keys['contact'],
-                  child: const ContactSection(),
-                ),
-              ],
-            ),
-          ),
-          // Fixed navbar overlay
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: NavBar(onNavTap: _scrollToSection),
-          ),
+  Component build(BuildContext context) {
+    return div([
+      // NavBar floating header overlay
+      NavBar(
+        lang: lang,
+        theme: theme,
+        toggleTheme: toggleTheme,
+        toggleLanguage: toggleLanguage,
+      ),
+      
+      // Main container with offset for fixed navigation bar
+      div(
+        styles: Styles(raw: {
+          'margin-top': '64px',
+        }),
+        [
+          section(id: 'home', [
+            HeroSection(lang: lang),
+          ]),
+          section(id: 'experience', [
+            ExperienceSection(lang: lang),
+          ]),
+          section(id: 'projects', [
+            ProjectsSection(lang: lang),
+          ]),
+          section(id: 'skills', [
+            SkillsSection(lang: lang),
+          ]),
+          section(id: 'contributions', [
+            ContributionGraphSection(lang: lang),
+          ]),
+          section(id: 'education', [
+            EducationSection(lang: lang),
+          ]),
+          section(id: 'contact', [
+            ContactSection(lang: lang),
+          ]),
         ],
       ),
-    );
+    ]);
   }
 }

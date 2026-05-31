@@ -1,24 +1,31 @@
-import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
-import '../main.dart';
+import 'package:jaspr/jaspr.dart';
+import 'package:jaspr/dom.dart';
 
-class ThemeModeSwitch extends StatelessWidget {
-  const ThemeModeSwitch({super.key});
+class ThemeModeSwitch extends StatelessComponent {
+  final String theme;
+  final VoidCallback toggleTheme;
+
+  const ThemeModeSwitch({
+    super.key,
+    required this.theme,
+    required this.toggleTheme,
+  });
 
   @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return IconButton(
-      onPressed: () {
-        themeNotifier.value =
-            isDark ? ThemeMode.light : ThemeMode.dark;
+  Component build(BuildContext context) {
+    final isDark = theme == 'dark';
+    return button(
+      classes: 'theme-switch',
+      events: {
+        'click': (e) => toggleTheme(),
       },
-      icon: Icon(
-        isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-        color: isDark ? AppColors.accent : AppColors.lightTextPrimary,
-      ),
-      tooltip: 'Toggle Theme',
+      attributes: {'title': 'Toggle Theme'},
+      [
+        span(
+          classes: 'material-symbols-outlined',
+          [Component.text(isDark ? 'light_mode' : 'dark_mode')],
+        ),
+      ],
     );
   }
 }

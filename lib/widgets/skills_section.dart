@@ -1,181 +1,35 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../theme/app_theme.dart';
+import 'package:jaspr/jaspr.dart';
+import 'package:jaspr/dom.dart';
 import '../data/portfolio_data.dart';
-import '../main.dart';
 import 'section_title.dart';
 
-class SkillsSection extends StatelessWidget {
-  const SkillsSection({super.key});
+class SkillsSection extends StatelessComponent {
+  final String lang;
+
+  const SkillsSection({super.key, required this.lang});
 
   @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<String>(
-      valueListenable: languageNotifier,
-      builder: (context, lang, _) {
-        final content = kContent[lang]!;
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final isMobile = constraints.maxWidth < 768;
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 24 : 40,
-                vertical: isMobile ? 60 : 80,
-              ),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1100),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SectionTitle(
-                        title: content.sectionSkills,
-                        subtitle: content.sectionSkillsSubtitle,
-                      ),
-                      Wrap(
-                        spacing: 16,
-                        runSpacing: 16,
-                        children: content.skills
-                            .map((cat) => _SkillCategoryCard(category: cat))
-                            .toList(),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
+  Component build(BuildContext context) {
+    final content = kContent[lang]!;
 
-class _SkillCategoryCard extends StatefulWidget {
-  final SkillCategory category;
-
-  const _SkillCategoryCard({required this.category});
-
-  @override
-  State<_SkillCategoryCard> createState() => _SkillCategoryCardState();
-}
-
-class _SkillCategoryCardState extends State<_SkillCategoryCard> {
-  bool _hovering = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Each card takes up appropriate width
-        return MouseRegion(
-          onEnter: (_) => setState(() => _hovering = true),
-          onExit: (_) => setState(() => _hovering = false),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            constraints: const BoxConstraints(minWidth: 220),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: _hovering ? AppColors.card(context) : AppColors.surfaceMode(context),
-              border: Border.all(
-                color: _hovering
-                    ? AppColors.accentMode(context).withValues(alpha: 0.35)
-                    : AppColors.borderMode(context),
-              ),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: _hovering
-                  ? [
-                      BoxShadow(
-                        color: AppColors.accentMode(context).withValues(alpha: 0.07),
-                        blurRadius: 20,
-                      ),
-                    ]
-                  : [],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 3,
-                      height: 16,
-                      decoration: BoxDecoration(
-                        color: AppColors.accentMode(context),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      widget.category.label,
-                      style: GoogleFonts.spaceGrotesk(
-                        color: AppColors.textPrimaryMode(context),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: widget.category.skills
-                      .map((s) => _SkillChip(label: s))
-                      .toList(),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _SkillChip extends StatefulWidget {
-  final String label;
-
-  const _SkillChip({required this.label});
-
-  @override
-  State<_SkillChip> createState() => _SkillChipState();
-}
-
-class _SkillChipState extends State<_SkillChip> {
-  bool _hovering = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovering = true),
-      onExit: (_) => setState(() => _hovering = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: _hovering
-              ? AppColors.accentMode(context).withValues(alpha: 0.15)
-              : AppColors.backgroundMode(context),
-          border: Border.all(
-            color: _hovering
-                ? AppColors.accentMode(context)
-                : AppColors.borderMode(context),
-          ),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Text(
-          widget.label,
-          style: GoogleFonts.inter(
-            color: _hovering ? AppColors.accentMode(context) : AppColors.textSecondaryMode(context),
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+    return div(classes: 'section-padding container-box', [
+      SectionTitle(
+        title: content.sectionSkills,
+        subtitle: content.sectionSkillsSubtitle,
       ),
-    );
+      div(classes: 'skills-wrap', [
+        for (final cat in content.skills)
+          div(classes: 'skill-category-card', [
+            div(classes: 'skill-cat-header', [
+              div(classes: 'skill-cat-indicator', []),
+              h3(classes: 'skill-cat-label', [Component.text(cat.label)]),
+            ]),
+            div(classes: 'skill-chips-wrap', [
+              for (final skill in cat.skills)
+                div(classes: 'skill-chip', [Component.text(skill)]),
+            ]),
+          ]),
+      ]),
+    ]);
   }
 }
