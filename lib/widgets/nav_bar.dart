@@ -1,5 +1,7 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart';
+@Import.onWeb('dart:html', show: [#window])
+import 'nav_bar.imports.dart';
 import 'language_switch.dart';
 import 'theme_mode_switch.dart';
 
@@ -55,7 +57,15 @@ class _NavBarState extends State<NavBar> {
         a(
           href: '#home',
           classes: 'nav-logo',
-          events: {'click': (e) => _closeMenu()},
+          events: {
+            'click': (e) {
+              _closeMenu();
+              if (kIsWeb) {
+                e.preventDefault();
+                window.document.getElementById('home')?.scrollIntoView();
+              }
+            }
+          },
           [Component.text('JCS')],
         ),
         div(classes: 'nav-spacer', []),
@@ -64,9 +74,18 @@ class _NavBarState extends State<NavBar> {
         div(classes: 'nav-items-desktop', [
           ..._kNavItems.map((item) {
             final label = isPt ? item['label_pt']! : item['label_en']!;
+            final sectionId = item['section']!;
             return a(
-              href: '#${item['section']}',
+              href: '#$sectionId',
               classes: 'nav-link',
+              events: {
+                'click': (e) {
+                  if (kIsWeb) {
+                    e.preventDefault();
+                    window.document.getElementById(sectionId)?.scrollIntoView();
+                  }
+                }
+              },
               [Component.text(label)],
             );
           }),
@@ -97,10 +116,19 @@ class _NavBarState extends State<NavBar> {
         [
           ..._kNavItems.map((item) {
             final label = isPt ? item['label_pt']! : item['label_en']!;
+            final sectionId = item['section']!;
             return a(
-              href: '#${item['section']}',
+              href: '#$sectionId',
               classes: 'nav-link-mobile',
-              events: {'click': (e) => _closeMenu()},
+              events: {
+                'click': (e) {
+                  _closeMenu();
+                  if (kIsWeb) {
+                    e.preventDefault();
+                    window.document.getElementById(sectionId)?.scrollIntoView();
+                  }
+                }
+              },
               [Component.text(label)],
             );
           }),

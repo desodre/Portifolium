@@ -4,36 +4,6 @@
    Design Tokens & Theme Variables
    ========================================================================== */
 :root {
-  --accent: #007A5E;
-  --accent-alpha-10: rgba(0, 122, 94, 0.1);
-  --accent-alpha-15: rgba(0, 122, 94, 0.15);
-  --accent-alpha-25: rgba(0, 122, 94, 0.25);
-  --accent-alpha-35: rgba(0, 122, 94, 0.35);
-  
-  --background: #F0F4F8;
-  --background-alpha-95: rgba(240, 244, 248, 0.95);
-  --surface: #FFFFFF;
-  --border: #BBC4CE;
-  --text-primary: #1A1F25;
-  --text-secondary: #505860;
-  --card: #F8FAFB;
-  
-  --shadow-color: rgba(0, 122, 94, 0.07);
-  --shadow-color-hover: rgba(0, 122, 94, 0.12);
-  --shadow-color-glow: rgba(0, 122, 94, 0.25);
-  
-  /* Timeline colors */
-  --timeline-dot-bg: #FFFFFF;
-  
-  /* GitHub Contributions Light */
-  --contrib-level-0: #EBEDF0;
-  --contrib-level-1: #9BE9A8;
-  --contrib-level-2: #40C463;
-  --contrib-level-3: #30A14E;
-  --contrib-level-4: #216E39;
-}
-
-[data-theme="dark"] {
   --accent: #00D4A3;
   --accent-alpha-10: rgba(0, 212, 163, 0.1);
   --accent-alpha-15: rgba(0, 212, 163, 0.15);
@@ -61,6 +31,36 @@
   --contrib-level-2: #006D32;
   --contrib-level-3: #26A641;
   --contrib-level-4: #39D353;
+}
+
+[data-theme="light"] {
+  --accent: #007A5E;
+  --accent-alpha-10: rgba(0, 122, 94, 0.1);
+  --accent-alpha-15: rgba(0, 122, 94, 0.15);
+  --accent-alpha-25: rgba(0, 122, 94, 0.25);
+  --accent-alpha-35: rgba(0, 122, 94, 0.35);
+  
+  --background: #F0F4F8;
+  --background-alpha-95: rgba(240, 244, 248, 0.95);
+  --surface: #FFFFFF;
+  --border: #BBC4CE;
+  --text-primary: #1A1F25;
+  --text-secondary: #505860;
+  --card: #F8FAFB;
+  
+  --shadow-color: rgba(0, 122, 94, 0.07);
+  --shadow-color-hover: rgba(0, 122, 94, 0.12);
+  --shadow-color-glow: rgba(0, 122, 94, 0.25);
+  
+  /* Timeline colors */
+  --timeline-dot-bg: #FFFFFF;
+  
+  /* GitHub Contributions Light */
+  --contrib-level-0: #EBEDF0;
+  --contrib-level-1: #9BE9A8;
+  --contrib-level-2: #40C463;
+  --contrib-level-3: #30A14E;
+  --contrib-level-4: #216E39;
 }
 
 /* ==========================================================================
