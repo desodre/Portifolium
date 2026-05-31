@@ -19,6 +19,15 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     _loadPreferences();
+    _handleRedirect();
+  }
+
+  void _handleRedirect() {
+    if (kIsWeb) {
+      if (window.location.pathname == '/') {
+        window.history.replaceState(null, '', '/home');
+      }
+    }
   }
 
   void _loadPreferences() {

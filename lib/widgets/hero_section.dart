@@ -1,5 +1,7 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart';
+@Import.onWeb('dart:html', show: [#window])
+import 'hero_section.imports.dart';
 import '../data/portfolio_data.dart';
 
 class HeroSection extends StatelessComponent {
@@ -75,10 +77,22 @@ class HeroSection extends StatelessComponent {
             ]),
             
             // View My Work CTA
-            a(href: '#experience', classes: 'hero-cta-row', [
-              Component.text(content.heroViewWork),
-              span(classes: 'material-symbols-outlined', [Component.text('arrow_downward')]),
-            ]),
+            a(
+              href: '#experience',
+              classes: 'hero-cta-row',
+              events: {
+                'click': (e) {
+                  if (kIsWeb) {
+                    e.preventDefault();
+                    window.document.getElementById('experience')?.scrollIntoView();
+                  }
+                }
+              },
+              [
+                Component.text(content.heroViewWork),
+                span(classes: 'material-symbols-outlined', [Component.text('arrow_downward')]),
+              ],
+            ),
           ]),
         ],
       ),
