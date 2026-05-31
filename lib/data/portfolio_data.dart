@@ -91,6 +91,11 @@ class PortfolioContent {
   final String sectionContactSubtitle;
   final String contactAvailableLabel;
   final String contactBuiltWith;
+  final String sectionContributions;
+  final String sectionContributionsSubtitle;
+  final String contributionsInLastYear;
+  final String contributionsLess;
+  final String contributionsMore;
 
   const PortfolioContent({
     required this.title,
@@ -117,6 +122,11 @@ class PortfolioContent {
     required this.sectionContactSubtitle,
     required this.contactAvailableLabel,
     required this.contactBuiltWith,
+    required this.sectionContributions,
+    required this.sectionContributionsSubtitle,
+    required this.contributionsInLastYear,
+    required this.contributionsLess,
+    required this.contributionsMore,
   });
 }
 
@@ -130,7 +140,7 @@ const String kGitHub = 'https://github.com/desodre';
 const String kLinkedIn = 'https://www.linkedin.com/in/jhonsodre/';
 const String kAvatarUrl =
     'https://avatars.githubusercontent.com/u/108944889?v=4';
-
+const String apiBaseContributions = 'https://github-contributions-api.jogruber.de/v4/desodre';
 // ── Bilingual content ─────────────────────────────────────────────────────────
 
 const Map<String, PortfolioContent> kContent = {
@@ -156,6 +166,11 @@ const Map<String, PortfolioContent> kContent = {
     sectionContactSubtitle: "Let's talk",
     contactAvailableLabel: 'Open to opportunities',
     contactBuiltWith: 'built using Flutter',
+    sectionContributions: 'GitHub Activity',
+    sectionContributionsSubtitle: 'Open source contributions',
+    contributionsInLastYear: 'contributions in the last year',
+    contributionsLess: 'Less',
+    contributionsMore: 'More',
     experiences: [
       ExperienceEntry(
         role: 'Software QA Android (Automation)',
@@ -332,6 +347,11 @@ const Map<String, PortfolioContent> kContent = {
     sectionContactSubtitle: 'Vamos conversar',
     contactAvailableLabel: 'Aberto a oportunidades',
     contactBuiltWith: 'feito com Flutter',
+    sectionContributions: 'Atividade no GitHub',
+    sectionContributionsSubtitle: 'Contribuições open source',
+    contributionsInLastYear: 'contribuições no último ano',
+    contributionsLess: 'Menos',
+    contributionsMore: 'Mais',
     experiences: [
       ExperienceEntry(
         role: 'Software QA Android (Automação)',
@@ -495,3 +515,37 @@ const Map<String, PortfolioContent> kContent = {
     ],
   ),
 };
+
+
+
+class AllContributions {
+  final Map<String, int> total;
+  final List<Contribution> contributions;
+
+  AllContributions({required this.total, required this.contributions});
+
+  factory AllContributions.fromJson(Map<String, dynamic> json) {
+    return AllContributions(
+      total: Map<String, int>.from(json['total'] as Map),
+      contributions: (json['contributions'] as List)
+          .map((c) => Contribution.fromJson(c as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+}
+
+class Contribution {
+  final String date;
+  final int count;
+  final int level;
+
+  Contribution({required this.date, required this.count, required this.level});
+
+  factory Contribution.fromJson(Map<String, dynamic> json) {
+    return Contribution(
+      date: json['date'] as String,
+      count: json['count'] as int,
+      level: json['level'] as int,
+    );
+  }
+}

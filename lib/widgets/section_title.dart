@@ -1,55 +1,21 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../theme/app_theme.dart';
+import 'package:jaspr/jaspr.dart';
+import 'package:jaspr/dom.dart';
 
-class SectionTitle extends StatelessWidget {
+class SectionTitle extends StatelessComponent {
   final String title;
   final String? subtitle;
 
   const SectionTitle({super.key, required this.title, this.subtitle});
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Container(
-              width: 4,
-              height: 32,
-              decoration: BoxDecoration(
-                color: AppColors.accentMode(context),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              title,
-              style: GoogleFonts.spaceGrotesk(
-                color: AppColors.textPrimaryMode(context),
-                fontSize: 32,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-        if (subtitle != null) ...[
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Text(
-              subtitle!,
-              style: GoogleFonts.inter(
-                color: AppColors.textSecondaryMode(context),
-                fontSize: 15,
-                height: 1.6,
-              ),
-            ),
-          ),
-        ],
-        const SizedBox(height: 40),
-      ],
-    );
+  Component build(BuildContext context) {
+    return div(classes: 'section-header-block', [
+      div(classes: 'section-title-row', [
+        div(classes: 'section-title-bar', []),
+        h2(classes: 'section-title-text', [Component.text(title)]),
+      ]),
+      if (subtitle != null)
+        p(classes: 'section-subtitle-text', [Component.text(subtitle!)]),
+    ]);
   }
 }
