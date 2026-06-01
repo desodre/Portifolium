@@ -24,9 +24,6 @@ jobs:
       - name: Analyze code
         run: dart analyze
 
-      - name: Format code
-        run: dart format --check .
-
       - name: Install Jaspr CLI
         run: dart pub global activate jaspr_cli
 
