@@ -11,7 +11,8 @@ class ContributionGraphSection extends StatefulComponent {
   const ContributionGraphSection({super.key, required this.lang});
 
   @override
-  State<ContributionGraphSection> createState() => _ContributionGraphSectionState();
+  State<ContributionGraphSection> createState() =>
+      _ContributionGraphSectionState();
 }
 
 class _ContributionGraphSectionState extends State<ContributionGraphSection> {
@@ -87,11 +88,25 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
   }
 
   static String _monthAbbr(int month) {
-    const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const m = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
     return m[month - 1];
   }
 
-  static String _formatDate(DateTime d) => '${_monthAbbr(d.month)} ${d.day}, ${d.year}';
+  static String _formatDate(DateTime d) =>
+      '${_monthAbbr(d.month)} ${d.day}, ${d.year}';
 
   @override
   Component build(BuildContext context) {
@@ -106,7 +121,11 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
         if (_loading)
           div(classes: 'avail-dot', []) // Circular loader styled as pulsing dot
         else if (_error != null)
-          p(classes: 'section-subtitle-text', [Component.text(component.lang == 'pt' ? 'Não foi possível carregar as contribuições: $_error' : 'Could not load contributions: $_error')])
+          p(classes: 'section-subtitle-text', [
+            Component.text(component.lang == 'pt'
+                ? 'Não foi possível carregar as contribuições: $_error'
+                : 'Could not load contributions: $_error')
+          ])
         else
           div([
             ..._buildGraphContent(content),

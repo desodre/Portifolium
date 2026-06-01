@@ -23,14 +23,16 @@ class ContactSection extends StatelessComponent {
           div(classes: 'avail-dot', []),
           Component.text(content.contactAvailableLabel),
         ]),
-        
+
         // Contact Buttons
         div(classes: 'contact-buttons-wrap', [
           a(
             href: 'mailto:$kEmail',
             classes: 'contact-btn',
             [
-              span(classes: 'material-symbols-outlined icon', [Component.text('mail')]),
+              span(
+                  classes: 'material-symbols-outlined icon',
+                  [Component.text('mail')]),
               span(classes: 'contact-label', [Component.text('Email')]),
               span(classes: 'contact-sublabel', [Component.text(kEmail)]),
             ],
@@ -40,9 +42,13 @@ class ContactSection extends StatelessComponent {
             target: Target.blank,
             classes: 'contact-btn',
             [
-              span(classes: 'material-symbols-outlined icon', [Component.text('code')]),
+              span(
+                  classes: 'material-symbols-outlined icon',
+                  [Component.text('code')]),
               span(classes: 'contact-label', [Component.text('GitHub')]),
-              span(classes: 'contact-sublabel', [Component.text('github.com/desodre')]),
+              span(
+                  classes: 'contact-sublabel',
+                  [Component.text('github.com/desodre')]),
             ],
           ),
           a(
@@ -50,17 +56,25 @@ class ContactSection extends StatelessComponent {
             target: Target.blank,
             classes: 'contact-btn',
             [
-              span(classes: 'material-symbols-outlined icon', [Component.text('work')]),
+              span(
+                  classes: 'material-symbols-outlined icon',
+                  [Component.text('work')]),
               span(classes: 'contact-label', [Component.text('LinkedIn')]),
-              span(classes: 'contact-sublabel', [Component.text('in/jhonsodre')]),
+              span(
+                  classes: 'contact-sublabel',
+                  [Component.text('in/jhonsodre')]),
             ],
           ),
           a(
             href: 'tel:${kPhone.replaceAll(RegExp(r"[^\d+]"), "")}',
             classes: 'contact-btn',
             [
-              span(classes: 'material-symbols-outlined icon', [Component.text('phone')]),
-              span(classes: 'contact-label', [Component.text(lang == 'pt' ? 'Telefone' : 'Phone')]),
+              span(
+                  classes: 'material-symbols-outlined icon',
+                  [Component.text('phone')]),
+              span(
+                  classes: 'contact-label',
+                  [Component.text(lang == 'pt' ? 'Telefone' : 'Phone')]),
               span(classes: 'contact-sublabel', [Component.text(kPhone)]),
             ],
           ),
@@ -72,8 +86,11 @@ class ContactSection extends StatelessComponent {
         // Footer Text
         div(classes: 'footer-text-row', [
           Component.text('© 2026 Jhonatha Cirilo Sodre · '),
-          span(classes: 'material-symbols-outlined icon', [Component.text('favorite')]),
-          Component.text(' ${content.contactBuiltWith.replaceAll("Flutter", "Jaspr")}'),
+          span(
+              classes: 'material-symbols-outlined icon',
+              [Component.text('favorite')]),
+          Component.text(
+              ' ${content.contactBuiltWith.replaceAll("Flutter", "Jaspr")}'),
         ]),
       ]),
     ]);

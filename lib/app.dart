@@ -37,11 +37,13 @@ class _AppState extends State<App> {
         _lang = savedLang;
       }
       final savedTheme = window.localStorage['theme'];
-      if (savedTheme != null && (savedTheme == 'dark' || savedTheme == 'light')) {
+      if (savedTheme != null &&
+          (savedTheme == 'dark' || savedTheme == 'light')) {
         _theme = savedTheme;
       } else {
         // Fallback to system preference
-        final systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        final systemDark =
+            window.matchMedia('(prefers-color-scheme: dark)').matches;
         _theme = systemDark ? 'dark' : 'light';
       }
       _applyTheme();

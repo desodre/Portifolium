@@ -7,7 +7,11 @@ import 'theme_mode_switch.dart';
 
 const List<Map<String, String>> _kNavItems = [
   {'label_en': 'Home', 'label_pt': 'Início', 'section': 'home'},
-  {'label_en': 'Experience', 'label_pt': 'Experiência', 'section': 'experience'},
+  {
+    'label_en': 'Experience',
+    'label_pt': 'Experiência',
+    'section': 'experience'
+  },
   {'label_en': 'Projects', 'label_pt': 'Projetos', 'section': 'projects'},
   {'label_en': 'Skills', 'label_pt': 'Habilidades', 'section': 'skills'},
   {'label_en': 'Contact', 'label_pt': 'Contato', 'section': 'contact'},
@@ -89,14 +93,18 @@ class _NavBarState extends State<NavBar> {
               [Component.text(label)],
             );
           }),
-          ThemeModeSwitch(theme: component.theme, toggleTheme: component.toggleTheme),
-          LanguageSwitch(lang: component.lang, toggleLanguage: component.toggleLanguage),
+          ThemeModeSwitch(
+              theme: component.theme, toggleTheme: component.toggleTheme),
+          LanguageSwitch(
+              lang: component.lang, toggleLanguage: component.toggleLanguage),
         ]),
 
         // Mobile actions
         div(classes: 'nav-actions-mobile', [
-          LanguageSwitch(lang: component.lang, toggleLanguage: component.toggleLanguage),
-          ThemeModeSwitch(theme: component.theme, toggleTheme: component.toggleTheme),
+          LanguageSwitch(
+              lang: component.lang, toggleLanguage: component.toggleLanguage),
+          ThemeModeSwitch(
+              theme: component.theme, toggleTheme: component.toggleTheme),
           button(
             classes: 'theme-switch',
             events: {'click': (e) => _toggleMenu()},

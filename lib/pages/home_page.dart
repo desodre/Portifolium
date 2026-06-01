@@ -33,7 +33,7 @@ class HomePage extends StatelessComponent {
         toggleTheme: toggleTheme,
         toggleLanguage: toggleLanguage,
       ),
-      
+
       // Main container with offset for fixed navigation bar
       div(
         styles: Styles(raw: {

@@ -140,7 +140,8 @@ const String kGitHub = 'https://github.com/desodre';
 const String kLinkedIn = 'https://www.linkedin.com/in/jhonsodre/';
 const String kAvatarUrl =
     'https://avatars.githubusercontent.com/u/108944889?v=4';
-const String apiBaseContributions = 'https://github-contributions-api.jogruber.de/v4/desodre';
+const String apiBaseContributions =
+    'https://github-contributions-api.jogruber.de/v4/desodre';
 // ── Bilingual content ─────────────────────────────────────────────────────────
 
 const Map<String, PortfolioContent> kContent = {
@@ -223,21 +224,21 @@ const Map<String, PortfolioContent> kContent = {
     ],
     projects: [
       ProjectEntry(
-        name: 'nexus_cts',
+        name: 'Nexus CTS',
         url: 'https://github.com/desodre/nexus_cts',
         description:
             'Portal aggregating Google Android test suites (CTS, GTS, VTS) for streamlined compliance management.',
         techs: ['Dart', 'Flutter'],
       ),
       ProjectEntry(
-        name: 'adb_utils',
+        name: 'Adb Utils',
         url: 'https://pub.dev/packages/adb_utils',
         description:
             'Open-source Dart library wrapping ADB commands for seamless Android device interaction from Dart code.',
         techs: ['Dart', 'ADB', 'Pub.dev'],
       ),
       ProjectEntry(
-        name: 'fast_bridge',
+        name: 'Fast Bridge',
         url: 'https://github.com/desodre/fast_bridge',
         description:
             'Cross-platform Android device debugger, ADB controls, and a FastAPI + UIAutomator2.',
@@ -272,13 +273,23 @@ const Map<String, PortfolioContent> kContent = {
       ),
       SkillCategory(
         label: 'Frameworks',
-        skills: ['Flutter', 'FastAPI', 'Robot Framework', 'Unittest', 'Scrapy'],
+        skills: [
+          'Flutter',
+          'FastAPI',
+          'Robot Framework',
+          'Pytests',
+          'Unittest',
+          'Scrapy',
+          'Jetpack Compose'
+        ],
       ),
       SkillCategory(
         label: 'Tools',
         skills: [
           'Git',
           'GitHub',
+          'GitLab',
+          'GitHub Actions',
           'Jenkins CI/CD',
           'Jira',
           'ADB',
@@ -288,11 +299,19 @@ const Map<String, PortfolioContent> kContent = {
       ),
       SkillCategory(
         label: 'Databases',
-        skills: ['PostgreSQL', 'MySQL', 'SQLite'],
+        skills: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'Redis'],
       ),
       SkillCategory(
         label: 'Android',
-        skills: ['CTS/GTS/VTS', 'Kernel', 'Firmware', 'UIAutomator2', 'Sensors'],
+        skills: [
+          'CTS/GTS/VTS',
+          'Kernel',
+          'Firmware',
+          'UIAutomator2',
+          'Sensors',
+          'Flutter',
+          'Jetpack Compose'
+        ],
       ),
     ],
     education: [
@@ -310,8 +329,12 @@ const Map<String, PortfolioContent> kContent = {
       ),
     ],
     courses: [
-      CourseEntry(title: 'Android Developer Tests', provider: 'Udemy', year: '2023'),
-      CourseEntry(title: 'Backend Development', provider: 'Samsung Ocean', year: '2023'),
+      CourseEntry(
+          title: 'Android Developer Tests', provider: 'Udemy', year: '2023'),
+      CourseEntry(
+          title: 'Backend Development',
+          provider: 'Samsung Ocean',
+          year: '2023'),
       CourseEntry(
         title: 'Android Development with Flutter',
         provider: 'Alura',
@@ -404,21 +427,21 @@ const Map<String, PortfolioContent> kContent = {
     ],
     projects: [
       ProjectEntry(
-        name: 'nexus_cts',
+        name: 'Nexus CTS',
         url: 'https://github.com/desodre/nexus_cts',
         description:
             'Portal que agrega as suítes de testes Android do Google (CTS, GTS, VTS) para gerenciamento de conformidade simplificado.',
         techs: ['Dart', 'Flutter'],
       ),
       ProjectEntry(
-        name: 'adb_utils',
+        name: 'Adb Utils',
         url: 'https://pub.dev/packages/adb_utils',
         description:
             'Biblioteca Dart open-source que encapsula comandos ADB para interação com dispositivos Android a partir do Dart.',
         techs: ['Dart', 'ADB', 'Pub.dev'],
       ),
       ProjectEntry(
-        name: 'fast_bridge',
+        name: 'Fast Bridge',
         url: 'https://github.com/desodre/fast_bridge',
         description:
             'Debugger multiplataforma para Android com controles ADB e integração FastAPI + UIAutomator2.',
@@ -440,7 +463,7 @@ const Map<String, PortfolioContent> kContent = {
       ),
       ProjectEntry(
         name: 'Geppetto',
-        url: 'https://github.com/desodre/Geppetto',
+        url: 'https://pypi.org/project/geppetto-android/',
         description:
             'Framework de automação de UI para Android que orquestra e executa sua suíte de testes com precisão. Fornece uma API Python de alto nível para controlar dispositivos Android via ADB, Fastboot e UIAutomator2.',
         techs: ['Python', 'Android', 'UIAutomator2', 'ADB', 'Fastboot'],
@@ -453,13 +476,23 @@ const Map<String, PortfolioContent> kContent = {
       ),
       SkillCategory(
         label: 'Frameworks',
-        skills: ['Flutter', 'FastAPI', 'Robot Framework', 'Unittest', 'Scrapy'],
+        skills: [
+          'Flutter',
+          'FastAPI',
+          'Robot Framework',
+          'Pytests',
+          'Unittest',
+          'Scrapy',
+          'Jetpack Compose'
+        ],
       ),
       SkillCategory(
         label: 'Ferramentas',
         skills: [
           'Git',
           'GitHub',
+          'GitLab',
+          'GitHub Actions',
           'Jenkins CI/CD',
           'Jira',
           'ADB',
@@ -469,11 +502,17 @@ const Map<String, PortfolioContent> kContent = {
       ),
       SkillCategory(
         label: 'Bancos de Dados',
-        skills: ['PostgreSQL', 'MySQL', 'SQLite'],
+        skills: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'Redis'],
       ),
       SkillCategory(
         label: 'Android',
-        skills: ['CTS/GTS/VTS', 'Kernel', 'Firmware', 'UIAutomator2', 'Sensors'],
+        skills: [
+          'CTS/GTS/VTS',
+          'Kernel',
+          'Firmware',
+          'UIAutomator2',
+          'Sensors'
+        ],
       ),
     ],
     education: [
@@ -515,8 +554,6 @@ const Map<String, PortfolioContent> kContent = {
     ],
   ),
 };
-
-
 
 class AllContributions {
   final Map<String, int> total;

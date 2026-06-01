@@ -26,7 +26,9 @@ class ExperienceSection extends StatelessComponent {
             return div(classes: 'timeline-item', [
               // Marker Column (Dot and vertical connecting line)
               div(classes: 'timeline-marker', [
-                div(classes: 'timeline-dot${entry.isCurrent ? ' current' : ''}', []),
+                div(
+                    classes: 'timeline-dot${entry.isCurrent ? ' current' : ''}',
+                    []),
                 if (!isLast) div(classes: 'timeline-line', []),
               ]),
               // Content Card Column
@@ -36,11 +38,15 @@ class ExperienceSection extends StatelessComponent {
                   div(classes: 'exp-header-wrap', [
                     h3(classes: 'exp-role', [Component.text(entry.role)]),
                     if (entry.isCurrent)
-                      span(classes: 'exp-badge', [Component.text(lang == 'pt' ? 'Atual' : 'Current')]),
+                      span(
+                          classes: 'exp-badge',
+                          [Component.text(lang == 'pt' ? 'Atual' : 'Current')]),
                   ]),
                   // Company & Period
                   div(classes: 'exp-meta-row', [
-                    span(classes: 'exp-company', [Component.text(entry.company)]),
+                    span(
+                        classes: 'exp-company',
+                        [Component.text(entry.company)]),
                     Component.text(' · '),
                     span(classes: 'exp-period', [Component.text(entry.period)]),
                   ]),

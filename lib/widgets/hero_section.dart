@@ -30,22 +30,24 @@ class HeroSection extends StatelessComponent {
           div(classes: 'hero-text-container', [
             // Greeting Badge
             div(classes: 'hero-badge', [Component.text(content.heroGreeting)]),
-            
+
             // Name
             h1(classes: 'hero-name', [Component.text(kName)]),
-            
+
             // Title
             p(classes: 'hero-title', [Component.text(content.title)]),
-            
+
             // Location
             div(classes: 'hero-location', [
-              span(classes: 'material-symbols-outlined icon', [Component.text('location_on')]),
+              span(
+                  classes: 'material-symbols-outlined icon',
+                  [Component.text('location_on')]),
               Component.text(kLocation),
             ]),
-            
+
             // Bio
             p(classes: 'hero-bio', [Component.text(content.bio)]),
-            
+
             // Social Links
             div(classes: 'hero-social-wrap', [
               a(
@@ -53,7 +55,9 @@ class HeroSection extends StatelessComponent {
                 target: Target.blank,
                 classes: 'social-btn',
                 [
-                  span(classes: 'material-symbols-outlined icon', [Component.text('code')]),
+                  span(
+                      classes: 'material-symbols-outlined icon',
+                      [Component.text('code')]),
                   Component.text('GitHub'),
                 ],
               ),
@@ -62,7 +66,9 @@ class HeroSection extends StatelessComponent {
                 target: Target.blank,
                 classes: 'social-btn',
                 [
-                  span(classes: 'material-symbols-outlined icon', [Component.text('work')]),
+                  span(
+                      classes: 'material-symbols-outlined icon',
+                      [Component.text('work')]),
                   Component.text('LinkedIn'),
                 ],
               ),
@@ -70,12 +76,14 @@ class HeroSection extends StatelessComponent {
                 href: 'mailto:$kEmail',
                 classes: 'social-btn',
                 [
-                  span(classes: 'material-symbols-outlined icon', [Component.text('mail')]),
+                  span(
+                      classes: 'material-symbols-outlined icon',
+                      [Component.text('mail')]),
                   Component.text('Email'),
                 ],
               ),
             ]),
-            
+
             // View My Work CTA
             a(
               href: '#experience',
@@ -84,13 +92,17 @@ class HeroSection extends StatelessComponent {
                 'click': (e) {
                   if (kIsWeb) {
                     e.preventDefault();
-                    window.document.getElementById('experience')?.scrollIntoView();
+                    window.document
+                        .getElementById('experience')
+                        ?.scrollIntoView();
                   }
                 }
               },
               [
                 Component.text(content.heroViewWork),
-                span(classes: 'material-symbols-outlined', [Component.text('arrow_downward')]),
+                span(
+                    classes: 'material-symbols-outlined',
+                    [Component.text('arrow_downward')]),
               ],
             ),
           ]),
