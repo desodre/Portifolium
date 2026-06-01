@@ -1,17 +1,14 @@
-# sodre_portifolium
+# Portifolium
 
-A new Flutter project.
+É só meu portifolio mesmo, fiz com flutter pq era oq eu sabia na epoca, mas flutter é mt pesado pra single page, então decidi refazer em jaspr, que é basicamente um react pra dart.
 
-## Getting Started
+Provavelmente vou deixar rodando em:
 
-This project is a starting point for a Flutter application.
+ 'jhonsodre.xyz/'
 
-A few resources to get you started if this is your first Flutter project:
+Caso não conheça o jaspr, recomendo dar uma olhada, [aqui](https://jaspr.site/).
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Desabafo
+
+Dart é muito parecido com typescript, e o jaspr é muito parecido com react, mas a comunidade é tão pequena que é difícil encontrar ajuda, e as vezes tem que ler o código fonte pra entender como as coisas funcionam, o que é bem chato. Mas é isso...
