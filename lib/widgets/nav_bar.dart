@@ -13,6 +13,7 @@ const List<Map<String, String>> _kNavItems = [
     'section': 'experience'
   },
   {'label_en': 'Projects', 'label_pt': 'Projetos', 'section': 'projects'},
+  {'label_en': 'Apps', 'label_pt': 'Apps', 'section': 'apps'},
   {'label_en': 'Skills', 'label_pt': 'Habilidades', 'section': 'skills'},
   {'label_en': 'Contact', 'label_pt': 'Contato', 'section': 'contact'},
 ];

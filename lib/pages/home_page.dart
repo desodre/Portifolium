@@ -4,6 +4,7 @@ import '../widgets/nav_bar.dart';
 import '../widgets/hero_section.dart';
 import '../widgets/experience_section.dart';
 import '../widgets/projects_section.dart';
+import '../widgets/published_apps_section.dart';
 import '../widgets/skills_section.dart';
 import '../widgets/contribution_graph_section.dart';
 import '../widgets/education_section.dart';
@@ -48,6 +49,9 @@ class HomePage extends StatelessComponent {
           ]),
           section(id: 'projects', [
             ProjectsSection(lang: lang),
+          ]),
+          section(id: 'apps', [
+            PublishedAppsSection(lang: lang),
           ]),
           section(id: 'skills', [
             SkillsSection(lang: lang),

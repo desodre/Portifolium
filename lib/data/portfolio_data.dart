@@ -30,6 +30,24 @@ class ProjectEntry {
   });
 }
 
+class PublishedApp {
+  final String name;
+  final String description;
+  final List<String> techStack;
+  final String screenshotAsset;
+  final String storeUrl;
+  final String? repoUrl;
+
+  const PublishedApp({
+    required this.name,
+    required this.description,
+    required this.techStack,
+    required this.screenshotAsset,
+    required this.storeUrl,
+    this.repoUrl,
+  });
+}
+
 class SkillCategory {
   final String label;
   final List<String> skills;
@@ -70,6 +88,7 @@ class PortfolioContent {
   final String bio;
   final List<ExperienceEntry> experiences;
   final List<ProjectEntry> projects;
+  final List<PublishedApp> publishedApps;
   final List<SkillCategory> skills;
   final List<EducationEntry> education;
   final List<CourseEntry> courses;
@@ -81,6 +100,8 @@ class PortfolioContent {
   final String sectionExperienceSubtitle;
   final String sectionProjects;
   final String sectionProjectsSubtitle;
+  final String sectionPublishedApps;
+  final String sectionPublishedAppsSubtitle;
   final String sectionSkills;
   final String sectionSkillsSubtitle;
   final String sectionEducation;
@@ -102,6 +123,7 @@ class PortfolioContent {
     required this.bio,
     required this.experiences,
     required this.projects,
+    required this.publishedApps,
     required this.skills,
     required this.education,
     required this.courses,
@@ -112,6 +134,8 @@ class PortfolioContent {
     required this.sectionExperienceSubtitle,
     required this.sectionProjects,
     required this.sectionProjectsSubtitle,
+    required this.sectionPublishedApps,
+    required this.sectionPublishedAppsSubtitle,
     required this.sectionSkills,
     required this.sectionSkillsSubtitle,
     required this.sectionEducation,
@@ -157,6 +181,8 @@ const Map<String, PortfolioContent> kContent = {
     sectionExperienceSubtitle: 'Professional history & achievements',
     sectionProjects: 'Projects',
     sectionProjectsSubtitle: 'Open-source work & personal builds',
+    sectionPublishedApps: 'Published Apps',
+    sectionPublishedAppsSubtitle: 'Mobile applications available on app stores or as public builds',
     sectionSkills: 'Skills',
     sectionSkillsSubtitle: 'Technologies and tools I work with',
     sectionEducation: 'Education',
@@ -266,6 +292,26 @@ const Map<String, PortfolioContent> kContent = {
         techs: ['Python', 'Android', 'UIAutomator2', 'ADB', 'Fastboot'],
       ),
     ],
+    publishedApps: [
+      PublishedApp(
+        name: 'Meu Ar Manaus',
+        description:
+            'Civic application providing real-time air quality monitoring, health recommendations, and pollution warnings for the residents of Manaus, AM.',
+        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing'],
+        screenshotAsset: 'images/apps/meu_ar_manaus.png',
+        storeUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
+        repoUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
+      ),
+      PublishedApp(
+        name: 'NFC-Tools',
+        description:
+            'An intuitive tool for reading, writing, and formatting NFC tags directly from Android, featuring custom payload templates.',
+        techStack: ['Flutter', 'Android', 'NFC Core', 'Local Storage'],
+        screenshotAsset: 'images/apps/nfc_tools.png',
+        storeUrl: 'https://github.com/desodre/NFC-Tools',
+        repoUrl: 'https://github.com/desodre/NFC-Tools',
+      ),
+    ],
     skills: [
       SkillCategory(
         label: 'Languages',
@@ -360,6 +406,8 @@ const Map<String, PortfolioContent> kContent = {
     sectionExperienceSubtitle: 'Histórico profissional e conquistas',
     sectionProjects: 'Projetos',
     sectionProjectsSubtitle: 'Trabalho open-source e criações pessoais',
+    sectionPublishedApps: 'Apps Publicados',
+    sectionPublishedAppsSubtitle: 'Aplicativos móveis disponíveis em lojas ou como builds públicas',
     sectionSkills: 'Habilidades',
     sectionSkillsSubtitle: 'Tecnologias e ferramentas com que trabalho',
     sectionEducation: 'Formação',
@@ -467,6 +515,26 @@ const Map<String, PortfolioContent> kContent = {
         description:
             'Framework de automação de UI para Android que orquestra e executa sua suíte de testes com precisão. Fornece uma API Python de alto nível para controlar dispositivos Android via ADB, Fastboot e UIAutomator2.',
         techs: ['Python', 'Android', 'UIAutomator2', 'ADB', 'Fastboot'],
+      ),
+    ],
+    publishedApps: [
+      PublishedApp(
+        name: 'Meu Ar Manaus',
+        description:
+            'Aplicativo cívico que fornece monitoramento da qualidade do ar em tempo real, recomendações de saúde e avisos de poluição para os moradores de Manaus, AM.',
+        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing'],
+        screenshotAsset: 'images/apps/meu_ar_manaus.png',
+        storeUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
+        repoUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
+      ),
+      PublishedApp(
+        name: 'NFC-Tools',
+        description:
+            'Uma ferramenta intuitiva para ler, escrever e formatar tags NFC diretamente do Android, apresentando modelos de dados customizados.',
+        techStack: ['Flutter', 'Android', 'NFC Core', 'Local Storage'],
+        screenshotAsset: 'images/apps/nfc_tools.png',
+        storeUrl: 'https://github.com/desodre/NFC-Tools',
+        repoUrl: 'https://github.com/desodre/NFC-Tools',
       ),
     ],
     skills: [
