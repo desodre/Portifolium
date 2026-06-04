@@ -25,7 +25,5 @@ import 'package:sodre_portifolium/app.dart' deferred as _app;
 /// }
 /// ```
 ClientOptions get defaultClientOptions => ClientOptions(
-      clients: {
-        'app': ClientLoader((p) => _app.App(), loader: _app.loadLibrary)
-      },
-    );
+  clients: {'app': ClientLoader((p) => _app.App(), loader: _app.loadLibrary)},
+);

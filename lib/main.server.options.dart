@@ -24,6 +24,6 @@ import 'package:sodre_portifolium/app.dart' as _app;
 /// }
 /// ```
 ServerOptions get defaultServerOptions => ServerOptions(
-      clientId: 'main.client.dart.js',
-      clients: {_app.App: ClientTarget<_app.App>('app')},
-    );
+  clientId: 'main.client.dart.js',
+  clients: {_app.App: ClientTarget<_app.App>('app')},
+);

@@ -30,6 +30,24 @@ class ProjectEntry {
   });
 }
 
+class PublishedApp {
+  final String name;
+  final String description;
+  final List<String> techStack;
+  final String screenshotAsset;
+  final String storeUrl;
+  final String? repoUrl;
+
+  const PublishedApp({
+    required this.name,
+    required this.description,
+    required this.techStack,
+    required this.screenshotAsset,
+    required this.storeUrl,
+    this.repoUrl,
+  });
+}
+
 class SkillCategory {
   final String label;
   final List<String> skills;
@@ -70,6 +88,7 @@ class PortfolioContent {
   final String bio;
   final List<ExperienceEntry> experiences;
   final List<ProjectEntry> projects;
+  final List<PublishedApp> publishedApps;
   final List<SkillCategory> skills;
   final List<EducationEntry> education;
   final List<CourseEntry> courses;
@@ -81,6 +100,8 @@ class PortfolioContent {
   final String sectionExperienceSubtitle;
   final String sectionProjects;
   final String sectionProjectsSubtitle;
+  final String sectionPublishedApps;
+  final String sectionPublishedAppsSubtitle;
   final String sectionSkills;
   final String sectionSkillsSubtitle;
   final String sectionEducation;
@@ -102,6 +123,7 @@ class PortfolioContent {
     required this.bio,
     required this.experiences,
     required this.projects,
+    required this.publishedApps,
     required this.skills,
     required this.education,
     required this.courses,
@@ -112,6 +134,8 @@ class PortfolioContent {
     required this.sectionExperienceSubtitle,
     required this.sectionProjects,
     required this.sectionProjectsSubtitle,
+    required this.sectionPublishedApps,
+    required this.sectionPublishedAppsSubtitle,
     required this.sectionSkills,
     required this.sectionSkillsSubtitle,
     required this.sectionEducation,
@@ -157,6 +181,8 @@ const Map<String, PortfolioContent> kContent = {
     sectionExperienceSubtitle: 'Professional history & achievements',
     sectionProjects: 'Projects',
     sectionProjectsSubtitle: 'Open-source work & personal builds',
+    sectionPublishedApps: 'Published Apps',
+    sectionPublishedAppsSubtitle: 'Mobile applications available on app stores or as public builds',
     sectionSkills: 'Skills',
     sectionSkillsSubtitle: 'Technologies and tools I work with',
     sectionEducation: 'Education',
@@ -174,7 +200,7 @@ const Map<String, PortfolioContent> kContent = {
     contributionsMore: 'More',
     experiences: [
       ExperienceEntry(
-        role: 'Software QA Android (Automation)',
+        role: 'Android Developer',
         company: 'Eldorado',
         period: 'May 2024 – Present',
         isCurrent: true,
@@ -185,7 +211,7 @@ const Map<String, PortfolioContent> kContent = {
           'Cross-platform apps with Flutter and Kotlin Native',
           'Backend services with FastAPI',
         ],
-        techs: ['Python', 'Flutter', 'Kotlin', 'FastAPI', 'CTS/GTS/VTS'],
+        techs: ['Python', 'Flutter', 'Kotlin', 'FastAPI', 'CTS/GTS/VTS', 'Kotlin', 'Jetpack Compose'],
       ),
       ExperienceEntry(
         role: 'Software QA (Manual)',
@@ -198,7 +224,7 @@ const Map<String, PortfolioContent> kContent = {
           'FastAPI backend development',
           'Android test automation with ADB, Fastboot, UIAutomator2',
         ],
-        techs: ['Python', 'Scrapy', 'FastAPI', 'ADB', 'UIAutomator2'],
+        techs: ['Python', 'Scrapy', 'FastAPI', 'ADB', 'UIAutomator2', 'Network Testing' ],
       ),
       ExperienceEntry(
         role: 'Software Analyst (Kernel)',
@@ -212,14 +238,14 @@ const Map<String, PortfolioContent> kContent = {
         techs: ['Android Kernel', 'OTA', 'Firmware'],
       ),
       ExperienceEntry(
-        role: 'Data Analyst',
+        role: 'Android Developer intern',
         company: 'SEDUC',
         period: 'Oct 2021 – Aug 2022',
         bullets: [
-          'Maintenance reporting with Excel and Power BI',
-          'Data analysis and visualisation with Python and R',
+          'Maintenance of native apps with Flutter and Kotlin',
+          'Deploying updates to production',
         ],
-        techs: ['Python', 'R', 'Power BI', 'Excel'],
+        techs: ['Flutter', 'Kotlin', 'Android'],
       ),
     ],
     projects: [
@@ -264,6 +290,17 @@ const Map<String, PortfolioContent> kContent = {
         description:
             'Geppetto is an Android UI automation framework that orchestrates and executes your test suite with precision and care. It provides a high-level Python API for controlling Android devices via ADB, Fastboot, and UIAutomator2.',
         techs: ['Python', 'Android', 'UIAutomator2', 'ADB', 'Fastboot'],
+      ),
+    ],
+    publishedApps: [
+      PublishedApp(
+        name: 'Termofication',
+        description:
+            'A wordle-like puzzle game where players guess the correct word within a limited number of attempts. Multiplayer mode with real-time updates and a custom word list.',
+        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing', 'Real-time Updates', 'Google play services'],
+        screenshotAsset: 'images/apps/home_termo.png',
+        storeUrl: 'https://github.com/desodre/Termofication',
+        repoUrl: 'https://github.com/desodre/Termofication',
       ),
     ],
     skills: [
@@ -360,6 +397,8 @@ const Map<String, PortfolioContent> kContent = {
     sectionExperienceSubtitle: 'Histórico profissional e conquistas',
     sectionProjects: 'Projetos',
     sectionProjectsSubtitle: 'Trabalho open-source e criações pessoais',
+    sectionPublishedApps: 'Apps Publicados',
+    sectionPublishedAppsSubtitle: 'Aplicativos móveis disponíveis em lojas ou como builds públicas',
     sectionSkills: 'Habilidades',
     sectionSkillsSubtitle: 'Tecnologias e ferramentas com que trabalho',
     sectionEducation: 'Formação',
@@ -377,7 +416,7 @@ const Map<String, PortfolioContent> kContent = {
     contributionsMore: 'Mais',
     experiences: [
       ExperienceEntry(
-        role: 'Software QA Android (Automação)',
+        role: 'Android Developer',
         company: 'Eldorado',
         period: 'May 2024 – Present',
         isCurrent: true,
@@ -388,7 +427,7 @@ const Map<String, PortfolioContent> kContent = {
           'Apps multiplataforma com Flutter e Kotlin Native',
           'Serviços de backend com FastAPI',
         ],
-        techs: ['Python', 'Flutter', 'Kotlin', 'FastAPI', 'CTS/GTS/VTS'],
+        techs: ['Python', 'Flutter', 'Kotlin', 'FastAPI', 'CTS/GTS/VTS', 'Kotlin', 'Jetpack Compose'],
       ),
       ExperienceEntry(
         role: 'Software QA (Manual)',
@@ -404,7 +443,7 @@ const Map<String, PortfolioContent> kContent = {
         techs: ['Python', 'Scrapy', 'FastAPI', 'ADB', 'UIAutomator2'],
       ),
       ExperienceEntry(
-        role: 'Analista de Software (Kernel)',
+        role: 'Analista de Software Embarcado (Kernel)',
         company: 'Voltz Institute',
         period: 'Aug 2022 – Nov 2022',
         bullets: [
@@ -415,14 +454,14 @@ const Map<String, PortfolioContent> kContent = {
         techs: ['Android Kernel', 'OTA', 'Firmware'],
       ),
       ExperienceEntry(
-        role: 'Analista de Dados',
+        role: 'Android Developer intern',
         company: 'SEDUC',
         period: 'Oct 2021 – Aug 2022',
         bullets: [
-          'Relatórios de manutenção com Excel e Power BI',
-          'Análise de dados e visualização com Python e R',
+          'Manutenção de apps nativa com Flutter e Kotlin',
+          'Deploy de atualizações em produção',
         ],
-        techs: ['Python', 'R', 'Power BI', 'Excel'],
+        techs: ['Flutter', 'Kotlin', 'Android'],
       ),
     ],
     projects: [
@@ -468,6 +507,18 @@ const Map<String, PortfolioContent> kContent = {
             'Framework de automação de UI para Android que orquestra e executa sua suíte de testes com precisão. Fornece uma API Python de alto nível para controlar dispositivos Android via ADB, Fastboot e UIAutomator2.',
         techs: ['Python', 'Android', 'UIAutomator2', 'ADB', 'Fastboot'],
       ),
+    ],
+    publishedApps: [
+      PublishedApp(
+        name: 'Termofication',
+        description:
+            'Um jogo de palavras estilo Wordle onde os jogadores tentam adivinhar a palavra correta em um número limitado de tentativas. Modo multiplayer com atualizações em tempo real e lista de palavras personalizada.',
+        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing', 'Real-time Updates', 'Google Play Services'],
+        screenshotAsset: 'images/apps/home_termo.png',
+        storeUrl: 'https://github.com/desodre/Termofication',
+        repoUrl: 'https://github.com/desodre/Termofication',
+      ),
+      
     ],
     skills: [
       SkillCategory(
