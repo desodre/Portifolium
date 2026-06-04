@@ -200,7 +200,7 @@ const Map<String, PortfolioContent> kContent = {
     contributionsMore: 'More',
     experiences: [
       ExperienceEntry(
-        role: 'Software QA Android (Automation)',
+        role: 'Android Developer',
         company: 'Eldorado',
         period: 'May 2024 – Present',
         isCurrent: true,
@@ -211,7 +211,7 @@ const Map<String, PortfolioContent> kContent = {
           'Cross-platform apps with Flutter and Kotlin Native',
           'Backend services with FastAPI',
         ],
-        techs: ['Python', 'Flutter', 'Kotlin', 'FastAPI', 'CTS/GTS/VTS'],
+        techs: ['Python', 'Flutter', 'Kotlin', 'FastAPI', 'CTS/GTS/VTS', 'Kotlin', 'Jetpack Compose'],
       ),
       ExperienceEntry(
         role: 'Software QA (Manual)',
@@ -224,7 +224,7 @@ const Map<String, PortfolioContent> kContent = {
           'FastAPI backend development',
           'Android test automation with ADB, Fastboot, UIAutomator2',
         ],
-        techs: ['Python', 'Scrapy', 'FastAPI', 'ADB', 'UIAutomator2'],
+        techs: ['Python', 'Scrapy', 'FastAPI', 'ADB', 'UIAutomator2', 'Network Testing' ],
       ),
       ExperienceEntry(
         role: 'Software Analyst (Kernel)',
@@ -238,14 +238,14 @@ const Map<String, PortfolioContent> kContent = {
         techs: ['Android Kernel', 'OTA', 'Firmware'],
       ),
       ExperienceEntry(
-        role: 'Data Analyst',
+        role: 'Android Developer intern',
         company: 'SEDUC',
         period: 'Oct 2021 – Aug 2022',
         bullets: [
-          'Maintenance reporting with Excel and Power BI',
-          'Data analysis and visualisation with Python and R',
+          'Maintenance of native apps with Flutter and Kotlin',
+          'Deploying updates to production',
         ],
-        techs: ['Python', 'R', 'Power BI', 'Excel'],
+        techs: ['Flutter', 'Kotlin', 'Android'],
       ),
     ],
     projects: [
@@ -294,22 +294,13 @@ const Map<String, PortfolioContent> kContent = {
     ],
     publishedApps: [
       PublishedApp(
-        name: 'Meu Ar Manaus',
+        name: 'Termofication',
         description:
-            'Civic application providing real-time air quality monitoring, health recommendations, and pollution warnings for the residents of Manaus, AM.',
-        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing'],
-        screenshotAsset: 'images/apps/meu_ar_manaus.png',
-        storeUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
-        repoUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
-      ),
-      PublishedApp(
-        name: 'NFC-Tools',
-        description:
-            'An intuitive tool for reading, writing, and formatting NFC tags directly from Android, featuring custom payload templates.',
-        techStack: ['Flutter', 'Android', 'NFC Core', 'Local Storage'],
-        screenshotAsset: 'images/apps/nfc_tools.png',
-        storeUrl: 'https://github.com/desodre/NFC-Tools',
-        repoUrl: 'https://github.com/desodre/NFC-Tools',
+            'A wordle-like puzzle game where players guess the correct word within a limited number of attempts. Multiplayer mode with real-time updates and a custom word list.',
+        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing', 'Real-time Updates', 'Google play services'],
+        screenshotAsset: 'images/apps/home_termo.png',
+        storeUrl: 'https://github.com/desodre/Termofication',
+        repoUrl: 'https://github.com/desodre/Termofication',
       ),
     ],
     skills: [
@@ -425,7 +416,7 @@ const Map<String, PortfolioContent> kContent = {
     contributionsMore: 'Mais',
     experiences: [
       ExperienceEntry(
-        role: 'Software QA Android (Automação)',
+        role: 'Android Developer',
         company: 'Eldorado',
         period: 'May 2024 – Present',
         isCurrent: true,
@@ -436,7 +427,7 @@ const Map<String, PortfolioContent> kContent = {
           'Apps multiplataforma com Flutter e Kotlin Native',
           'Serviços de backend com FastAPI',
         ],
-        techs: ['Python', 'Flutter', 'Kotlin', 'FastAPI', 'CTS/GTS/VTS'],
+        techs: ['Python', 'Flutter', 'Kotlin', 'FastAPI', 'CTS/GTS/VTS', 'Kotlin', 'Jetpack Compose'],
       ),
       ExperienceEntry(
         role: 'Software QA (Manual)',
@@ -452,7 +443,7 @@ const Map<String, PortfolioContent> kContent = {
         techs: ['Python', 'Scrapy', 'FastAPI', 'ADB', 'UIAutomator2'],
       ),
       ExperienceEntry(
-        role: 'Analista de Software (Kernel)',
+        role: 'Analista de Software Embarcado (Kernel)',
         company: 'Voltz Institute',
         period: 'Aug 2022 – Nov 2022',
         bullets: [
@@ -463,14 +454,14 @@ const Map<String, PortfolioContent> kContent = {
         techs: ['Android Kernel', 'OTA', 'Firmware'],
       ),
       ExperienceEntry(
-        role: 'Analista de Dados',
+        role: 'Android Developer intern',
         company: 'SEDUC',
         period: 'Oct 2021 – Aug 2022',
         bullets: [
-          'Relatórios de manutenção com Excel e Power BI',
-          'Análise de dados e visualização com Python e R',
+          'Manutenção de apps nativa com Flutter e Kotlin',
+          'Deploy de atualizações em produção',
         ],
-        techs: ['Python', 'R', 'Power BI', 'Excel'],
+        techs: ['Flutter', 'Kotlin', 'Android'],
       ),
     ],
     projects: [
@@ -519,23 +510,15 @@ const Map<String, PortfolioContent> kContent = {
     ],
     publishedApps: [
       PublishedApp(
-        name: 'Meu Ar Manaus',
+        name: 'Termofication',
         description:
-            'Aplicativo cívico que fornece monitoramento da qualidade do ar em tempo real, recomendações de saúde e avisos de poluição para os moradores de Manaus, AM.',
-        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing'],
-        screenshotAsset: 'images/apps/meu_ar_manaus.png',
-        storeUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
-        repoUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
+            'Um jogo de palavras estilo Wordle onde os jogadores tentam adivinhar a palavra correta em um número limitado de tentativas. Modo multiplayer com atualizações em tempo real e lista de palavras personalizada.',
+        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing', 'Real-time Updates', 'Google Play Services'],
+        screenshotAsset: 'images/apps/home_termo.png',
+        storeUrl: 'https://github.com/desodre/Termofication',
+        repoUrl: 'https://github.com/desodre/Termofication',
       ),
-      PublishedApp(
-        name: 'NFC-Tools',
-        description:
-            'Uma ferramenta intuitiva para ler, escrever e formatar tags NFC diretamente do Android, apresentando modelos de dados customizados.',
-        techStack: ['Flutter', 'Android', 'NFC Core', 'Local Storage'],
-        screenshotAsset: 'images/apps/nfc_tools.png',
-        storeUrl: 'https://github.com/desodre/NFC-Tools',
-        repoUrl: 'https://github.com/desodre/NFC-Tools',
-      ),
+      
     ],
     skills: [
       SkillCategory(
