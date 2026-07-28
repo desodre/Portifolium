@@ -85,12 +85,16 @@ class ContactSection extends StatelessComponent {
 
         // Footer Text
         div(classes: 'footer-text-row', [
-          Component.text('© 2026 Jhonatha Cirilo Sodre · '),
+          Component.text('© 2026 Jhonatha Sodre · '),
           span(
               classes: 'material-symbols-outlined icon',
               [Component.text('favorite')]),
-          Component.text(
-              ' ${content.contactBuiltWith.replaceAll("Flutter", "Jaspr")}'),
+          a(
+            classes: 'footer-link',
+            href: 'https://docs.jaspr.site/',
+            target: Target.blank,
+            [Component.text(' ${content.contactBuiltWith}')],
+          ),
         ]),
       ]),
     ]);
