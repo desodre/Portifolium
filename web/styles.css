@@ -1503,3 +1503,8 @@ a {
   }
 }
 
+.footer-link:hover {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
