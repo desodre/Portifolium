@@ -1869,6 +1869,12 @@ a {
   color: #A371F7;
 }
 
+.registry-badge.mavencentral {
+  background-color: rgba(199, 29, 35, 0.15);
+  border: 1px solid rgba(199, 29, 35, 0.4);
+  color: #C71D23;
+}
+
 .lib-link-icon {
   color: var(--text-secondary);
   transition: color 0.2s ease;
