@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart';
 import '../data/portfolio_data.dart';
@@ -15,13 +16,50 @@ class PublishedAppsSection extends StatefulComponent {
 class _PublishedAppsSectionState extends State<PublishedAppsSection> {
   AppCategory _activeCategory = AppCategory.mobile;
   int _activeSlideIndex = 0;
+  int _activeImageIndex = 0;
+  Timer? _slideshowTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startSlideshow();
+  }
+
+  void _startSlideshow() {
+    _slideshowTimer?.cancel();
+    final content = kContent[component.lang]!;
+    final filteredApps = content.publishedApps
+        .where((app) => app.category == _activeCategory)
+        .toList();
+    final safeIndex = filteredApps.isEmpty
+        ? 0
+        : (_activeSlideIndex >= filteredApps.length ? 0 : _activeSlideIndex);
+    if (filteredApps.isNotEmpty && filteredApps[safeIndex].screenshotAssets.length > 1) {
+      _slideshowTimer = Timer.periodic(const Duration(seconds: 2), (_) {
+        final apps = kContent[component.lang]!.publishedApps
+            .where((app) => app.category == _activeCategory)
+            .toList();
+        final idx = apps.isEmpty ? 0 : (_activeSlideIndex >= apps.length ? 0 : _activeSlideIndex);
+        if (apps.isNotEmpty) {
+          final totalImages = apps[idx].screenshotAssets.length;
+          if (totalImages > 1) {
+            setState(() {
+              _activeImageIndex = (_activeImageIndex + 1) % totalImages;
+            });
+          }
+        }
+      });
+    }
+  }
 
   void _selectCategory(AppCategory category) {
     if (_activeCategory != category) {
       setState(() {
         _activeCategory = category;
         _activeSlideIndex = 0;
+        _activeImageIndex = 0;
       });
+      _startSlideshow();
     }
   }
 
@@ -29,20 +67,32 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
     if (total <= 1) return;
     setState(() {
       _activeSlideIndex = (_activeSlideIndex - 1 + total) % total;
+      _activeImageIndex = 0;
     });
+    _startSlideshow();
   }
 
   void _nextSlide(int total) {
     if (total <= 1) return;
     setState(() {
       _activeSlideIndex = (_activeSlideIndex + 1) % total;
+      _activeImageIndex = 0;
     });
+    _startSlideshow();
   }
 
   void _goToSlide(int index) {
     setState(() {
       _activeSlideIndex = index;
+      _activeImageIndex = 0;
     });
+    _startSlideshow();
+  }
+
+  @override
+  void dispose() {
+    _slideshowTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -87,17 +137,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
             span([Component.text(content.categoryDesktop)]),
           ],
         ),
-        button(
-          classes:
-              'category-tab${_activeCategory == AppCategory.web ? ' active' : ''}',
-          events: {'click': (e) => _selectCategory(AppCategory.web)},
-          [
-            span(
-                classes: 'material-symbols-outlined icon',
-                [Component.text('language')]),
-            span([Component.text(content.categoryWeb)]),
-          ],
-        ),
+        // Web tab removed — kept in data model for future use
       ]),
 
       // ── Carousel Container ──────────────────────────────────────────────────
@@ -200,7 +240,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
         ]),
 
       // ───────────────────────────────────────────────────────────────────────
-      // ── SUBSECTION: Open Source & Bibliotecas ──────────────────────────────
+      // ── SUBSECTION: Devs4Devs ──────────────────────────────────────────────
       // ───────────────────────────────────────────────────────────────────────
       div(classes: 'opensource-section-block', [
         div(classes: 'section-header-block sub-header', [
@@ -220,7 +260,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
             div(classes: 'library-card', [
               div(classes: 'lib-card-header', [
                 span(
-                  classes: 'registry-badge ${lib.registry.toLowerCase().replaceAll('.', '')}',
+                  classes: 'registry-badge ${lib.registry.toLowerCase().replaceAll('.', '').replaceAll(' ', '')}',
                   [Component.text(lib.badgeText ?? lib.registry)],
                 ),
                 a(
@@ -247,6 +287,17 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
     ]);
   }
 
+  /// Builds a list of stacked image layers for slideshow fade effect
+  List<Component> _buildScreenImages(List<String> assets) {
+    return [
+      for (var i = 0; i < assets.length; i++)
+        img(
+          src: assets[i],
+          classes: 'screen-image${_activeImageIndex == i ? ' active' : ''}',
+        ),
+    ];
+  }
+
   Component _buildDeviceMockup(PublishedApp app) {
     switch (app.category) {
       case AppCategory.mobile:
@@ -258,10 +309,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
             div(classes: 'phone-power-button', []),
             div(
               classes: 'phone-screen',
-              styles: Styles(raw: {
-                'background-image': "url('${app.screenshotAsset}')",
-              }),
-              [],
+              _buildScreenImages(app.screenshotAssets),
             ),
           ]),
         ]);
@@ -274,10 +322,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
             ]),
             div(
               classes: 'laptop-screen',
-              styles: Styles(raw: {
-                'background-image': "url('${app.screenshotAsset}')",
-              }),
-              [],
+              _buildScreenImages(app.screenshotAssets),
             ),
             div(classes: 'laptop-keyboard-base', [
               div(classes: 'laptop-notch-indent', []),
@@ -303,10 +348,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
             ]),
             div(
               classes: 'browser-screen',
-              styles: Styles(raw: {
-                'background-image': "url('${app.screenshotAsset}')",
-              }),
-              [],
+              _buildScreenImages(app.screenshotAssets),
             ),
           ]),
         ]);

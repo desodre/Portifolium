@@ -36,7 +36,7 @@ class PublishedApp {
   final String name;
   final String description;
   final List<String> techStack;
-  final String screenshotAsset;
+  final List<String> screenshotAssets;
   final String storeUrl;
   final String? repoUrl;
   final AppCategory category;
@@ -46,7 +46,7 @@ class PublishedApp {
     required this.name,
     required this.description,
     required this.techStack,
-    required this.screenshotAsset,
+    required this.screenshotAssets,
     required this.storeUrl,
     this.repoUrl,
     this.category = AppCategory.mobile,
@@ -340,7 +340,7 @@ const Map<String, PortfolioContent> kContent = {
         description:
             'A Wordle-inspired puzzle game where players guess words within limited attempts. Features real-time multiplayer, custom word lists, and smooth animations.',
         techStack: ['Flutter', 'Android', 'REST API', 'Real-time', 'Play Services'],
-        screenshotAsset: 'images/apps/home_termo.png',
+        screenshotAssets: ['images/apps/home_termo.png'],
         storeUrl: 'https://github.com/desodre/Termofication',
         repoUrl: 'https://github.com/desodre/Termofication',
         category: AppCategory.mobile,
@@ -350,19 +350,9 @@ const Map<String, PortfolioContent> kContent = {
         description:
             'A modern Flutter application for reading, writing, and managing NFC tags on Android devices with custom payload templates.',
         techStack: ['Flutter', 'Android', 'NFC Core', 'Local Storage'],
-        screenshotAsset: 'images/apps/nfc_manager_home.png',
+        screenshotAssets: ['images/apps/nfc_manager_home.png'],
         storeUrl: 'https://github.com/desodre/NFC-Manager',
         repoUrl: 'https://github.com/desodre/NFC-Manager',
-        category: AppCategory.mobile,
-      ),
-      PublishedApp(
-        name: 'Meu Ar Manaus',
-        description:
-            'Civic application providing real-time air quality monitoring, health recommendations, and pollution warnings for residents of Manaus, AM.',
-        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing'],
-        screenshotAsset: 'images/apps/meu_ar_manaus.png',
-        storeUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
-        repoUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
         category: AppCategory.mobile,
       ),
       // Desktop
@@ -371,32 +361,16 @@ const Map<String, PortfolioContent> kContent = {
         description:
             'Powerful desktop GUI application for inspecting Android UI hierarchies, real-time Logcat logging, system properties, and hardware specifications via ADB & UIAutomator2. Coming soon to Flathub.',
         techStack: ['Flutter Desktop', 'ADB', 'UIAutomator2', 'Linux', 'Flathub'],
-        screenshotAsset: 'images/apps/Android_Inspecs_hierarquia.png',
+        screenshotAssets: [
+          'images/apps/Android_Inspecs_hierarquia.png',
+          'images/apps/Android_Inspecs_logcat.png',
+          'images/apps/Android_Inspecs_props.png',
+          'images/apps/Android_Inspecs_specs.png',
+        ],
         storeUrl: 'https://github.com/desodre/Android-Inspec',
         repoUrl: 'https://github.com/desodre/Android-Inspec',
         category: AppCategory.desktop,
         badgeNote: 'Coming soon to Flathub',
-      ),
-      PublishedApp(
-        name: 'Nexus CTS Desktop',
-        description:
-            'Desktop management portal aggregating Google Android test suites (CTS, GTS, VTS) for automated compliance validation and report analytics.',
-        techStack: ['Dart', 'Flutter Desktop', 'Python', 'ADB'],
-        screenshotAsset: 'images/apps/Android_Inspecs_specs.png',
-        storeUrl: 'https://github.com/desodre/nexus_cts',
-        repoUrl: 'https://github.com/desodre/nexus_cts',
-        category: AppCategory.desktop,
-      ),
-      // Web
-      PublishedApp(
-        name: 'Portifolium Web',
-        description:
-            'High-performance personal developer portfolio built with Jaspr static pre-rendering, custom CSS 3D device mockups, and instant theme toggling.',
-        techStack: ['Dart', 'Jaspr', 'HTML5/CSS3', 'Vercel'],
-        screenshotAsset: 'images/apps/nfc_manager_home.png',
-        storeUrl: 'https://github.com/desodre/Portifolium',
-        repoUrl: 'https://github.com/desodre/Portifolium',
-        category: AppCategory.web,
       ),
     ],
     openSourceLibraries: [
@@ -654,7 +628,7 @@ const Map<String, PortfolioContent> kContent = {
         description:
             'Um jogo de adivinhação de palavras estilo Wordle. Conta com modo multijogador em tempo real, lista de palavras personalizadas e animações fluidas.',
         techStack: ['Flutter', 'Android', 'REST API', 'Real-time', 'Play Services'],
-        screenshotAsset: 'images/apps/home_termo.png',
+        screenshotAssets: ['images/apps/home_termo.png'],
         storeUrl: 'https://github.com/desodre/Termofication',
         repoUrl: 'https://github.com/desodre/Termofication',
         category: AppCategory.mobile,
@@ -664,19 +638,9 @@ const Map<String, PortfolioContent> kContent = {
         description:
             'Um aplicativo Android moderno em Flutter para leitura, escrita e gerenciamento de tags NFC com modelos de dados customizados.',
         techStack: ['Flutter', 'Android', 'NFC Core', 'Local Storage'],
-        screenshotAsset: 'images/apps/nfc_manager_home.png',
+        screenshotAssets: ['images/apps/nfc_manager_home.png'],
         storeUrl: 'https://github.com/desodre/NFC-Manager',
         repoUrl: 'https://github.com/desodre/NFC-Manager',
-        category: AppCategory.mobile,
-      ),
-      PublishedApp(
-        name: 'Meu Ar Manaus',
-        description:
-            'Aplicativo cívico que fornece monitoramento da qualidade do ar em tempo real, recomendações de saúde e avisos de poluição para os moradores de Manaus, AM.',
-        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing'],
-        screenshotAsset: 'images/apps/meu_ar_manaus.png',
-        storeUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
-        repoUrl: 'https://github.com/desodre/Meu_Ar_Manaus',
         category: AppCategory.mobile,
       ),
       // Desktop
@@ -685,32 +649,16 @@ const Map<String, PortfolioContent> kContent = {
         description:
             'Ferramenta desktop para inspeção da hierarquia de UI do Android, visualização de Logcat em tempo real, propriedades do sistema e especificações de hardware via ADB e UIAutomator2. Em breve no Flathub.',
         techStack: ['Flutter Desktop', 'ADB', 'UIAutomator2', 'Linux', 'Flathub'],
-        screenshotAsset: 'images/apps/Android_Inspecs_hierarquia.png',
+        screenshotAssets: [
+          'images/apps/Android_Inspecs_hierarquia.png',
+          'images/apps/Android_Inspecs_logcat.png',
+          'images/apps/Android_Inspecs_props.png',
+          'images/apps/Android_Inspecs_specs.png',
+        ],
         storeUrl: 'https://github.com/desodre/Android-Inspec',
         repoUrl: 'https://github.com/desodre/Android-Inspec',
         category: AppCategory.desktop,
         badgeNote: 'Em breve no Flathub',
-      ),
-      PublishedApp(
-        name: 'Nexus CTS Desktop',
-        description:
-            'Portal de gerenciamento desktop que agrega as suítes de testes Android do Google (CTS, GTS, VTS) para automação de conformidade e relatórios.',
-        techStack: ['Dart', 'Flutter Desktop', 'Python', 'ADB'],
-        screenshotAsset: 'images/apps/Android_Inspecs_specs.png',
-        storeUrl: 'https://github.com/desodre/nexus_cts',
-        repoUrl: 'https://github.com/desodre/nexus_cts',
-        category: AppCategory.desktop,
-      ),
-      // Web
-      PublishedApp(
-        name: 'Portifolium Web',
-        description:
-            'Portfólio de desenvolvedor de alta performance desenvolvido com renderização estática em Jaspr, mockups 3D em CSS e alternância instantânea de temas.',
-        techStack: ['Dart', 'Jaspr', 'HTML5/CSS3', 'Vercel'],
-        screenshotAsset: 'images/apps/nfc_manager_home.png',
-        storeUrl: 'https://github.com/desodre/Portifolium',
-        repoUrl: 'https://github.com/desodre/Portifolium',
-        category: AppCategory.web,
       ),
     ],
     openSourceLibraries: [

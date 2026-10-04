@@ -21,8 +21,6 @@ void main() {
           href:
               'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0'),
       link(rel: 'icon', type: 'image/svg+xml', href: 'favicon.svg'),
-      link(rel: 'apple-touch-icon', href: 'icons/Icon-192.png'),
-      link(rel: 'manifest', href: 'manifest.json'),
     ],
     body: const App(),
   ));

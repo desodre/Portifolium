@@ -1466,13 +1466,25 @@ a {
   width: 100%;
   height: 100%;
   border-radius: 29px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   overflow: hidden;
   position: relative;
   background-color: #000;
   box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.screen-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.screen-image.active {
+  opacity: 1;
 }
 
 /* Responsive styles */
@@ -1683,13 +1695,13 @@ a {
 
 .laptop-screen {
   width: 100%;
-  height: 220px;
+  aspect-ratio: 16 / 10;
+  box-sizing: border-box;
   background-color: #000;
   border-left: 8px solid #1f2328;
   border-right: 8px solid #1f2328;
-  background-size: cover;
-  background-position: top center;
-  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
   box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
 }
 
@@ -1789,10 +1801,9 @@ a {
 }
 
 .browser-screen {
+  position: relative;
+  overflow: hidden;
   flex-grow: 1;
-  background-size: cover;
-  background-position: top center;
-  background-repeat: no-repeat;
   background-color: #0d1117;
 }
 
