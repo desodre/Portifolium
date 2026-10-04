@@ -1466,13 +1466,25 @@ a {
   width: 100%;
   height: 100%;
   border-radius: 29px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   overflow: hidden;
   position: relative;
   background-color: #000;
   box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.screen-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.screen-image.active {
+  opacity: 1;
 }
 
 /* Responsive styles */
@@ -1494,14 +1506,420 @@ a {
     justify-content: center;
   }
   
-  .phone-device {
-    transform: rotateY(0) rotateX(0) rotateZ(0);
+  .phone-device, .laptop-device, .browser-device {
+    transform: rotateY(0) rotateX(0) rotateZ(0) !important;
   }
   
-  .phone-device:hover {
-    transform: scale(1.02);
+  .phone-device:hover, .laptop-device:hover, .browser-device:hover {
+    transform: scale(1.02) !important;
   }
 }
+
+/* ==========================================================================
+   Category Selector Tabs & Carousel Navigation Controls
+   ========================================================================== */
+.apps-category-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.category-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  color: var(--text-secondary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.category-tab .icon {
+  font-size: 18px;
+}
+
+.category-tab:hover {
+  border-color: var(--accent-alpha-35);
+  color: var(--text-primary);
+  background-color: var(--card);
+}
+
+.category-tab.active {
+  background-color: var(--accent-alpha-15);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 4px 16px var(--accent-alpha-25);
+}
+
+.carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.carousel-slide-content {
+  flex-grow: 1;
+  width: 100%;
+}
+
+.carousel-nav-btn {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.carousel-nav-btn:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--background);
+  box-shadow: 0 4px 16px var(--shadow-color-glow);
+}
+
+@media (max-width: 600px) {
+  .carousel-nav-btn {
+    display: none;
+  }
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+  margin-bottom: 60px;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--border);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+  background-color: var(--accent);
+  width: 28px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px var(--accent-alpha-35);
+}
+
+/* App Header & Badge Note */
+.app-title-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.app-badge-note {
+  padding: 4px 10px;
+  background-color: rgba(255, 179, 0, 0.15);
+  border: 1px solid rgba(255, 179, 0, 0.4);
+  color: #FFB300;
+  border-radius: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ==========================================================================
+   3D Laptop Mockup (Desktop Software)
+   ========================================================================== */
+.laptop-perspective {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  padding: 20px 0;
+}
+
+.laptop-device {
+  position: relative;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-style: preserve-3d;
+  transform: rotateY(-14deg) rotateX(7deg) rotateZ(-1deg);
+  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.6s ease;
+}
+
+.laptop-device:hover {
+  transform: rotateY(-2deg) rotateX(2deg) scale(1.03);
+}
+
+.laptop-topbar {
+  width: 100%;
+  height: 16px;
+  background-color: #1f2328;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #30363d;
+  border-bottom: none;
+}
+
+.laptop-camera-dot {
+  width: 5px;
+  height: 5px;
+  background-color: #0d1117;
+  border-radius: 50%;
+}
+
+.laptop-screen {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  box-sizing: border-box;
+  background-color: #000;
+  border-left: 8px solid #1f2328;
+  border-right: 8px solid #1f2328;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.laptop-keyboard-base {
+  width: 420px;
+  height: 18px;
+  background: linear-gradient(180deg, #2d333b 0%, #1c2128 100%);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border: 1px solid #444c56;
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  left: -30px;
+  display: flex;
+  justify-content: center;
+}
+
+.laptop-notch-indent {
+  width: 60px;
+  height: 5px;
+  background-color: #161b22;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+/* ==========================================================================
+   3D Browser Frame Mockup (Web Projects)
+   ========================================================================== */
+.browser-perspective {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  padding: 20px 0;
+}
+
+.browser-device {
+  width: 360px;
+  height: 250px;
+  background-color: #161b22;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px var(--shadow-color-glow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+  transform: rotateY(-12deg) rotateX(6deg);
+  transition: transform 0.6s ease, box-shadow 0.6s ease;
+}
+
+.browser-device:hover {
+  transform: rotateY(-2deg) rotateX(2deg) scale(1.03);
+}
+
+.browser-topbar {
+  height: 32px;
+  background-color: #0d1117;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 12px;
+}
+
+.browser-traffic-lights {
+  display: flex;
+  gap: 6px;
+}
+
+.browser-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.browser-dot.red { background-color: #FF5F56; }
+.browser-dot.yellow { background-color: #FFBD2E; }
+.browser-dot.green { background-color: #27C93F; }
+
+.browser-addressbar {
+  flex-grow: 1;
+  background-color: #161b22;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.browser-url-text {
+  color: var(--text-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+}
+
+.browser-screen {
+  position: relative;
+  overflow: hidden;
+  flex-grow: 1;
+  background-color: #0d1117;
+}
+
+/* ==========================================================================
+   Open Source Libraries Subsection
+   ========================================================================== */
+.opensource-section-block {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px dashed var(--border);
+}
+
+.opensource-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .opensource-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.library-card {
+  padding: 24px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+}
+
+.library-card:hover {
+  background-color: var(--card);
+  border-color: var(--accent);
+  box-shadow: 0 10px 30px var(--shadow-color-hover);
+  transform: translateY(-4px);
+}
+
+.lib-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.registry-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.registry-badge.pubdev {
+  background-color: rgba(1, 87, 155, 0.15);
+  border: 1px solid rgba(1, 87, 155, 0.4);
+  color: #0175C2;
+}
+
+.registry-badge.pypi {
+  background-color: rgba(55, 115, 162, 0.15);
+  border: 1px solid rgba(255, 212, 59, 0.4);
+  color: #FFD43B;
+}
+
+.registry-badge.github {
+  background-color: rgba(137, 87, 229, 0.15);
+  border: 1px solid rgba(137, 87, 229, 0.4);
+  color: #A371F7;
+}
+
+.registry-badge.mavencentral {
+  background-color: rgba(199, 29, 35, 0.15);
+  border: 1px solid rgba(199, 29, 35, 0.4);
+  color: #C71D23;
+}
+
+.lib-link-icon {
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+}
+
+.library-card:hover .lib-link-icon {
+  color: var(--accent);
+}
+
+.lib-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.library-card:hover .lib-name {
+  color: var(--accent);
+}
+
+.lib-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 18px 0;
+  flex-grow: 1;
+}
+
+.lib-techs {
+  margin-top: auto;
+}
+
 
 .footer-link:hover {
   color: var(--accent);

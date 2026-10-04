@@ -30,21 +30,45 @@ class ProjectEntry {
   });
 }
 
+enum AppCategory { mobile, desktop, web }
+
 class PublishedApp {
   final String name;
   final String description;
   final List<String> techStack;
-  final String screenshotAsset;
+  final List<String> screenshotAssets;
   final String storeUrl;
   final String? repoUrl;
+  final AppCategory category;
+  final String? badgeNote;
 
   const PublishedApp({
     required this.name,
     required this.description,
     required this.techStack,
-    required this.screenshotAsset,
+    required this.screenshotAssets,
     required this.storeUrl,
     this.repoUrl,
+    this.category = AppCategory.mobile,
+    this.badgeNote,
+  });
+}
+
+class OpenSourceLibrary {
+  final String name;
+  final String description;
+  final String registry; // 'pub.dev', 'PyPI', 'GitHub'
+  final String url;
+  final List<String> techStack;
+  final String? badgeText;
+
+  const OpenSourceLibrary({
+    required this.name,
+    required this.description,
+    required this.registry,
+    required this.url,
+    required this.techStack,
+    this.badgeText,
   });
 }
 
@@ -89,6 +113,7 @@ class PortfolioContent {
   final List<ExperienceEntry> experiences;
   final List<ProjectEntry> projects;
   final List<PublishedApp> publishedApps;
+  final List<OpenSourceLibrary> openSourceLibraries;
   final List<SkillCategory> skills;
   final List<EducationEntry> education;
   final List<CourseEntry> courses;
@@ -102,6 +127,11 @@ class PortfolioContent {
   final String sectionProjectsSubtitle;
   final String sectionPublishedApps;
   final String sectionPublishedAppsSubtitle;
+  final String categoryMobile;
+  final String categoryDesktop;
+  final String categoryWeb;
+  final String sectionOpenSourceTitle;
+  final String sectionOpenSourceSubtitle;
   final String sectionSkills;
   final String sectionSkillsSubtitle;
   final String sectionEducation;
@@ -124,6 +154,7 @@ class PortfolioContent {
     required this.experiences,
     required this.projects,
     required this.publishedApps,
+    required this.openSourceLibraries,
     required this.skills,
     required this.education,
     required this.courses,
@@ -136,6 +167,11 @@ class PortfolioContent {
     required this.sectionProjectsSubtitle,
     required this.sectionPublishedApps,
     required this.sectionPublishedAppsSubtitle,
+    required this.categoryMobile,
+    required this.categoryDesktop,
+    required this.categoryWeb,
+    required this.sectionOpenSourceTitle,
+    required this.sectionOpenSourceSubtitle,
     required this.sectionSkills,
     required this.sectionSkillsSubtitle,
     required this.sectionEducation,
@@ -181,8 +217,13 @@ const Map<String, PortfolioContent> kContent = {
     sectionExperienceSubtitle: 'Professional history & achievements',
     sectionProjects: 'Projects',
     sectionProjectsSubtitle: 'Open-source work & personal builds',
-    sectionPublishedApps: 'Published Apps',
-    sectionPublishedAppsSubtitle: 'Mobile applications available on app stores or as public builds',
+    sectionPublishedApps: 'Apps & Software',
+    sectionPublishedAppsSubtitle: 'Mobile applications, desktop software, and web projects',
+    categoryMobile: 'Mobile Apps',
+    categoryDesktop: 'Desktop Apps',
+    categoryWeb: 'Web & Sites',
+    sectionOpenSourceTitle: 'Devs4Devs',
+    sectionOpenSourceSubtitle: 'Free & open-source packages created for developers',
     sectionSkills: 'Skills',
     sectionSkillsSubtitle: 'Technologies and tools I work with',
     sectionEducation: 'Education',
@@ -293,14 +334,81 @@ const Map<String, PortfolioContent> kContent = {
       ),
     ],
     publishedApps: [
+      // Mobile
       PublishedApp(
         name: 'Termofication',
         description:
-            'A wordle-like puzzle game where players guess the correct word within a limited number of attempts. Multiplayer mode with real-time updates and a custom word list.',
-        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing', 'Real-time Updates', 'Google play services'],
-        screenshotAsset: 'images/apps/home_termo.png',
+            'A Wordle-inspired puzzle game where players guess words within limited attempts. Features real-time multiplayer, custom word lists, and smooth animations.',
+        techStack: ['Flutter', 'Android', 'REST API', 'Real-time', 'Play Services'],
+        screenshotAssets: ['images/apps/home_termo.png'],
         storeUrl: 'https://github.com/desodre/Termofication',
         repoUrl: 'https://github.com/desodre/Termofication',
+        category: AppCategory.mobile,
+      ),
+      PublishedApp(
+        name: 'NFC Manager',
+        description:
+            'A modern Flutter application for reading, writing, and managing NFC tags on Android devices with custom payload templates.',
+        techStack: ['Flutter', 'Android', 'NFC Core', 'Local Storage'],
+        screenshotAssets: ['images/apps/nfc_manager_home.png'],
+        storeUrl: 'https://github.com/desodre/NFC-Manager',
+        repoUrl: 'https://github.com/desodre/NFC-Manager',
+        category: AppCategory.mobile,
+      ),
+      // Desktop
+      PublishedApp(
+        name: 'Android Inspect',
+        description:
+            'Powerful desktop GUI application for inspecting Android UI hierarchies, real-time Logcat logging, system properties, and hardware specifications via ADB & UIAutomator2. Coming soon to Flathub.',
+        techStack: ['Flutter Desktop', 'ADB', 'UIAutomator2', 'Linux', 'Flathub'],
+        screenshotAssets: [
+          'images/apps/Android_Inspecs_hierarquia.png',
+          'images/apps/Android_Inspecs_logcat.png',
+          'images/apps/Android_Inspecs_props.png',
+          'images/apps/Android_Inspecs_specs.png',
+        ],
+        storeUrl: 'https://github.com/desodre/Android-Inspec',
+        repoUrl: 'https://github.com/desodre/Android-Inspec',
+        category: AppCategory.desktop,
+        badgeNote: 'Coming soon to Flathub',
+      ),
+    ],
+    openSourceLibraries: [
+      OpenSourceLibrary(
+        name: 'adb_utils',
+        description:
+            'Open-source Dart package wrapping Android Debug Bridge (ADB) commands for seamless device automation directly from Dart & Flutter code.',
+        registry: 'pub.dev',
+        url: 'https://pub.dev/packages/adb_utils',
+        techStack: ['Dart', 'ADB', 'Pub.dev'],
+        badgeText: 'pub.dev package',
+      ),
+      OpenSourceLibrary(
+        name: 'geppetto-android',
+        description:
+            'Python UI automation framework for Android devices. Provides high-level Python APIs orchestrating ADB, Fastboot, and UIAutomator2.',
+        registry: 'PyPI',
+        url: 'https://pypi.org/project/geppetto-android/',
+        techStack: ['Python', 'PyPI', 'UIAutomator2', 'ADB'],
+        badgeText: 'PyPI package',
+      ),
+      OpenSourceLibrary(
+        name: 'fast_bridge',
+        description:
+            'Cross-platform bridge server & client providing FastAPI REST endpoints to execute ADB & UIAutomator2 actions remotely.',
+        registry: 'GitHub',
+        url: 'https://github.com/desodre/fast_bridge',
+        techStack: ['Python', 'FastAPI', 'Flutter', 'ADB'],
+        badgeText: 'Open Source Repo',
+      ),
+      OpenSourceLibrary(
+        name: 'adb-utils-gradle-package',
+        description:
+            'Open-source Kotlin library for Android Debug Bridge (ADB) automation, published on Maven Central for Java & Kotlin developers.',
+        registry: 'Maven Central',
+        url: 'https://github.com/desodre/adb-utils-gradle-package',
+        techStack: ['Kotlin', 'Java', 'ADB', 'Maven Central'],
+        badgeText: 'Maven Central',
       ),
     ],
     skills: [
@@ -397,8 +505,13 @@ const Map<String, PortfolioContent> kContent = {
     sectionExperienceSubtitle: 'Histórico profissional e conquistas',
     sectionProjects: 'Projetos',
     sectionProjectsSubtitle: 'Trabalho open-source e criações pessoais',
-    sectionPublishedApps: 'Apps Publicados',
-    sectionPublishedAppsSubtitle: 'Aplicativos móveis disponíveis em lojas ou como builds públicas',
+    sectionPublishedApps: 'Apps & Softwares',
+    sectionPublishedAppsSubtitle: 'Aplicativos móveis, programas desktop e projetos web',
+    categoryMobile: 'Apps Mobile',
+    categoryDesktop: 'Softwares Desktop',
+    categoryWeb: 'Sites & Web',
+    sectionOpenSourceTitle: 'Devs4Devs',
+    sectionOpenSourceSubtitle: 'Bibliotecas e pacotes gratuitos desenvolvidos para a comunidade',
     sectionSkills: 'Habilidades',
     sectionSkillsSubtitle: 'Tecnologias e ferramentas com que trabalho',
     sectionEducation: 'Formação',
@@ -509,16 +622,82 @@ const Map<String, PortfolioContent> kContent = {
       ),
     ],
     publishedApps: [
+      // Mobile
       PublishedApp(
         name: 'Termofication',
         description:
-            'Um jogo de palavras estilo Wordle onde os jogadores tentam adivinhar a palavra correta em um número limitado de tentativas. Modo multiplayer com atualizações em tempo real e lista de palavras personalizada.',
-        techStack: ['Flutter', 'Android', 'REST API', 'Data Parsing', 'Real-time Updates', 'Google Play Services'],
-        screenshotAsset: 'images/apps/home_termo.png',
+            'Um jogo de adivinhação de palavras estilo Wordle. Conta com modo multijogador em tempo real, lista de palavras personalizadas e animações fluidas.',
+        techStack: ['Flutter', 'Android', 'REST API', 'Real-time', 'Play Services'],
+        screenshotAssets: ['images/apps/home_termo.png'],
         storeUrl: 'https://github.com/desodre/Termofication',
         repoUrl: 'https://github.com/desodre/Termofication',
+        category: AppCategory.mobile,
       ),
-      
+      PublishedApp(
+        name: 'NFC Manager',
+        description:
+            'Um aplicativo Android moderno em Flutter para leitura, escrita e gerenciamento de tags NFC com modelos de dados customizados.',
+        techStack: ['Flutter', 'Android', 'NFC Core', 'Local Storage'],
+        screenshotAssets: ['images/apps/nfc_manager_home.png'],
+        storeUrl: 'https://github.com/desodre/NFC-Manager',
+        repoUrl: 'https://github.com/desodre/NFC-Manager',
+        category: AppCategory.mobile,
+      ),
+      // Desktop
+      PublishedApp(
+        name: 'Android Inspect',
+        description:
+            'Ferramenta desktop para inspeção da hierarquia de UI do Android, visualização de Logcat em tempo real, propriedades do sistema e especificações de hardware via ADB e UIAutomator2. Em breve no Flathub.',
+        techStack: ['Flutter Desktop', 'ADB', 'UIAutomator2', 'Linux', 'Flathub'],
+        screenshotAssets: [
+          'images/apps/Android_Inspecs_hierarquia.png',
+          'images/apps/Android_Inspecs_logcat.png',
+          'images/apps/Android_Inspecs_props.png',
+          'images/apps/Android_Inspecs_specs.png',
+        ],
+        storeUrl: 'https://github.com/desodre/Android-Inspec',
+        repoUrl: 'https://github.com/desodre/Android-Inspec',
+        category: AppCategory.desktop,
+        badgeNote: 'Em breve no Flathub',
+      ),
+    ],
+    openSourceLibraries: [
+      OpenSourceLibrary(
+        name: 'adb_utils',
+        description:
+            'Pacote Dart open-source que encapsula comandos do Android Debug Bridge (ADB) para automação de dispositivos diretamente a partir de código Dart/Flutter.',
+        registry: 'pub.dev',
+        url: 'https://pub.dev/packages/adb_utils',
+        techStack: ['Dart', 'ADB', 'Pub.dev'],
+        badgeText: 'Pacote pub.dev',
+      ),
+      OpenSourceLibrary(
+        name: 'geppetto-android',
+        description:
+            'Framework Python de automação de UI para dispositivos Android. Fornece APIs de alto nível orquestrando ADB, Fastboot e UIAutomator2.',
+        registry: 'PyPI',
+        url: 'https://pypi.org/project/geppetto-android/',
+        techStack: ['Python', 'PyPI', 'UIAutomator2', 'ADB'],
+        badgeText: 'Pacote PyPI',
+      ),
+      OpenSourceLibrary(
+        name: 'fast_bridge',
+        description:
+            'Servidor e cliente de ponte multiplataforma fornecendo endpoints REST FastAPI para executar ações ADB e UIAutomator2 remotamente.',
+        registry: 'GitHub',
+        url: 'https://github.com/desodre/fast_bridge',
+        techStack: ['Python', 'FastAPI', 'Flutter', 'ADB'],
+        badgeText: 'Repositório Open Source',
+      ),
+      OpenSourceLibrary(
+        name: 'adb-utils-gradle-package',
+        description:
+            'Biblioteca Kotlin open-source para automação do Android Debug Bridge (ADB), disponibilizada no Maven Central para Java e Kotlin.',
+        registry: 'Maven Central',
+        url: 'https://github.com/desodre/adb-utils-gradle-package',
+        techStack: ['Kotlin', 'Java', 'ADB', 'Maven Central'],
+        badgeText: 'Maven Central',
+      ),
     ],
     skills: [
       SkillCategory(
