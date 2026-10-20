@@ -326,6 +326,12 @@ a {
   margin: 0;
 }
 
+@media (max-width: 600px) {
+  .section-title-text {
+    font-size: 26px;
+  }
+}
+
 .section-subtitle-text {
   font-family: 'Inter', sans-serif;
   font-size: 15px;
@@ -469,8 +475,15 @@ a {
 .hero-social-wrap {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
   margin-bottom: 20px;
+}
+
+@media (min-width: 769px) {
+  .hero-social-wrap {
+    justify-content: flex-start;
+  }
 }
 
 .hero-cta-row {
@@ -614,8 +627,9 @@ a {
 
 .exp-meta-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 4px 8px;
   color: var(--text-secondary);
   font-size: 13px;
   margin-bottom: 16px;
@@ -1247,6 +1261,17 @@ a {
   transition: all 0.2s ease-in-out;
 }
 
+@media (max-width: 600px) {
+  .contact-buttons-wrap {
+    gap: 12px;
+  }
+
+  .contact-btn {
+    width: calc(50% - 6px);
+    padding: 16px 12px;
+  }
+}
+
 .contact-btn:hover {
   background-color: var(--accent);
   border-color: var(--accent);
@@ -1496,14 +1521,49 @@ a {
     margin-bottom: 60px;
   }
   
+  .app-info-col,
+  .app-mockup-col {
+    width: 100%;
+    min-width: 0;
+  }
+
   .app-info-col {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-  
+
+  .app-title-header,
+  .app-tech-chips,
   .app-actions-wrap {
     justify-content: center;
+  }
+
+  .app-row-title {
+    font-size: 26px;
+  }
+
+  .laptop-perspective,
+  .browser-perspective {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .laptop-device,
+  .browser-device {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .browser-device {
+    height: auto;
+    aspect-ratio: 36 / 25;
+  }
+
+  .laptop-keyboard-base {
+    width: calc(100% + 24px);
+    left: 0;
   }
   
   .phone-device, .laptop-device, .browser-device {
@@ -1540,6 +1600,17 @@ a {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;
+}
+
+@media (max-width: 600px) {
+  .apps-category-tabs {
+    gap: 8px;
+  }
+
+  .category-tab {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
 }
 
 .category-tab .icon {
