@@ -202,6 +202,176 @@ const String kAvatarUrl =
     'https://avatars.githubusercontent.com/u/108944889?v=4';
 const String apiBaseContributions =
     'https://github-contributions-api.jogruber.de/v4/desodre';
+
+// Technology names are shared so both languages expose the same skills.
+const kLanguageSkills = [
+  'Python',
+  'Dart',
+  'Kotlin',
+  'Rust',
+  'Java',
+  'Swift',
+  'JavaScript',
+  'SQL',
+  'R',
+  'Shell',
+];
+
+const kMobileSkills = [
+  'Flutter',
+  'Kotlin Multiplatform',
+  'Compose Multiplatform',
+  'Jetpack Compose',
+  'Material 3',
+  'SwiftUI',
+  'Koin',
+  'Coroutines',
+  'StateFlow',
+  'ViewModel',
+  'Navigation Compose',
+  'kotlinx.serialization',
+  'kotlinx-datetime',
+  'Firebase Analytics',
+  'MapLibre',
+];
+
+const kBackendSkills = [
+  'Django',
+  'Django REST Framework',
+  'Django Ninja',
+  'FastAPI',
+  'Django Channels',
+  'Celery',
+  'Celery Beat',
+  'RabbitMQ',
+  'Scrapy',
+  'Gunicorn',
+  'Daphne',
+  'Uvicorn',
+  'WhiteNoise',
+  'Flower',
+];
+
+const kWebSkills = [
+  'HTML5',
+  'CSS3',
+  'Django Templates',
+  'HTMX',
+  'Tailwind CSS',
+  'Alpine.js',
+  'jQuery',
+  'Chart.js',
+  'DataTables',
+  'Tom Select',
+  'Choices.js',
+  'Tribute.js',
+  'Signature Pad',
+  'PWA',
+  'Web Push',
+  'PostCSS',
+  'Autoprefixer',
+];
+
+const kDatabaseSkills = [
+  'PostgreSQL',
+  'SQL Server',
+  'MySQL',
+  'SQLite',
+  'MongoDB',
+  'Redis',
+  'Memcached',
+];
+
+const kArchitectureSkills = [
+  'MVVM',
+  'Unidirectional Data Flow',
+  'Dependency Injection',
+  'REST APIs',
+  'OpenAPI',
+  'OpenAPI Generator',
+  'Retrofit',
+  'OkHttp',
+  'WebSockets',
+  'JWT',
+  'HTTPX',
+  'Requests',
+];
+
+const kNativeSkills = [
+  'Android NDK',
+  'Binder',
+  'Rust FFI',
+  'Serde',
+  'serde_json',
+  'Android Keystore',
+  'iOS Keychain',
+  'AES-GCM',
+  'OpenGL',
+  'CTS/GTS/VTS',
+  'Linux Kernel',
+  'Firmware',
+  'Sensors',
+];
+
+const kTestingSkills = [
+  'pytest',
+  'pytest-django',
+  'unittest',
+  'Robot Framework',
+  'UIAutomator',
+  'UIAutomator2',
+  'JUnit',
+  'kotlin.test',
+  'kotlinx-coroutines-test',
+  'Marathon',
+  'Playwright',
+  'Clippy',
+  'rustfmt',
+  'Ruff',
+  'Black',
+  'pre-commit',
+];
+
+const kDataSkills = [
+  'Pandas',
+  'NumPy',
+  'OpenPyXL',
+  'Beautiful Soup',
+  'lxml',
+  'Google GenAI',
+  'Whisper.cpp',
+  'FFmpeg',
+  'OpenCV',
+  'InsightFace',
+  'ONNX Runtime',
+  'ReportLab',
+  'WeasyPrint',
+  'python-docx',
+];
+
+const kToolSkills = [
+  'Git',
+  'GitHub',
+  'GitLab',
+  'GitHub Actions',
+  'Jenkins CI/CD',
+  'Jira',
+  'Bitbucket',
+  'Docker',
+  'Docker Compose',
+  'Cargo',
+  'rustup',
+  'Gradle',
+  'Amper',
+  'Android SDK',
+  'ADB',
+  'Fastboot',
+  'Xcode',
+  'Node.js',
+  'npm',
+  'uv',
+];
+
 // ── Bilingual content ─────────────────────────────────────────────────────────
 
 const Map<String, PortfolioContent> kContent = {
@@ -241,10 +411,53 @@ const Map<String, PortfolioContent> kContent = {
     contributionsMore: 'More',
     experiences: [
       ExperienceEntry(
+        role: 'Fullstack Developer',
+        company: 'Grupo Forte',
+        period: 'Oct 2026 – Present',
+        isCurrent: true,
+        bullets: [
+          'Android-focused mobile development with Kotlin Multiplatform and Compose Multiplatform for logistics, delivery tracking, fuel orders, fleet tracking, task management, and business indicators',
+          'MVVM architecture and unidirectional data flow with ViewModels, Coroutines, StateFlow, and Koin',
+          'API integration using Retrofit, OkHttp, and OpenAPI, with token-based authentication, session renewal, and secure storage through Android Keystore',
+          'Native kitchen dashboard for Android tablets with WebSockets, automatic reconnection, fallback polling, preparation timers, sound and voice alerts, immersive mode, and an expanded order view',
+          'Internal business system development with Python and Django: APIs, financial integrations, payment reconciliation, and process automation',
+          'Data persistence and asynchronous processing with PostgreSQL, SQL Server, Celery, and RabbitMQ, with services running in Docker',
+          'Unit testing, UI testing with UIAutomator, validation on physical devices, ADB debugging, and GitHub Actions pipelines for building and distributing signed APKs',
+        ],
+        techs: [
+          'Kotlin Multiplatform',
+          'Compose Multiplatform',
+          'Coroutines',
+          'Koin',
+          'Retrofit',
+          'WebSockets',
+          'Python',
+          'Django',
+          'PostgreSQL',
+          'SQL Server',
+          'Celery',
+          'RabbitMQ',
+          'Docker',
+          'UIAutomator',
+          'GitHub Actions',
+        ],
+      ),
+      ExperienceEntry(
+        role: 'Kotlin Developer (Freelance)',
+        company: 'Israeli Military Research Institute',
+        period: 'Sep 2026 – Present',
+        isCurrent: true,
+        bullets: [
+          'Research and development for Iron Dome, contributing to a high-efficiency emulator for missile attack simulations',
+          'Frontend development with Kotlin Multiplatform and backend services with Ktor',
+          'Emulation infrastructure using the Linux kernel and QEMU',
+        ],
+        techs: ['Kotlin Multiplatform', 'Ktor', 'Linux Kernel', 'QEMU'],
+      ),
+      ExperienceEntry(
         role: 'Android Developer',
         company: 'Eldorado',
-        period: 'May 2024 – Present',
-        isCurrent: true,
+        period: 'May 2024 – Aug 2026',
         bullets: [
           'Compliance testing for Android devices',
           'Test automation using Python, Flutter Tests, and Unittest',
@@ -332,6 +545,13 @@ const Map<String, PortfolioContent> kContent = {
             'Geppetto is an Android UI automation framework that orchestrates and executes your test suite with precision and care. It provides a high-level Python API for controlling Android devices via ADB, Fastboot, and UIAutomator2.',
         techs: ['Python', 'Android', 'UIAutomator2', 'ADB', 'Fastboot'],
       ),
+      ProjectEntry(
+        name: 'Carlo',
+        url: 'https://github.com/desodre/Carlo-puppet-of-geppetto',
+        description:
+            'Native Android agent in Rust for Geppetto, launched via ADB and using Binder/NDK for accessibility sessions and UI node reading. Full hierarchy extraction and video streaming are under development.',
+        techs: ['Rust', 'Android NDK', 'Binder', 'ADB', 'Serde', 'Python'],
+      ),
     ],
     publishedApps: [
       // Mobile
@@ -414,49 +634,43 @@ const Map<String, PortfolioContent> kContent = {
     skills: [
       SkillCategory(
         label: 'Languages',
-        skills: ['Python', 'Dart', 'Kotlin', 'Java', 'SQL', 'R'],
+        skills: kLanguageSkills,
       ),
       SkillCategory(
-        label: 'Frameworks',
-        skills: [
-          'Flutter',
-          'FastAPI',
-          'Robot Framework',
-          'Pytests',
-          'Unittest',
-          'Scrapy',
-          'Jetpack Compose'
-        ],
+        label: 'Mobile & Multiplatform',
+        skills: kMobileSkills,
       ),
       SkillCategory(
-        label: 'Tools',
-        skills: [
-          'Git',
-          'GitHub',
-          'GitLab',
-          'GitHub Actions',
-          'Jenkins CI/CD',
-          'Jira',
-          'ADB',
-          'Fastboot',
-          'Bitbucket',
-        ],
+        label: 'Backend & Messaging',
+        skills: kBackendSkills,
       ),
       SkillCategory(
-        label: 'Databases',
-        skills: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'Redis'],
+        label: 'Web',
+        skills: kWebSkills,
       ),
       SkillCategory(
-        label: 'Android',
-        skills: [
-          'CTS/GTS/VTS',
-          'Kernel',
-          'Firmware',
-          'UIAutomator2',
-          'Sensors',
-          'Flutter',
-          'Jetpack Compose'
-        ],
+        label: 'Databases & Cache',
+        skills: kDatabaseSkills,
+      ),
+      SkillCategory(
+        label: 'APIs & Architecture',
+        skills: kArchitectureSkills,
+      ),
+      SkillCategory(
+        label: 'Android & Native',
+        skills: kNativeSkills,
+      ),
+      SkillCategory(
+        label: 'Testing & Quality',
+        skills: kTestingSkills,
+      ),
+      SkillCategory(
+        label: 'Data, AI & Documents',
+        skills: kDataSkills,
+      ),
+      SkillCategory(
+        label: 'Tools & DevOps',
+        skills: kToolSkills,
       ),
     ],
     education: [
@@ -529,10 +743,53 @@ const Map<String, PortfolioContent> kContent = {
     contributionsMore: 'Mais',
     experiences: [
       ExperienceEntry(
+        role: 'Desenvolvedor Fullstack',
+        company: 'Grupo Forte',
+        period: 'Out 2026 – Atual',
+        isCurrent: true,
+        bullets: [
+          'Desenvolvimento mobile com Kotlin Multiplatform e Compose Multiplatform, com foco em Android, para logística, acompanhamento de entregas, pedidos de combustível, rastreamento de frota, gestão de tarefas e indicadores de negócio',
+          'Arquitetura MVVM e fluxo unidirecional de dados com ViewModels, Coroutines, StateFlow e Koin',
+          'Integração de APIs com Retrofit, OkHttp e OpenAPI, com autenticação por tokens, renovação de sessão e armazenamento seguro via Android Keystore',
+          'Painel de cozinha nativo para tablets Android com WebSockets, reconexão automática, polling de contingência, temporizadores de preparo, alertas sonoros e por voz, modo imersivo e visualização ampliada dos pedidos',
+          'Evolução do sistema interno com Python e Django: APIs, integrações financeiras, conciliação de pagamentos e automação de processos',
+          'Persistência de dados e processamento assíncrono com PostgreSQL, SQL Server, Celery e RabbitMQ, com serviços executados em Docker',
+          'Testes unitários, testes de interface com UIAutomator, validação em dispositivos físicos, depuração com ADB e pipelines no GitHub Actions para gerar e distribuir APKs assinados',
+        ],
+        techs: [
+          'Kotlin Multiplatform',
+          'Compose Multiplatform',
+          'Coroutines',
+          'Koin',
+          'Retrofit',
+          'WebSockets',
+          'Python',
+          'Django',
+          'PostgreSQL',
+          'SQL Server',
+          'Celery',
+          'RabbitMQ',
+          'Docker',
+          'UIAutomator',
+          'GitHub Actions',
+        ],
+      ),
+      ExperienceEntry(
+        role: 'Desenvolvedor Kotlin (Freelancer)',
+        company: 'Instituto de Pesquisa Militar Israelita',
+        period: 'Set 2026 – Atual',
+        isCurrent: true,
+        bullets: [
+          'Pesquisa e desenvolvimento do Domo de Ferro, contribuindo para um emulador de alta eficiência para simulações de ataques de mísseis',
+          'Desenvolvimento de frontend com Kotlin Multiplatform e serviços de backend com Ktor',
+          'Infraestrutura de emulação com kernel Linux e QEMU',
+        ],
+        techs: ['Kotlin Multiplatform', 'Ktor', 'Linux Kernel', 'QEMU'],
+      ),
+      ExperienceEntry(
         role: 'Android Developer',
         company: 'Eldorado',
-        period: 'May 2024 – Present',
-        isCurrent: true,
+        period: 'Mai 2024 – Ago 2026',
         bullets: [
           'Testes de conformidade para dispositivos Android',
           'Automação de testes com Python, Flutter Tests e Unittest',
@@ -620,6 +877,13 @@ const Map<String, PortfolioContent> kContent = {
             'Framework de automação de UI para Android que orquestra e executa sua suíte de testes com precisão. Fornece uma API Python de alto nível para controlar dispositivos Android via ADB, Fastboot e UIAutomator2.',
         techs: ['Python', 'Android', 'UIAutomator2', 'ADB', 'Fastboot'],
       ),
+      ProjectEntry(
+        name: 'Carlo',
+        url: 'https://github.com/desodre/Carlo-puppet-of-geppetto',
+        description:
+            'Agente Android nativo em Rust para o Geppetto, iniciado via ADB e usando Binder/NDK para sessões de acessibilidade e leitura de nós da interface. Hierarquia completa e streaming de vídeo em desenvolvimento.',
+        techs: ['Rust', 'Android NDK', 'Binder', 'ADB', 'Serde', 'Python'],
+      ),
     ],
     publishedApps: [
       // Mobile
@@ -702,47 +966,43 @@ const Map<String, PortfolioContent> kContent = {
     skills: [
       SkillCategory(
         label: 'Linguagens',
-        skills: ['Python', 'Dart', 'Kotlin', 'Java', 'SQL', 'R'],
+        skills: kLanguageSkills,
       ),
       SkillCategory(
-        label: 'Frameworks',
-        skills: [
-          'Flutter',
-          'FastAPI',
-          'Robot Framework',
-          'Pytests',
-          'Unittest',
-          'Scrapy',
-          'Jetpack Compose'
-        ],
+        label: 'Mobile & Multiplataforma',
+        skills: kMobileSkills,
       ),
       SkillCategory(
-        label: 'Ferramentas',
-        skills: [
-          'Git',
-          'GitHub',
-          'GitLab',
-          'GitHub Actions',
-          'Jenkins CI/CD',
-          'Jira',
-          'ADB',
-          'Fastboot',
-          'Bitbucket',
-        ],
+        label: 'Backend & Mensageria',
+        skills: kBackendSkills,
       ),
       SkillCategory(
-        label: 'Bancos de Dados',
-        skills: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'Redis'],
+        label: 'Web',
+        skills: kWebSkills,
       ),
       SkillCategory(
-        label: 'Android',
-        skills: [
-          'CTS/GTS/VTS',
-          'Kernel',
-          'Firmware',
-          'UIAutomator2',
-          'Sensors'
-        ],
+        label: 'Bancos de Dados & Cache',
+        skills: kDatabaseSkills,
+      ),
+      SkillCategory(
+        label: 'APIs & Arquitetura',
+        skills: kArchitectureSkills,
+      ),
+      SkillCategory(
+        label: 'Android & Nativo',
+        skills: kNativeSkills,
+      ),
+      SkillCategory(
+        label: 'Testes & Qualidade',
+        skills: kTestingSkills,
+      ),
+      SkillCategory(
+        label: 'Dados, IA & Documentos',
+        skills: kDataSkills,
+      ),
+      SkillCategory(
+        label: 'Ferramentas & DevOps',
+        skills: kToolSkills,
       ),
     ],
     education: [
