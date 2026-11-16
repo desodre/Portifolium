@@ -592,6 +592,25 @@ const Map<String, PortfolioContent> kContent = {
         category: AppCategory.desktop,
         badgeNote: 'Coming soon to Flathub',
       ),
+      // Web
+      PublishedApp(
+        name: 'BestGas',
+        description:
+            'Web application built with React, Vite, and React Leaflet, integrated with a Python API using FastAPI. Persistence with SQLite and SQLAlchemy, migrations with Alembic, and infrastructure with Docker, Caddy, and GitHub Actions.',
+        techStack: [
+          'React',
+          'Vite',
+          'Leaflet',
+          'Python',
+          'FastAPI',
+          'SQLAlchemy',
+          'SQLite',
+          'Docker',
+        ],
+        screenshotAssets: ['images/apps/bestgas.webp'],
+        storeUrl: 'https://bestgas.com.br/',
+        category: AppCategory.web,
+      ),
     ],
     openSourceLibraries: [
       OpenSourceLibrary(
@@ -923,6 +942,25 @@ const Map<String, PortfolioContent> kContent = {
         repoUrl: 'https://github.com/desodre/Android-Inspec',
         category: AppCategory.desktop,
         badgeNote: 'Em breve no Flathub',
+      ),
+      // Web
+      PublishedApp(
+        name: 'BestGas',
+        description:
+            'Aplicação web desenvolvida com React, Vite e React Leaflet, integrada a uma API Python com FastAPI. Persistência com SQLite e SQLAlchemy, migrações com Alembic e infraestrutura com Docker, Caddy e GitHub Actions.',
+        techStack: [
+          'React',
+          'Vite',
+          'Leaflet',
+          'Python',
+          'FastAPI',
+          'SQLAlchemy',
+          'SQLite',
+          'Docker',
+        ],
+        screenshotAssets: ['images/apps/bestgas.webp'],
+        storeUrl: 'https://bestgas.com.br/',
+        category: AppCategory.web,
       ),
     ],
     openSourceLibraries: [

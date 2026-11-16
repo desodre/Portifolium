@@ -34,12 +34,16 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
     final safeIndex = filteredApps.isEmpty
         ? 0
         : (_activeSlideIndex >= filteredApps.length ? 0 : _activeSlideIndex);
-    if (filteredApps.isNotEmpty && filteredApps[safeIndex].screenshotAssets.length > 1) {
+    if (filteredApps.isNotEmpty &&
+        filteredApps[safeIndex].screenshotAssets.length > 1) {
       _slideshowTimer = Timer.periodic(const Duration(seconds: 2), (_) {
-        final apps = kContent[component.lang]!.publishedApps
+        final apps = kContent[component.lang]!
+            .publishedApps
             .where((app) => app.category == _activeCategory)
             .toList();
-        final idx = apps.isEmpty ? 0 : (_activeSlideIndex >= apps.length ? 0 : _activeSlideIndex);
+        final idx = apps.isEmpty
+            ? 0
+            : (_activeSlideIndex >= apps.length ? 0 : _activeSlideIndex);
         if (apps.isNotEmpty) {
           final totalImages = apps[idx].screenshotAssets.length;
           if (totalImages > 1) {
@@ -105,7 +109,8 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
     final currentIndex = filteredApps.isEmpty
         ? 0
         : (_activeSlideIndex >= filteredApps.length ? 0 : _activeSlideIndex);
-    final currentApp = filteredApps.isNotEmpty ? filteredApps[currentIndex] : null;
+    final currentApp =
+        filteredApps.isNotEmpty ? filteredApps[currentIndex] : null;
 
     return div(classes: 'section-padding container-box', [
       SectionTitle(
@@ -137,7 +142,17 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
             span([Component.text(content.categoryDesktop)]),
           ],
         ),
-        // Web tab removed — kept in data model for future use
+        button(
+          classes:
+              'category-tab${_activeCategory == AppCategory.web ? ' active' : ''}',
+          events: {'click': (e) => _selectCategory(AppCategory.web)},
+          [
+            span(
+                classes: 'material-symbols-outlined icon',
+                [Component.text('language')]),
+            span([Component.text(content.categoryWeb)]),
+          ],
+        ),
       ]),
 
       // ── Carousel Container ──────────────────────────────────────────────────
@@ -160,14 +175,18 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
               // Info Column
               div(classes: 'app-info-col', [
                 div(classes: 'app-title-header', [
-                  h3(classes: 'app-row-title', [Component.text(currentApp.name)]),
+                  h3(
+                      classes: 'app-row-title',
+                      [Component.text(currentApp.name)]),
                   if (currentApp.badgeNote != null)
                     span(
                       classes: 'app-badge-note',
                       [Component.text(currentApp.badgeNote!)],
                     ),
                 ]),
-                p(classes: 'app-row-desc', [Component.text(currentApp.description)]),
+                p(
+                    classes: 'app-row-desc',
+                    [Component.text(currentApp.description)]),
 
                 // Tech chips
                 div(classes: 'tech-chips-wrap app-tech-chips', [
@@ -187,9 +206,13 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
                         [Component.text('open_in_new')],
                       ),
                       span([
-                        Component.text(component.lang == 'pt'
-                            ? 'Acessar Projeto'
-                            : 'Open Project')
+                        Component.text(currentApp.category == AppCategory.web
+                            ? (component.lang == 'pt'
+                                ? 'Acessar site'
+                                : 'Visit website')
+                            : (component.lang == 'pt'
+                                ? 'Acessar Projeto'
+                                : 'Open Project'))
                       ]),
                     ],
                   ),
@@ -246,21 +269,21 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
         div(classes: 'section-header-block sub-header', [
           div(classes: 'section-title-row', [
             div(classes: 'section-title-bar', []),
-            h3(classes: 'section-title-text', [
-              Component.text(content.sectionOpenSourceTitle)
-            ]),
+            h3(
+                classes: 'section-title-text',
+                [Component.text(content.sectionOpenSourceTitle)]),
           ]),
-          p(classes: 'section-subtitle-text', [
-            Component.text(content.sectionOpenSourceSubtitle)
-          ]),
+          p(
+              classes: 'section-subtitle-text',
+              [Component.text(content.sectionOpenSourceSubtitle)]),
         ]),
-
         div(classes: 'opensource-grid', [
           for (final lib in content.openSourceLibraries)
             div(classes: 'library-card', [
               div(classes: 'lib-card-header', [
                 span(
-                  classes: 'registry-badge ${lib.registry.toLowerCase().replaceAll('.', '').replaceAll(' ', '')}',
+                  classes:
+                      'registry-badge ${lib.registry.toLowerCase().replaceAll('.', '').replaceAll(' ', '')}',
                   [Component.text(lib.badgeText ?? lib.registry)],
                 ),
                 a(
@@ -288,11 +311,15 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
   }
 
   /// Builds a list of stacked image layers for slideshow fade effect
-  List<Component> _buildScreenImages(List<String> assets) {
+  List<Component> _buildScreenImages(PublishedApp app) {
+    final assets = app.screenshotAssets;
     return [
       for (var i = 0; i < assets.length; i++)
         img(
           src: assets[i],
+          alt: component.lang == 'pt'
+              ? 'Interface de ${app.name} — tela ${i + 1}'
+              : '${app.name} interface — screen ${i + 1}',
           classes: 'screen-image${_activeImageIndex == i ? ' active' : ''}',
         ),
     ];
@@ -309,7 +336,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
             div(classes: 'phone-power-button', []),
             div(
               classes: 'phone-screen',
-              _buildScreenImages(app.screenshotAssets),
+              _buildScreenImages(app),
             ),
           ]),
         ]);
@@ -322,7 +349,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
             ]),
             div(
               classes: 'laptop-screen',
-              _buildScreenImages(app.screenshotAssets),
+              _buildScreenImages(app),
             ),
             div(classes: 'laptop-keyboard-base', [
               div(classes: 'laptop-notch-indent', []),
@@ -340,15 +367,14 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
                 div(classes: 'browser-dot green', []),
               ]),
               div(classes: 'browser-addressbar', [
-                span(classes: 'browser-url-text', [
-                  Component.text(
-                      'https://${app.name.toLowerCase().replaceAll(' ', '')}.dev')
-                ]),
+                span(
+                    classes: 'browser-url-text',
+                    [Component.text(app.storeUrl)]),
               ]),
             ]),
             div(
               classes: 'browser-screen',
-              _buildScreenImages(app.screenshotAssets),
+              _buildScreenImages(app),
             ),
           ]),
         ]);

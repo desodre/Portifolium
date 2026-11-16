@@ -1556,11 +1556,6 @@ a {
     max-width: 360px;
   }
 
-  .browser-device {
-    height: auto;
-    aspect-ratio: 36 / 25;
-  }
-
   .laptop-keyboard-base {
     width: calc(100% + 24px);
     left: 0;
@@ -1804,14 +1799,15 @@ a {
    3D Browser Frame Mockup (Web Projects)
    ========================================================================== */
 .browser-perspective {
+  width: 100%;
+  max-width: 360px;
   perspective: 1200px;
   perspective-origin: 50% 50%;
   padding: 20px 0;
 }
 
 .browser-device {
-  width: 360px;
-  height: 250px;
+  width: 100%;
   background-color: #161b22;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -1832,6 +1828,7 @@ a {
 
 .browser-topbar {
   height: 32px;
+  flex-shrink: 0;
   background-color: #0d1117;
   border-bottom: 1px solid var(--border);
   display: flex;
@@ -1857,6 +1854,7 @@ a {
 
 .browser-addressbar {
   flex-grow: 1;
+  min-width: 0;
   background-color: #161b22;
   border: 1px solid var(--border);
   border-radius: 6px;
@@ -1866,12 +1864,16 @@ a {
 }
 
 .browser-url-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--text-secondary);
   font-family: 'Inter', sans-serif;
   font-size: 11px;
 }
 
 .browser-screen {
+  aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
   flex-grow: 1;
