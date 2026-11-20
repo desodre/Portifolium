@@ -1,0 +1,693 @@
+/* ==========================================================================
+   Projects, Published Apps & Open Source Showcase Styles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Projects Filter Pills & Featured Cards
+   -------------------------------------------------------------------------- */
+.filter-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-pill:hover {
+  background-color: var(--card);
+  border-color: var(--accent-alpha-35);
+  color: var(--text-primary);
+}
+
+.filter-pill.active {
+  background-color: var(--accent-alpha-15);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+  box-shadow: 0 2px 10px var(--accent-alpha-15);
+}
+
+.proj-header {
+  gap: 10px;
+}
+
+.project-card.featured {
+  border-color: var(--accent-alpha-35);
+  border-top: 2px solid var(--accent);
+  background-color: var(--card);
+  box-shadow: 0 6px 20px var(--shadow-color);
+}
+
+.project-card.featured:hover {
+  border-color: var(--accent);
+  box-shadow: 0 12px 28px var(--shadow-color-hover);
+}
+
+.proj-featured-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background-color: var(--accent-alpha-10);
+  border: 1px solid var(--accent-alpha-35);
+  color: var(--accent);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.project-card {
+  cursor: default;
+}
+
+.proj-open-icon {
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.proj-open-icon:hover {
+  opacity: 1;
+  background-color: var(--accent-alpha-10);
+}
+
+.proj-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.proj-case-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background-color: var(--accent-alpha-10);
+  border: 1px solid var(--accent-alpha-35);
+  color: var(--accent);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.proj-case-btn:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.proj-case-btn .icon {
+  font-size: 16px;
+}
+
+.proj-repo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.proj-repo-link:hover {
+  color: var(--accent);
+  background-color: var(--accent-alpha-10);
+}
+
+.proj-repo-link .icon {
+  font-size: 15px;
+}
+
+/* --------------------------------------------------------------------------
+   Interactive Mockup Trigger, Zoom Badge & Screen Dots
+   -------------------------------------------------------------------------- */
+.mockup-interactive-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.mockup-trigger {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: zoom-in;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 16px;
+}
+
+.mockup-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 8px;
+  border-radius: 16px;
+}
+
+.mockup-trigger .laptop-perspective {
+  width: 100%;
+  max-width: 390px;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.mockup-trigger .browser-perspective {
+  width: 360px;
+  max-width: 100%;
+}
+
+.mockup-zoom-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background-color: var(--background-alpha-95);
+  border: 1px solid var(--accent-alpha-35);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  opacity: 0.72;
+  transform: translateY(2px);
+  transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.mockup-zoom-badge .icon {
+  font-size: 15px;
+  color: var(--accent);
+}
+
+.mockup-trigger:hover .mockup-zoom-badge,
+.mockup-trigger:focus-visible .mockup-zoom-badge {
+  opacity: 1;
+  transform: translateY(0);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.mockup-screen-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mockup-screen-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--border);
+  cursor: pointer;
+  transition: width 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.mockup-screen-dot:hover {
+  background-color: var(--accent-alpha-35);
+}
+
+.mockup-screen-dot.active {
+  width: 24px;
+  background-color: var(--accent);
+  box-shadow: 0 0 8px var(--accent-alpha-35);
+}
+
+/* --------------------------------------------------------------------------
+   Devs4Devs Link Target Refinement
+   -------------------------------------------------------------------------- */
+.lib-link-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Screenshot Lightbox Modal
+   -------------------------------------------------------------------------- */
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.lightbox-dialog {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 960px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+}
+
+.lightbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.lightbox-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.lightbox-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lightbox-counter {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background-color: var(--accent-alpha-10);
+  border: 1px solid var(--accent-alpha-25);
+  color: var(--accent);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.lightbox-close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.lightbox-close-btn:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.lightbox-body {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  background-color: var(--background);
+}
+
+.lightbox-img {
+  max-height: 70vh;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+}
+
+.lightbox-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.lightbox-nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lightbox-nav-btn:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 4px 12px var(--shadow-color-glow);
+}
+
+/* --------------------------------------------------------------------------
+   Project Case Study Modal
+   -------------------------------------------------------------------------- */
+.case-study-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2050;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.case-study-dialog {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 720px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+}
+
+.case-study-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--surface);
+  flex-shrink: 0;
+}
+
+.case-study-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.case-study-title-wrap > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.case-study-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.case-study-role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background-color: var(--accent-alpha-10);
+  border: 1px solid var(--accent-alpha-25);
+  color: var(--accent);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.case-study-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.case-study-summary {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin: 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.case-study-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.case-study-heading {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--accent);
+  margin: 0;
+}
+
+.case-study-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.case-study-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.case-study-highlight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.case-study-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  background-color: var(--surface);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.case-study-cta {
+  text-decoration: none;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Adjustments
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .mockup-trigger .laptop-perspective {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px 12px;
+  }
+
+  .mockup-trigger .laptop-device {
+    width: 100%;
+    max-width: 316px;
+  }
+
+  .mockup-trigger .laptop-keyboard-base {
+    width: calc(100% + 16px);
+    left: 0;
+  }
+
+  .mockup-trigger .browser-perspective {
+    width: 100%;
+    max-width: 340px;
+    padding: 16px 6px;
+  }
+}
+
+@media (max-width: 600px) {
+  .filter-pills-row {
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+
+  .filter-pill {
+    padding: 7px 13px;
+    font-size: 12px;
+  }
+
+  .mockup-zoom-badge {
+    opacity: 0.9;
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  .lightbox-backdrop {
+    padding: 12px;
+  }
+
+  .lightbox-dialog {
+    border-radius: 12px;
+    max-height: 94vh;
+  }
+
+  .lightbox-header {
+    padding: 12px 14px;
+  }
+
+  .lightbox-title {
+    font-size: 16px;
+  }
+
+  .lightbox-body {
+    padding: 12px;
+  }
+
+  .lightbox-img {
+    max-height: 68vh;
+  }
+
+  .lightbox-controls {
+    padding: 10px 14px;
+  }
+
+  .case-study-backdrop {
+    padding: 12px;
+  }
+
+  .case-study-dialog {
+    border-radius: 12px;
+    max-height: 92vh;
+  }
+
+  .case-study-header {
+    padding: 14px 16px;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .case-study-title-wrap {
+    gap: 10px;
+  }
+
+  .case-study-title {
+    font-size: 18px;
+  }
+
+  .case-study-role-badge {
+    font-size: 11px;
+  }
+
+  .case-study-body {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .case-study-footer {
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .case-study-footer .case-study-cta,
+  .case-study-footer .btn-secondary {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px;
+  }
+}
+

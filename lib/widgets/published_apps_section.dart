@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart';
 import '../data/portfolio_data.dart';
+import '../utils/web_utils.dart';
 import 'section_title.dart';
 
 class PublishedAppsSection extends StatefulComponent {
@@ -18,29 +19,38 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
   int _activeSlideIndex = 0;
   int _activeImageIndex = 0;
   Timer? _slideshowTimer;
+  bool _isPaused = false;
+  bool _lightboxOpen = false;
+  Unsubscribe? _unsubEsc;
 
   @override
   void initState() {
     super.initState();
     _startSlideshow();
+    _unsubEsc = subscribeEscapeKey(_closeLightbox);
   }
+
+  List<PublishedApp> _filteredApps() => kContent[component.lang]!
+      .publishedApps
+      .where((app) => app.category == _activeCategory)
+      .toList();
+
+  String _screenAlt(String appName, int index) => component.lang == 'pt'
+      ? 'Interface de $appName — tela ${index + 1}'
+      : '$appName interface — screen ${index + 1}';
 
   void _startSlideshow() {
     _slideshowTimer?.cancel();
-    final content = kContent[component.lang]!;
-    final filteredApps = content.publishedApps
-        .where((app) => app.category == _activeCategory)
-        .toList();
+    if (!kIsWeb) return;
+    final filteredApps = _filteredApps();
     final safeIndex = filteredApps.isEmpty
         ? 0
         : (_activeSlideIndex >= filteredApps.length ? 0 : _activeSlideIndex);
     if (filteredApps.isNotEmpty &&
         filteredApps[safeIndex].screenshotAssets.length > 1) {
       _slideshowTimer = Timer.periodic(const Duration(seconds: 2), (_) {
-        final apps = kContent[component.lang]!
-            .publishedApps
-            .where((app) => app.category == _activeCategory)
-            .toList();
+        if (!mounted || _isPaused || _lightboxOpen) return;
+        final apps = _filteredApps();
         final idx = apps.isEmpty
             ? 0
             : (_activeSlideIndex >= apps.length ? 0 : _activeSlideIndex);
@@ -62,6 +72,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
         _activeCategory = category;
         _activeSlideIndex = 0;
         _activeImageIndex = 0;
+        _lightboxOpen = false;
       });
       _startSlideshow();
     }
@@ -72,6 +83,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
     setState(() {
       _activeSlideIndex = (_activeSlideIndex - 1 + total) % total;
       _activeImageIndex = 0;
+      _lightboxOpen = false;
     });
     _startSlideshow();
   }
@@ -81,6 +93,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
     setState(() {
       _activeSlideIndex = (_activeSlideIndex + 1) % total;
       _activeImageIndex = 0;
+      _lightboxOpen = false;
     });
     _startSlideshow();
   }
@@ -89,28 +102,54 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
     setState(() {
       _activeSlideIndex = index;
       _activeImageIndex = 0;
+      _lightboxOpen = false;
     });
     _startSlideshow();
+  }
+
+  void _openLightbox() {
+    if (!_lightboxOpen) {
+      setState(() {
+        _lightboxOpen = true;
+      });
+    }
+  }
+
+  void _closeLightbox() {
+    if (_lightboxOpen && mounted) {
+      setState(() {
+        _lightboxOpen = false;
+      });
+    }
   }
 
   @override
   void dispose() {
     _slideshowTimer?.cancel();
+    _unsubEsc?.call();
     super.dispose();
   }
 
   @override
   Component build(BuildContext context) {
     final content = kContent[component.lang]!;
-    final filteredApps = content.publishedApps
-        .where((app) => app.category == _activeCategory)
-        .toList();
+    final filteredApps = _filteredApps();
 
     final currentIndex = filteredApps.isEmpty
         ? 0
         : (_activeSlideIndex >= filteredApps.length ? 0 : _activeSlideIndex);
     final currentApp =
         filteredApps.isNotEmpty ? filteredApps[currentIndex] : null;
+    final assets = currentApp?.screenshotAssets ?? const <String>[];
+    final safeImgIdx = assets.isEmpty
+        ? 0
+        : (_activeImageIndex >= assets.length ? 0 : _activeImageIndex);
+
+    final categories = [
+      (AppCategory.mobile, 'smartphone', content.categoryMobile),
+      (AppCategory.desktop, 'laptop_mac', content.categoryDesktop),
+      (AppCategory.web, 'language', content.categoryWeb),
+    ];
 
     return div(classes: 'section-padding container-box', [
       SectionTitle(
@@ -119,55 +158,54 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
       ),
 
       // ── Category Selector Tabs ─────────────────────────────────────────────
-      div(classes: 'apps-category-tabs', [
-        button(
-          classes:
-              'category-tab${_activeCategory == AppCategory.mobile ? ' active' : ''}',
-          events: {'click': (e) => _selectCategory(AppCategory.mobile)},
-          [
-            span(
-                classes: 'material-symbols-outlined icon',
-                [Component.text('smartphone')]),
-            span([Component.text(content.categoryMobile)]),
-          ],
-        ),
-        button(
-          classes:
-              'category-tab${_activeCategory == AppCategory.desktop ? ' active' : ''}',
-          events: {'click': (e) => _selectCategory(AppCategory.desktop)},
-          [
-            span(
-                classes: 'material-symbols-outlined icon',
-                [Component.text('laptop_mac')]),
-            span([Component.text(content.categoryDesktop)]),
-          ],
-        ),
-        button(
-          classes:
-              'category-tab${_activeCategory == AppCategory.web ? ' active' : ''}',
-          events: {'click': (e) => _selectCategory(AppCategory.web)},
-          [
-            span(
-                classes: 'material-symbols-outlined icon',
-                [Component.text('language')]),
-            span([Component.text(content.categoryWeb)]),
-          ],
-        ),
-      ]),
+      div(
+        classes: 'apps-category-tabs',
+        attributes: {
+          'role': 'tablist',
+          'aria-label': content.sectionPublishedApps,
+        },
+        [
+          for (final (cat, iconName, label) in categories)
+            button(
+              classes: 'category-tab${_activeCategory == cat ? ' active' : ''}',
+              attributes: {
+                'type': 'button',
+                'role': 'tab',
+                'aria-selected': '${_activeCategory == cat}',
+              },
+              events: {'click': (e) => _selectCategory(cat)},
+              [
+                span(
+                  classes: 'material-symbols-outlined icon',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text(iconName)],
+                ),
+                span([Component.text(label)]),
+              ],
+            ),
+        ],
+      ),
 
       // ── Carousel Container ──────────────────────────────────────────────────
       if (currentApp != null)
         div(classes: 'carousel-wrapper', [
           // Left Navigation Arrow
-          button(
-            classes: 'carousel-nav-btn prev-btn',
-            events: {'click': (e) => _prevSlide(filteredApps.length)},
-            [
-              span(
+          if (filteredApps.length > 1)
+            button(
+              classes: 'carousel-nav-btn prev-btn',
+              attributes: {
+                'type': 'button',
+                'aria-label': content.appPrevLabel,
+              },
+              events: {'click': (e) => _prevSlide(filteredApps.length)},
+              [
+                span(
                   classes: 'material-symbols-outlined',
-                  [Component.text('chevron_left')]),
-            ],
-          ),
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('chevron_left')],
+                ),
+              ],
+            ),
 
           // Active Slide Item
           div(classes: 'carousel-slide-content', [
@@ -196,34 +234,39 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
 
                 // Action Buttons
                 div(classes: 'app-actions-wrap', [
-                  a(
-                    href: currentApp.storeUrl,
-                    target: Target.blank,
-                    classes: 'social-btn store-btn',
-                    [
-                      span(
-                        classes: 'material-symbols-outlined icon',
-                        [Component.text('open_in_new')],
-                      ),
-                      span([
-                        Component.text(currentApp.category == AppCategory.web
-                            ? (component.lang == 'pt'
-                                ? 'Acessar site'
-                                : 'Visit website')
-                            : (component.lang == 'pt'
-                                ? 'Acessar Projeto'
-                                : 'Open Project'))
-                      ]),
-                    ],
-                  ),
+                  if (currentApp.storeUrl != null)
+                    a(
+                      href: currentApp.storeUrl!,
+                      target: Target.blank,
+                      classes: 'social-btn store-btn',
+                      attributes: {'rel': 'noopener noreferrer'},
+                      [
+                        span(
+                          classes: 'material-symbols-outlined icon',
+                          attributes: {'aria-hidden': 'true'},
+                          [Component.text('open_in_new')],
+                        ),
+                        span([
+                          Component.text(currentApp.category == AppCategory.web
+                              ? (component.lang == 'pt'
+                                  ? 'Acessar site'
+                                  : 'Visit website')
+                              : (component.lang == 'pt'
+                                  ? 'Acessar Projeto'
+                                  : 'Open Project')),
+                        ]),
+                      ],
+                    ),
                   if (currentApp.repoUrl != null)
                     a(
                       href: currentApp.repoUrl!,
                       target: Target.blank,
                       classes: 'social-btn repo-btn',
+                      attributes: {'rel': 'noopener noreferrer'},
                       [
                         span(
                           classes: 'material-symbols-outlined icon',
+                          attributes: {'aria-hidden': 'true'},
                           [Component.text('code')],
                         ),
                         span([Component.text('GitHub')]),
@@ -234,21 +277,88 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
 
               // Dynamic 3D Device Mockup Column
               div(classes: 'app-mockup-col', [
-                _buildDeviceMockup(currentApp),
+                div(
+                  classes: 'mockup-interactive-wrap',
+                  events: {
+                    'mouseenter': (_) {
+                      if (!_isPaused) setState(() => _isPaused = true);
+                    },
+                    'mouseleave': (_) {
+                      if (_isPaused) setState(() => _isPaused = false);
+                    },
+                  },
+                  [
+                    button(
+                      classes: 'mockup-trigger',
+                      attributes: {
+                        'type': 'button',
+                        'aria-label':
+                            '${currentApp.name} — ${content.appZoomHint}',
+                      },
+                      events: {'click': (_) => _openLightbox()},
+                      [
+                        _buildDeviceMockup(currentApp, safeImgIdx),
+                        span(classes: 'mockup-zoom-badge', [
+                          span(
+                            classes: 'material-symbols-outlined icon',
+                            attributes: {'aria-hidden': 'true'},
+                            [Component.text('zoom_in')],
+                          ),
+                          span([Component.text(content.appZoomHint)]),
+                        ]),
+                      ],
+                    ),
+                    if (assets.length > 1)
+                      div(
+                        classes: 'mockup-screen-dots',
+                        attributes: {
+                          'role': 'group',
+                          'aria-label': currentApp.name,
+                        },
+                        [
+                          for (var i = 0; i < assets.length; i++)
+                            button(
+                              classes:
+                                  'mockup-screen-dot${safeImgIdx == i ? ' active' : ''}',
+                              attributes: {
+                                'type': 'button',
+                                'aria-label':
+                                    '${content.appScreenshotPrefix} ${i + 1}',
+                                'aria-pressed': '${safeImgIdx == i}',
+                              },
+                              events: {
+                                'click': (_) {
+                                  setState(() => _activeImageIndex = i);
+                                  _startSlideshow();
+                                },
+                              },
+                              [],
+                            ),
+                        ],
+                      ),
+                  ],
+                ),
               ]),
             ]),
           ]),
 
           // Right Navigation Arrow
-          button(
-            classes: 'carousel-nav-btn next-btn',
-            events: {'click': (e) => _nextSlide(filteredApps.length)},
-            [
-              span(
+          if (filteredApps.length > 1)
+            button(
+              classes: 'carousel-nav-btn next-btn',
+              attributes: {
+                'type': 'button',
+                'aria-label': content.appNextLabel,
+              },
+              events: {'click': (e) => _nextSlide(filteredApps.length)},
+              [
+                span(
                   classes: 'material-symbols-outlined',
-                  [Component.text('chevron_right')]),
-            ],
-          ),
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('chevron_right')],
+                ),
+              ],
+            ),
         ]),
 
       // ── Carousel Dots ─────────────────────────────────────────────────────
@@ -257,10 +367,117 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
           for (var i = 0; i < filteredApps.length; i++)
             button(
               classes: 'carousel-dot${currentIndex == i ? ' active' : ''}',
+              attributes: {
+                'type': 'button',
+                'aria-label':
+                    '${content.appSlideDotPrefix} ${i + 1}: ${filteredApps[i].name}',
+                'aria-current': currentIndex == i ? 'true' : 'false',
+              },
               events: {'click': (e) => _goToSlide(i)},
               [],
             ),
         ]),
+
+      // ── Lightbox Modal ────────────────────────────────────────────────────
+      if (_lightboxOpen && currentApp != null && assets.isNotEmpty)
+        div(
+          classes: 'lightbox-backdrop',
+          attributes: {
+            'role': 'dialog',
+            'aria-modal': 'true',
+            'aria-label': currentApp.name,
+          },
+          events: {'click': (_) => _closeLightbox()},
+          [
+            div(
+              classes: 'lightbox-dialog',
+              events: {'click': (e) => e.stopPropagation()},
+              [
+                div(classes: 'lightbox-header', [
+                  div(classes: 'lightbox-title-group', [
+                    h3(
+                      classes: 'lightbox-title',
+                      [Component.text(currentApp.name)],
+                    ),
+                    if (assets.length > 1)
+                      span(
+                        classes: 'lightbox-counter',
+                        [
+                          Component.text('${safeImgIdx + 1} / ${assets.length}')
+                        ],
+                      ),
+                  ]),
+                  button(
+                    classes: 'lightbox-close-btn',
+                    attributes: {
+                      'type': 'button',
+                      'aria-label': content.appCloseLightbox,
+                    },
+                    events: {'click': (_) => _closeLightbox()},
+                    [
+                      span(
+                        classes: 'material-symbols-outlined',
+                        attributes: {'aria-hidden': 'true'},
+                        [Component.text('close')],
+                      ),
+                    ],
+                  ),
+                ]),
+                div(classes: 'lightbox-body', [
+                  img(
+                    src: assets[safeImgIdx],
+                    classes: 'lightbox-img',
+                    alt: _screenAlt(currentApp.name, safeImgIdx),
+                  ),
+                ]),
+                if (assets.length > 1)
+                  div(classes: 'lightbox-controls', [
+                    button(
+                      classes: 'lightbox-nav-btn',
+                      attributes: {
+                        'type': 'button',
+                        'aria-label': content.appPrevLabel,
+                      },
+                      events: {
+                        'click': (_) => setState(() {
+                              _activeImageIndex =
+                                  (safeImgIdx - 1 + assets.length) %
+                                      assets.length;
+                            }),
+                      },
+                      [
+                        span(
+                          classes: 'material-symbols-outlined',
+                          attributes: {'aria-hidden': 'true'},
+                          [Component.text('chevron_left')],
+                        ),
+                      ],
+                    ),
+                    button(
+                      classes: 'lightbox-nav-btn',
+                      attributes: {
+                        'type': 'button',
+                        'aria-label': content.appNextLabel,
+                      },
+                      events: {
+                        'click': (_) => setState(() {
+                              _activeImageIndex =
+                                  (safeImgIdx + 1) % assets.length;
+                            }),
+                      },
+                      [
+                        span(
+                          classes: 'material-symbols-outlined',
+                          attributes: {'aria-hidden': 'true'},
+                          [Component.text('chevron_right')],
+                        ),
+                      ],
+                    ),
+                  ]),
+              ],
+            ),
+          ],
+        ),
 
       // ───────────────────────────────────────────────────────────────────────
       // ── SUBSECTION: Devs4Devs ──────────────────────────────────────────────
@@ -290,9 +507,14 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
                   href: lib.url,
                   target: Target.blank,
                   classes: 'lib-link-icon',
+                  attributes: {
+                    'rel': 'noopener noreferrer',
+                    'aria-label': '${lib.name} (${lib.registry})',
+                  },
                   [
                     span(
                       classes: 'material-symbols-outlined',
+                      attributes: {'aria-hidden': 'true'},
                       [Component.text('open_in_new')],
                     ),
                   ],
@@ -311,21 +533,19 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
   }
 
   /// Builds a list of stacked image layers for slideshow fade effect
-  List<Component> _buildScreenImages(PublishedApp app) {
+  List<Component> _buildScreenImages(PublishedApp app, int activeIndex) {
     final assets = app.screenshotAssets;
     return [
       for (var i = 0; i < assets.length; i++)
         img(
           src: assets[i],
-          alt: component.lang == 'pt'
-              ? 'Interface de ${app.name} — tela ${i + 1}'
-              : '${app.name} interface — screen ${i + 1}',
-          classes: 'screen-image${_activeImageIndex == i ? ' active' : ''}',
+          alt: _screenAlt(app.name, i),
+          classes: 'screen-image${activeIndex == i ? ' active' : ''}',
         ),
     ];
   }
 
-  Component _buildDeviceMockup(PublishedApp app) {
+  Component _buildDeviceMockup(PublishedApp app, int activeImageIndex) {
     switch (app.category) {
       case AppCategory.mobile:
         return div(classes: 'phone-perspective', [
@@ -336,7 +556,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
             div(classes: 'phone-power-button', []),
             div(
               classes: 'phone-screen',
-              _buildScreenImages(app),
+              _buildScreenImages(app, activeImageIndex),
             ),
           ]),
         ]);
@@ -349,7 +569,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
             ]),
             div(
               classes: 'laptop-screen',
-              _buildScreenImages(app),
+              _buildScreenImages(app, activeImageIndex),
             ),
             div(classes: 'laptop-keyboard-base', [
               div(classes: 'laptop-notch-indent', []),
@@ -368,13 +588,14 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
               ]),
               div(classes: 'browser-addressbar', [
                 span(
-                    classes: 'browser-url-text',
-                    [Component.text(app.storeUrl)]),
+                  classes: 'browser-url-text',
+                  [Component.text(app.storeUrl ?? app.repoUrl ?? '')],
+                ),
               ]),
             ]),
             div(
               classes: 'browser-screen',
-              _buildScreenImages(app),
+              _buildScreenImages(app, activeImageIndex),
             ),
           ]),
         ]);

@@ -31,14 +31,25 @@
   --contrib-level-2: #006D32;
   --contrib-level-3: #26A641;
   --contrib-level-4: #39D353;
+
+  /* Contrast & Semantic Badge Tokens */
+  --on-accent: #0D1117;
+  --on-accent-muted: rgba(13, 17, 23, 0.78);
+  --badge-amber-bg: rgba(255, 179, 0, 0.15);
+  --badge-amber-border: rgba(255, 179, 0, 0.4);
+  --badge-amber-text: #FFB300;
+  --badge-pubdev-text: #38A9FF;
+  --badge-pypi-text: #FFD43B;
+  --badge-github-text: #A371F7;
+  --badge-maven-text: #F85149;
 }
 
 [data-theme="light"] {
-  --accent: #007A5E;
-  --accent-alpha-10: rgba(0, 122, 94, 0.1);
-  --accent-alpha-15: rgba(0, 122, 94, 0.15);
-  --accent-alpha-25: rgba(0, 122, 94, 0.25);
-  --accent-alpha-35: rgba(0, 122, 94, 0.35);
+  --accent: #00664E;
+  --accent-alpha-10: rgba(0, 102, 78, 0.1);
+  --accent-alpha-15: rgba(0, 102, 78, 0.15);
+  --accent-alpha-25: rgba(0, 102, 78, 0.25);
+  --accent-alpha-35: rgba(0, 102, 78, 0.35);
   
   --background: #F0F4F8;
   --background-alpha-95: rgba(240, 244, 248, 0.95);
@@ -48,9 +59,9 @@
   --text-secondary: #505860;
   --card: #F8FAFB;
   
-  --shadow-color: rgba(0, 122, 94, 0.07);
-  --shadow-color-hover: rgba(0, 122, 94, 0.12);
-  --shadow-color-glow: rgba(0, 122, 94, 0.25);
+  --shadow-color: rgba(0, 102, 78, 0.07);
+  --shadow-color-hover: rgba(0, 102, 78, 0.12);
+  --shadow-color-glow: rgba(0, 102, 78, 0.25);
   
   /* Timeline colors */
   --timeline-dot-bg: #FFFFFF;
@@ -61,6 +72,17 @@
   --contrib-level-2: #40C463;
   --contrib-level-3: #30A14E;
   --contrib-level-4: #216E39;
+
+  /* Contrast & Semantic Badge Tokens */
+  --on-accent: #FFFFFF;
+  --on-accent-muted: rgba(255, 255, 255, 0.88);
+  --badge-amber-bg: rgba(180, 110, 0, 0.12);
+  --badge-amber-border: rgba(180, 110, 0, 0.35);
+  --badge-amber-text: #8A5A00;
+  --badge-pubdev-text: #01579B;
+  --badge-pypi-text: #7A5600;
+  --badge-github-text: #6639BA;
+  --badge-maven-text: #B31D28;
 }
 
 /* ==========================================================================
@@ -97,6 +119,48 @@ a {
   color: inherit;
   text-decoration: none;
   transition: color 0.2s ease;
+}
+
+section[id] {
+  scroll-margin-top: 72px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: fixed;
+  top: -120px;
+  left: 16px;
+  z-index: 2000;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--accent);
+  color: var(--on-accent);
+  border: 2px solid var(--accent);
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 12px;
+  clip: auto;
+  clip-path: none;
+  overflow: visible;
+  background: var(--accent);
+  color: var(--on-accent);
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
 }
 
 /* Scrollbar styling */
@@ -199,7 +263,7 @@ a {
   padding: 8px 14px;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
 .nav-link:hover {
@@ -269,7 +333,7 @@ a {
   letter-spacing: 0.5px;
   background: transparent;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .lang-switch:hover {
@@ -287,7 +351,7 @@ a {
   justify-content: center;
   cursor: pointer;
   color: var(--text-primary);
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .theme-switch:hover {
@@ -376,7 +440,7 @@ a {
   flex-shrink: 0;
   width: 168px;
   height: 168px;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 @media (min-width: 769px) {
@@ -515,18 +579,18 @@ a {
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .social-btn:hover {
   background-color: var(--accent);
   border-color: var(--accent);
-  color: var(--background);
+  color: var(--on-accent);
   box-shadow: 0 4px 12px var(--accent-alpha-25);
 }
 
 .social-btn:hover .icon {
-  color: var(--background) !important;
+  color: var(--on-accent) !important;
 }
 
 /* ==========================================================================
@@ -558,7 +622,7 @@ a {
   flex-shrink: 0;
   position: relative;
   top: 4px;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .timeline-dot.current {
@@ -589,7 +653,7 @@ a {
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  transition: all 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .experience-card:hover {
@@ -715,7 +779,7 @@ a {
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .project-card:hover {
@@ -816,7 +880,7 @@ a {
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  transition: all 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .skill-category-card:hover {
@@ -864,7 +928,7 @@ a {
   font-size: 13px;
   font-weight: 500;
   cursor: default;
-  transition: all 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .skill-chip:hover {
@@ -1026,7 +1090,7 @@ a {
   border-radius: 12px;
   display: flex;
   gap: 16px;
-  transition: all 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 @media (max-width: 768px) {
@@ -1231,11 +1295,11 @@ a {
   }
   70% {
     transform: scale(1);
-    box-shadow: 0 0 0 6px rgba(0, 212, 163, 0);
+    box-shadow: 0 0 0 6px transparent;
   }
   100% {
     transform: scale(0.9);
-    box-shadow: 0 0 0 0 rgba(0, 212, 163, 0);
+    box-shadow: 0 0 0 0 transparent;
   }
 }
 
@@ -1258,7 +1322,7 @@ a {
   align-items: center;
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 @media (max-width: 600px) {
@@ -1275,7 +1339,7 @@ a {
 .contact-btn:hover {
   background-color: var(--accent);
   border-color: var(--accent);
-  color: var(--background);
+  color: var(--on-accent);
   box-shadow: 0 8px 20px var(--shadow-color-glow);
 }
 
@@ -1287,7 +1351,7 @@ a {
 }
 
 .contact-btn:hover .icon {
-  color: var(--background);
+  color: var(--on-accent);
 }
 
 .contact-label {
@@ -1300,7 +1364,7 @@ a {
 }
 
 .contact-btn:hover .contact-label {
-  color: var(--background);
+  color: var(--on-accent);
 }
 
 .contact-sublabel {
@@ -1314,7 +1378,7 @@ a {
 }
 
 .contact-btn:hover .contact-sublabel {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--on-accent-muted);
 }
 
 /* Footer elements */
@@ -1594,7 +1658,7 @@ a {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }
 
 @media (max-width: 600px) {
@@ -1650,14 +1714,14 @@ a {
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   z-index: 10;
 }
 
 .carousel-nav-btn:hover {
   background-color: var(--accent);
   border-color: var(--accent);
-  color: var(--background);
+  color: var(--on-accent);
   box-shadow: 0 4px 16px var(--shadow-color-glow);
 }
 
@@ -1683,7 +1747,7 @@ a {
   border: none;
   cursor: pointer;
   padding: 0;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, width 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease;
 }
 
 .carousel-dot.active {
@@ -1704,9 +1768,9 @@ a {
 
 .app-badge-note {
   padding: 4px 10px;
-  background-color: rgba(255, 179, 0, 0.15);
-  border: 1px solid rgba(255, 179, 0, 0.4);
-  color: #FFB300;
+  background-color: var(--badge-amber-bg);
+  border: 1px solid var(--badge-amber-border);
+  color: var(--badge-amber-text);
   border-radius: 16px;
   font-family: 'Inter', sans-serif;
   font-size: 12px;
@@ -1867,7 +1931,7 @@ a {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--text-secondary);
+  color: #8B949E;
   font-family: 'Inter', sans-serif;
   font-size: 11px;
 }
@@ -1908,7 +1972,7 @@ a {
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  transition: all 0.25s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .library-card:hover {
@@ -1938,25 +2002,25 @@ a {
 .registry-badge.pubdev {
   background-color: rgba(1, 87, 155, 0.15);
   border: 1px solid rgba(1, 87, 155, 0.4);
-  color: #0175C2;
+  color: var(--badge-pubdev-text);
 }
 
 .registry-badge.pypi {
   background-color: rgba(55, 115, 162, 0.15);
   border: 1px solid rgba(255, 212, 59, 0.4);
-  color: #FFD43B;
+  color: var(--badge-pypi-text);
 }
 
 .registry-badge.github {
   background-color: rgba(137, 87, 229, 0.15);
   border: 1px solid rgba(137, 87, 229, 0.4);
-  color: #A371F7;
+  color: var(--badge-github-text);
 }
 
 .registry-badge.mavencentral {
   background-color: rgba(199, 29, 35, 0.15);
   border: 1px solid rgba(199, 29, 35, 0.4);
-  color: #C71D23;
+  color: var(--badge-maven-text);
 }
 
 .lib-link-icon {
@@ -1998,4 +2062,17 @@ a {
   color: var(--accent);
   text-decoration: none;
   transition: color 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
 }

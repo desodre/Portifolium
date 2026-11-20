@@ -1,0 +1,268 @@
+/* ==========================================================================
+   Navigation Bar & Hero Section Styles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Navigation Bar Enhancements (Scroll Spy, Progress Bar, Mobile Drawer)
+   -------------------------------------------------------------------------- */
+.nav-header {
+  position: fixed;
+}
+
+.nav-container {
+  position: relative;
+  z-index: 2;
+}
+
+.nav-progress-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 3;
+}
+
+.nav-progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.1s linear;
+}
+
+.nav-link.active,
+.nav-link-mobile.active {
+  color: var(--accent);
+  background-color: var(--accent-alpha-10);
+  font-weight: 600;
+}
+
+.nav-link-mobile {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-mobile-backdrop {
+  position: fixed;
+  inset: 64px 0 0 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 998;
+  animation: nav-backdrop-fade 0.2s ease forwards;
+}
+
+@keyframes nav-backdrop-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.nav-mobile-menu {
+  display: none;
+}
+
+.nav-mobile-menu.open {
+  display: block;
+  animation: nav-drawer-open 0.18s ease forwards;
+}
+
+@keyframes nav-drawer-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 769px) {
+  .nav-mobile-backdrop,
+  .nav-mobile-menu,
+  .nav-mobile-menu.open {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Hero Section Backdrop, Primary CTAs & Highlights Strip
+   -------------------------------------------------------------------------- */
+.hero-section-bg {
+  position: relative;
+  overflow: hidden;
+  background-image: radial-gradient(
+    ellipse 65% 50% at 75% 35%,
+    var(--accent-alpha-10),
+    transparent 70%
+  );
+}
+
+.hero-section-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.45;
+  -webkit-mask-image: radial-gradient(
+    ellipse 75% 70% at 50% 45%,
+    #000 35%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 75% 70% at 50% 45%,
+    #000 35%,
+    transparent 100%
+  );
+}
+
+.hero-section-bg > .hero-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-actions-primary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+
+@media (min-width: 769px) {
+  .hero-actions-primary {
+    justify-content: flex-start;
+  }
+}
+
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: var(--on-accent);
+  border: 1px solid var(--accent);
+  box-shadow: 0 4px 14px var(--accent-alpha-25);
+}
+
+.btn-primary:hover {
+  color: var(--on-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-color-glow);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: var(--accent-alpha-10);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px var(--shadow-color-hover);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+.btn-primary .icon,
+.btn-secondary .icon {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.btn-primary:hover .icon {
+  transform: translateX(2px);
+}
+
+.btn-secondary:hover .icon {
+  transform: translateY(2px);
+}
+
+.hero-social-wrap {
+  margin-bottom: 0;
+}
+
+.hero-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  width: 100%;
+  max-width: 560px;
+}
+
+.hero-highlight-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+@media (min-width: 769px) {
+  .hero-highlight-item {
+    align-items: flex-start;
+  }
+}
+
+.hero-highlight-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--accent);
+}
+
+.hero-highlight-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 600px) {
+  .hero-highlights {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .hero-highlight-item {
+    padding: 12px 16px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+}
