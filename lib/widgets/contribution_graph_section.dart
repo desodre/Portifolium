@@ -19,6 +19,7 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
   AllContributions? _data;
   bool _loading = true;
   String? _error;
+  String? _inspectedText;
 
   @override
   void initState() {
@@ -29,14 +30,32 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
     }
   }
 
+  @override
+  void didUpdateComponent(covariant ContributionGraphSection oldComponent) {
+    super.didUpdateComponent(oldComponent);
+    if (oldComponent.lang != component.lang) {
+      _inspectedText = null;
+    }
+  }
+
+  void _retryFetch() {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    _fetchContributions();
+  }
+
   Future<void> _fetchContributions() async {
     try {
       final uri = Uri.parse('$apiBaseContributions?y=last');
       final response = await http.get(uri);
+      if (!mounted) return;
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         setState(() {
           _data = AllContributions.fromJson(json);
+          _error = null;
           _loading = false;
         });
       } else {
@@ -46,11 +65,22 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
         });
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _error = e.toString();
         _loading = false;
       });
     }
+  }
+
+  void _setInspected(String summary) {
+    if (_inspectedText == summary) return;
+    setState(() => _inspectedText = summary);
+  }
+
+  void _clearInspected() {
+    if (_inspectedText == null) return;
+    setState(() => _inspectedText = null);
   }
 
   DateTime _getStartSunday(DateTime today) {
@@ -87,26 +117,26 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
     return weeks;
   }
 
-  static String _monthAbbr(int month) {
-    const m = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
-    return m[month - 1];
+  String _monthAbbr(int month, PortfolioContent content) =>
+      content.contribMonthAbbrs[month - 1];
+
+  String _formatDate(DateTime d, PortfolioContent content) {
+    final month = _monthAbbr(d.month, content);
+    return component.lang == 'pt'
+        ? '${d.day} $month ${d.year}'
+        : '$month ${d.day}, ${d.year}';
   }
 
-  static String _formatDate(DateTime d) =>
-      '${_monthAbbr(d.month)} ${d.day}, ${d.year}';
+  String _formatDaySummary(int count, DateTime date, PortfolioContent content) {
+    final formattedDate = _formatDate(date, content);
+    if (count == 0) {
+      return '${content.contribNoneOn} $formattedDate';
+    }
+    if (count == 1) {
+      return '1 ${content.contribSingleOn} $formattedDate';
+    }
+    return '$count ${content.contribPluralOn} $formattedDate';
+  }
 
   @override
   Component build(BuildContext context) {
@@ -119,12 +149,43 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
       ),
       div(classes: 'graph-card', [
         if (_loading)
-          div(classes: 'avail-dot', []) // Circular loader styled as pulsing dot
+          div(
+            classes: 'graph-skeleton',
+            attributes: {
+              'aria-busy': 'true',
+              'aria-label': content.sectionContributions,
+            },
+            [
+              div(classes: 'skeleton-line skeleton-title', []),
+              div(classes: 'skeleton-grid', [
+                for (var col = 0; col < 26; col++)
+                  div(classes: 'skeleton-col', [
+                    for (var row = 0; row < 7; row++)
+                      div(classes: 'skeleton-cell', []),
+                  ]),
+              ]),
+            ],
+          )
         else if (_error != null)
-          p(classes: 'section-subtitle-text', [
-            Component.text(component.lang == 'pt'
-                ? 'Não foi possível carregar as contribuições: $_error'
-                : 'Could not load contributions: $_error')
+          div(classes: 'graph-error-box', [
+            p(classes: 'graph-error-text', [
+              Component.text(component.lang == 'pt'
+                  ? 'Não foi possível carregar as contribuições: $_error'
+                  : 'Could not load contributions: $_error'),
+            ]),
+            button(
+              classes: 'graph-retry-btn',
+              attributes: {'type': 'button'},
+              events: {'click': (_) => _retryFetch()},
+              [
+                span(
+                  classes: 'material-symbols-outlined icon',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('refresh')],
+                ),
+                Component.text(content.contribRetryLabel),
+              ],
+            ),
           ])
         else
           div([
@@ -161,53 +222,102 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
           // Days column labels
           div(classes: 'contrib-days-labels', [
             div(classes: 'contrib-day-label', [Component.text('')]),
-            div(classes: 'contrib-day-label', [Component.text('Mon')]),
+            div(
+              classes: 'contrib-day-label',
+              [Component.text(content.contribDayLabels[0])],
+            ),
             div(classes: 'contrib-day-label', [Component.text('')]),
-            div(classes: 'contrib-day-label', [Component.text('Wed')]),
+            div(
+              classes: 'contrib-day-label',
+              [Component.text(content.contribDayLabels[1])],
+            ),
             div(classes: 'contrib-day-label', [Component.text('')]),
-            div(classes: 'contrib-day-label', [Component.text('Fri')]),
+            div(
+              classes: 'contrib-day-label',
+              [Component.text(content.contribDayLabels[2])],
+            ),
             div(classes: 'contrib-day-label', [Component.text('')]),
           ]),
 
           // Month labels and Day Cells grid
           div(classes: 'contrib-grid-columns-box', [
-            div(classes: 'contrib-months-row', _buildMonthLabels(weeks)),
-            div(classes: 'contrib-weeks-row', [
-              for (final week in weeks)
-                div(classes: 'contrib-week-column', [
-                  for (final day in week)
-                    div(
-                      classes: 'contrib-cell',
-                      attributes: {'data-level': '${day['level']}'},
-                      [
-                        span(classes: 'tooltip-text', [
-                          Component.text(day['count'] == 0
-                              ? 'No contributions on ${_formatDate(day['date'] as DateTime)}'
-                              : '${day['count']} contribution${day['count'] == 1 ? '' : 's'} on ${_formatDate(day['date'] as DateTime)}'),
-                        ]),
-                      ],
-                    ),
-                ]),
-            ]),
+            div(
+              classes: 'contrib-months-row',
+              _buildMonthLabels(weeks, content),
+            ),
+            div(
+              classes: 'contrib-weeks-row',
+              attributes: {
+                'role': 'grid',
+                'aria-label': content.sectionContributions,
+              },
+              events: {'mouseleave': (_) => _clearInspected()},
+              [
+                for (final week in weeks)
+                  div(
+                    classes: 'contrib-week-column',
+                    attributes: {'role': 'row'},
+                    [
+                      for (final day in week) _buildContribCell(day, content),
+                    ],
+                  ),
+              ],
+            ),
           ]),
         ]),
       ]),
 
-      // Legend
-      div(classes: 'graph-legend-row', [
-        Component.text(content.contributionsLess),
-        for (var l = 0; l <= 4; l++)
-          div(
-            classes: 'legend-box',
-            attributes: {'data-level': '$l'},
-            [],
-          ),
-        Component.text(content.contributionsMore),
+      // Inspector bar + Legend
+      div(classes: 'graph-footer-row', [
+        div(
+          classes:
+              'graph-inspector-bar${_inspectedText != null ? ' is-active' : ''}',
+          attributes: {'aria-live': 'polite'},
+          [Component.text(_inspectedText ?? content.contribInspectHint)],
+        ),
+        div(classes: 'graph-legend-row', [
+          Component.text(content.contributionsLess),
+          for (var l = 0; l <= 4; l++)
+            div(
+              classes: 'legend-box',
+              attributes: {'data-level': '$l'},
+              [],
+            ),
+          Component.text(content.contributionsMore),
+        ]),
       ]),
     ];
   }
 
-  List<Component> _buildMonthLabels(List<List<Map<String, dynamic>>> weeks) {
+  Component _buildContribCell(
+    Map<String, dynamic> day,
+    PortfolioContent content,
+  ) {
+    final summary = _formatDaySummary(
+      day['count'] as int,
+      day['date'] as DateTime,
+      content,
+    );
+    return div(
+      classes: 'contrib-cell',
+      attributes: {
+        'data-level': '${day['level']}',
+        'tabindex': '0',
+        'role': 'gridcell',
+        'aria-label': summary,
+      },
+      events: {
+        'mouseenter': (_) => _setInspected(summary),
+        'focus': (_) => _setInspected(summary),
+      },
+      [],
+    );
+  }
+
+  List<Component> _buildMonthLabels(
+    List<List<Map<String, dynamic>>> weeks,
+    PortfolioContent content,
+  ) {
     final labels = <Component>[];
     String? lastMonth;
 
@@ -215,7 +325,7 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
       final week = weeks[i];
       if (week.isEmpty) continue;
       final date = week.first['date'] as DateTime;
-      final monthName = _monthAbbr(date.month);
+      final monthName = _monthAbbr(date.month, content);
       if (monthName != lastMonth) {
         lastMonth = monthName;
         labels.add(

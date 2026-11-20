@@ -26,11 +26,13 @@ class EducationSection extends StatelessComponent {
             div(classes: 'education-card', [
               div(classes: 'edu-icon-container', [
                 span(
-                    classes: 'material-symbols-outlined icon',
-                    [Component.text('school')]),
+                  classes: 'material-symbols-outlined icon',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('school')],
+                ),
               ]),
               div(classes: 'edu-info-container', [
-                h4(classes: 'edu-degree', [Component.text(edu.degree)]),
+                h3(classes: 'edu-degree', [Component.text(edu.degree)]),
                 span(
                     classes: 'edu-institution',
                     [Component.text(edu.institution)]),
@@ -53,8 +55,10 @@ class EducationSection extends StatelessComponent {
             for (final course in content.courses)
               div(classes: 'course-chip-card', [
                 span(
-                    classes: 'material-symbols-outlined icon',
-                    [Component.text('verified')]),
+                  classes: 'material-symbols-outlined icon',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('verified')],
+                ),
                 div(classes: 'course-info', [
                   span(classes: 'course-title', [Component.text(course.title)]),
                   span(
@@ -77,8 +81,10 @@ class EducationSection extends StatelessComponent {
             for (final language in content.languages)
               div(classes: 'lang-chip-card', [
                 span(
-                    classes: 'material-symbols-outlined icon',
-                    [Component.text('language')]),
+                  classes: 'material-symbols-outlined icon',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('language')],
+                ),
                 span(classes: 'lang-name', [Component.text(language['name']!)]),
                 span(
                     classes: 'lang-level',
