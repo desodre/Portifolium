@@ -1,7 +1,7 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart';
-@Import.onWeb('dart:html', show: [#window])
-import 'nav_bar.imports.dart';
+import '../data/portfolio_data.dart';
+import '../utils/web_utils.dart';
 import 'language_switch.dart';
 import 'theme_mode_switch.dart';
 
@@ -38,6 +38,36 @@ class NavBar extends StatefulComponent {
 
 class _NavBarState extends State<NavBar> {
   bool _menuOpen = false;
+  String _activeSection = 'home';
+  double _scrollProgress = 0.0;
+  Unsubscribe? _unsubScroll;
+  Unsubscribe? _unsubEsc;
+
+  @override
+  void initState() {
+    super.initState();
+    _unsubScroll = subscribeScrollSpy(
+      ['home', 'experience', 'projects', 'apps', 'skills', 'contact'],
+      (activeId, progress) {
+        if (!mounted) return;
+        if (_activeSection != activeId ||
+            (_scrollProgress - progress).abs() > 0.005) {
+          setState(() {
+            _activeSection = activeId;
+            _scrollProgress = progress;
+          });
+        }
+      },
+    );
+    _unsubEsc = subscribeEscapeKey(_closeMenu);
+  }
+
+  @override
+  void dispose() {
+    _unsubScroll?.call();
+    _unsubEsc?.call();
+    super.dispose();
+  }
 
   void _toggleMenu() {
     setState(() {
@@ -53,94 +83,140 @@ class _NavBarState extends State<NavBar> {
     }
   }
 
+  Component _buildNavLink(
+    Map<String, String> item, {
+    required bool isPt,
+    required bool mobile,
+  }) {
+    final label = isPt ? item['label_pt']! : item['label_en']!;
+    final sectionId = item['section']!;
+    final isActive = _activeSection == sectionId;
+    final baseClass = mobile ? 'nav-link-mobile' : 'nav-link';
+    return a(
+      href: '#$sectionId',
+      classes: '$baseClass${isActive ? ' active' : ''}',
+      attributes: isActive ? {'aria-current': 'location'} : null,
+      events: {
+        'click': (e) {
+          e.preventDefault();
+          if (mobile) _closeMenu();
+          scrollToSection(sectionId);
+        },
+      },
+      [Component.text(label)],
+    );
+  }
+
   @override
   Component build(BuildContext context) {
     final isPt = component.lang == 'pt';
-    return header(classes: 'nav-header', [
-      div(classes: 'nav-container', [
-        // Logo
-        a(
-          href: '#home',
-          classes: 'nav-logo',
-          events: {
-            'click': (e) {
-              _closeMenu();
-              if (kIsWeb) {
+    final content = kContent[component.lang]!;
+
+    return div(classes: 'nav-root', [
+      header(classes: 'nav-header', [
+        div(classes: 'nav-container', [
+          // Logo
+          a(
+            href: '#home',
+            classes: 'nav-logo',
+            events: {
+              'click': (e) {
                 e.preventDefault();
-                window.document.getElementById('home')?.scrollIntoView();
+                _closeMenu();
+                scrollToSection('home');
               }
-            }
-          },
-          [Component.text('JCS')],
-        ),
-        div(classes: 'nav-spacer', []),
+            },
+            [Component.text('JCS')],
+          ),
+          div(classes: 'nav-spacer', []),
 
-        // Desktop nav items
-        div(classes: 'nav-items-desktop', [
-          ..._kNavItems.map((item) {
-            final label = isPt ? item['label_pt']! : item['label_en']!;
-            final sectionId = item['section']!;
-            return a(
-              href: '#$sectionId',
-              classes: 'nav-link',
-              events: {
-                'click': (e) {
-                  if (kIsWeb) {
-                    e.preventDefault();
-                    window.document.getElementById(sectionId)?.scrollIntoView();
-                  }
-                }
-              },
-              [Component.text(label)],
-            );
-          }),
-          ThemeModeSwitch(
-              theme: component.theme, toggleTheme: component.toggleTheme),
-          LanguageSwitch(
-              lang: component.lang, toggleLanguage: component.toggleLanguage),
-        ]),
-
-        // Mobile actions
-        div(classes: 'nav-actions-mobile', [
-          LanguageSwitch(
-              lang: component.lang, toggleLanguage: component.toggleLanguage),
-          ThemeModeSwitch(
-              theme: component.theme, toggleTheme: component.toggleTheme),
-          button(
-            classes: 'theme-switch',
-            events: {'click': (e) => _toggleMenu()},
+          // Desktop nav items
+          nav(
+            classes: 'nav-items-desktop',
+            attributes: {'aria-label': content.navAriaLabel},
             [
-              span(
-                classes: 'material-symbols-outlined',
-                [Component.text(_menuOpen ? 'close' : 'menu')],
+              for (final item in _kNavItems)
+                _buildNavLink(item, isPt: isPt, mobile: false),
+              ThemeModeSwitch(
+                theme: component.theme,
+                toggleTheme: component.toggleTheme,
+                lang: component.lang,
+              ),
+              LanguageSwitch(
+                lang: component.lang,
+                toggleLanguage: component.toggleLanguage,
               ),
             ],
           ),
+
+          // Mobile actions
+          div(classes: 'nav-actions-mobile', [
+            LanguageSwitch(
+              lang: component.lang,
+              toggleLanguage: component.toggleLanguage,
+            ),
+            ThemeModeSwitch(
+              theme: component.theme,
+              toggleTheme: component.toggleTheme,
+              lang: component.lang,
+            ),
+            button(
+              classes: 'theme-switch',
+              attributes: {
+                'type': 'button',
+                'aria-label': _menuOpen
+                    ? content.navMenuCloseLabel
+                    : content.navMenuOpenLabel,
+                'aria-expanded': '$_menuOpen',
+                'aria-controls': 'mobile-nav-menu',
+              },
+              events: {'click': (e) => _toggleMenu()},
+              [
+                span(
+                  classes: 'material-symbols-outlined',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text(_menuOpen ? 'close' : 'menu')],
+                ),
+              ],
+            ),
+          ]),
         ]),
+
+        // Reading progress indicator
+        div(
+          classes: 'nav-progress-track',
+          attributes: {'aria-hidden': 'true'},
+          [
+            div(
+              classes: 'nav-progress-bar',
+              styles: Styles(raw: {
+                'width': '${(_scrollProgress * 100).toStringAsFixed(1)}%',
+              }),
+              [],
+            ),
+          ],
+        ),
       ]),
 
-      // Mobile dropdown menu
-      div(
+      // Clickable backdrop & mobile drawer outside header backdrop-filter block
+      if (_menuOpen)
+        div(
+          classes: 'nav-mobile-backdrop',
+          attributes: {'aria-hidden': 'true'},
+          events: {'click': (_) => _closeMenu()},
+          [],
+        ),
+
+      nav(
+        id: 'mobile-nav-menu',
         classes: 'nav-mobile-menu${_menuOpen ? ' open' : ''}',
+        attributes: {
+          'aria-label': content.navAriaLabel,
+          'aria-hidden': '${!_menuOpen}',
+        },
         [
-          ..._kNavItems.map((item) {
-            final label = isPt ? item['label_pt']! : item['label_en']!;
-            final sectionId = item['section']!;
-            return a(
-              href: '#$sectionId',
-              classes: 'nav-link-mobile',
-              events: {
-                'click': (e) {
-                  _closeMenu();
-                  if (kIsWeb) {
-                    e.preventDefault();
-                    window.document.getElementById(sectionId)?.scrollIntoView();
-                  }
-                }
-              },
-              [Component.text(label)],
-            );
-          }),
+          for (final item in _kNavItems)
+            _buildNavLink(item, isPt: isPt, mobile: true),
         ],
       ),
     ]);
