@@ -1,0 +1,198 @@
+/* ==========================================================================
+   Print / Save-as-PDF Resume Stylesheet
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Screen Defaults & Print-Only Contact Header
+   -------------------------------------------------------------------------- */
+.print-contact-header {
+  display: none;
+}
+
+.exp-collapsed-hidden {
+  display: none;
+}
+
+.print-cv-btn {
+  font: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   @media print Page Setup, Chrome Suppression & Typography
+   -------------------------------------------------------------------------- */
+@media print {
+  @page {
+    size: A4;
+    margin: 13mm 15mm;
+  }
+
+  :root,
+  [data-theme="dark"],
+  [data-theme="light"] {
+    --background: #ffffff;
+    --surface: #ffffff;
+    --card: #f9fafb;
+    --text-primary: #111827;
+    --text-secondary: #374151;
+    --border: #d1d5db;
+    --accent: #00664e;
+    --accent-alpha-10: rgba(0, 102, 78, 0.08);
+    --accent-alpha-25: rgba(0, 102, 78, 0.25);
+    --shadow-color: transparent;
+    --shadow-color-hover: transparent;
+    --shadow-color-glow: transparent;
+    --timeline-dot-bg: #ffffff;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 9.5pt;
+    line-height: 1.45;
+  }
+
+  #main-content {
+    margin-top: 0 !important;
+  }
+
+  .print-contact-header {
+    display: block !important;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #00664e;
+  }
+
+  .print-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20pt;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 2px 0;
+  }
+
+  .print-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 600;
+    color: #00664e;
+    margin: 0 0 4px 0;
+  }
+
+  .print-meta {
+    font-size: 8.5pt;
+    color: #374151;
+    margin: 0;
+  }
+
+  .nav-root,
+  .skip-link,
+  .hero-avatar-container,
+  .hero-badge,
+  .hero-name,
+  .hero-title,
+  .hero-location,
+  .hero-actions-primary,
+  .hero-social-wrap,
+  .hero-section-bg::before,
+  .filter-pills-row,
+  .proj-card-actions,
+  .proj-open-icon,
+  .skills-filter-bar,
+  .exp-toggle-btn,
+  .tech-chip-more,
+  #apps,
+  #contributions,
+  #contact,
+  .lightbox-backdrop,
+  .case-study-backdrop {
+    display: none !important;
+  }
+
+  li.exp-bullet-item.exp-collapsed-hidden {
+    display: flex !important;
+  }
+
+  .tech-chip.exp-collapsed-hidden {
+    display: inline-block !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     Print Section Layout, Cards & Page-Break Controls
+     ------------------------------------------------------------------------ */
+  .section-padding {
+    padding: 10px 0 !important;
+  }
+
+  .hero-wrapper {
+    min-height: auto !important;
+    padding: 4px 0 10px !important;
+  }
+
+  .hero-layout {
+    display: block !important;
+    text-align: left !important;
+  }
+
+  .hero-text-container {
+    align-items: flex-start !important;
+  }
+
+  .hero-bio {
+    max-width: 100% !important;
+    margin-bottom: 8px !important;
+    font-size: 9.5pt !important;
+    color: #1f2937 !important;
+  }
+
+  .hero-highlights {
+    margin-top: 8px !important;
+    padding-top: 8px !important;
+    max-width: 100% !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .hero-highlight-item {
+    align-items: flex-start !important;
+  }
+
+  .surface-bg {
+    background: transparent !important;
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .proj-desc {
+    -webkit-line-clamp: unset !important;
+    overflow: visible !important;
+  }
+
+  .section-header-block {
+    break-after: avoid;
+    page-break-after: avoid;
+    margin-bottom: 10px !important;
+  }
+
+  .section-title-text {
+    font-size: 14pt !important;
+  }
+
+  .experience-card,
+  .project-card,
+  .education-card,
+  .skill-category-card,
+  .core-skills-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    padding: 10px 12px !important;
+    background: #ffffff !important;
+    border-color: #d1d5db !important;
+  }
+
+  .timeline-content {
+    padding-bottom: 12px !important;
+  }
+}
