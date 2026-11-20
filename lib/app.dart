@@ -2,6 +2,7 @@ import 'package:jaspr/jaspr.dart';
 @Import.onWeb('dart:html', show: [#window])
 import 'app.imports.dart';
 import 'pages/home_page.dart';
+import 'utils/web_utils.dart';
 
 @client
 class App extends StatefulComponent {
@@ -14,11 +15,20 @@ class App extends StatefulComponent {
 class _AppState extends State<App> {
   String _lang = 'pt';
   String _theme = 'dark';
+  final Set<String> _revealedSections = {};
+  Unsubscribe? _unsubReveal;
 
   @override
   void initState() {
     super.initState();
     _loadPreferences();
+    _unsubReveal = initRevealOnScroll();
+  }
+
+  @override
+  void dispose() {
+    _unsubReveal?.call();
+    super.dispose();
   }
 
   void _loadPreferences() {
@@ -49,21 +59,25 @@ class _AppState extends State<App> {
 
   void _toggleTheme() {
     setState(() {
+      _revealedSections.addAll(getRevealedSectionIds());
       _theme = _theme == 'dark' ? 'light' : 'dark';
       if (kIsWeb) {
         window.localStorage['theme'] = _theme;
         _applyTheme();
       }
     });
+    Future.microtask(refreshRevealOnScroll);
   }
 
   void _toggleLanguage() {
     setState(() {
+      _revealedSections.addAll(getRevealedSectionIds());
       _lang = _lang == 'pt' ? 'en' : 'pt';
       if (kIsWeb) {
         window.localStorage['lang'] = _lang;
       }
     });
+    Future.microtask(refreshRevealOnScroll);
   }
 
   @override
@@ -73,6 +87,7 @@ class _AppState extends State<App> {
       theme: _theme,
       toggleTheme: _toggleTheme,
       toggleLanguage: _toggleLanguage,
+      revealedSections: _revealedSections,
     );
   }
 }
