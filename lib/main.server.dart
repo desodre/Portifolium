@@ -20,7 +20,7 @@ void main() {
           'Jhonatha Sodre – Software Engineer & Android Developer',
       'twitter:description':
           'Software Engineer, Android Developer (Kotlin, Flutter, NDK) & QA Automation Specialist.',
-      'twitter:image': 'https://jhonsodre.xyz/og-image.png?v=2',
+      'twitter:image': 'https://jhonsodre.xyz/og-image.png?v=3',
       'twitter:image:alt':
           'Jhonatha Cirilo Sodre — Software Engineer, Android Developer & QA Automation',
     },
@@ -49,11 +49,11 @@ void main() {
       }),
       Component.element(tag: 'meta', attributes: {
         'property': 'og:image',
-        'content': 'https://jhonsodre.xyz/og-image.png?v=2',
+        'content': 'https://jhonsodre.xyz/og-image.png?v=3',
       }),
       Component.element(tag: 'meta', attributes: {
         'property': 'og:image:secure_url',
-        'content': 'https://jhonsodre.xyz/og-image.png?v=2',
+        'content': 'https://jhonsodre.xyz/og-image.png?v=3',
       }),
       Component.element(tag: 'meta', attributes: {
         'property': 'og:image:type',

@@ -7,9 +7,10 @@
 .nav-items-desktop, .nav-actions-mobile { display: flex; align-items: center; gap: 16px; }
 .nav-items-desktop { gap: clamp(10px, 1.3vw, 16px); }
 .nav-link { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; border-bottom: 1px solid transparent; font-size: 13px; font-weight: 500; white-space: nowrap; }
-.nav-link:hover, .nav-link[aria-current="location"] { border-bottom-color: var(--text-primary); }
+.nav-link:hover { border-bottom-color: var(--text-primary); }
+.nav-link[aria-current="location"] { color: var(--text-primary); border-bottom: 2px solid var(--accent-navy-border); }
 .nav-progress { position: absolute; bottom: -1px; width: 100%; height: 1px; pointer-events: none; }
-.nav-progress-bar { height: 1px; background: var(--text-primary); }
+.nav-progress-bar { height: 1px; background: var(--accent-navy-border); }
 .lang-switch, .theme-switch { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 0 8px; border: 1px solid transparent; border-radius: 6px; background: transparent; color: var(--text-primary); font-size: 12px; font-weight: 600; }
 .lang-switch:hover, .theme-switch:hover { border-color: var(--border-strong); background: var(--bg-subtle); }
 .nav-actions-mobile, .nav-mobile-menu, .nav-mobile-backdrop { display: none; }
@@ -41,7 +42,7 @@
   .nav-mobile-menu { position: fixed; top: 64px; left: 0; right: 0; z-index: 29; display: none; padding: 8px 18px 18px; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
   .nav-mobile-menu.open { display: flex; flex-direction: column; }
   .nav-link-mobile { display: flex; align-items: center; min-height: 44px; padding: 8px 4px; border-bottom: 1px solid var(--border); font-size: 14px; }
-  .nav-link-mobile[aria-current="location"] { border-bottom: 2px solid var(--text-primary); font-weight: 600; }
+  .nav-link-mobile[aria-current="location"] { border-bottom: 2px solid var(--accent-navy-border); font-weight: 600; }
 }
 @media (max-width: 700px) {
   .nav-container { width: min(calc(100% - 36px), 980px); }
