@@ -42,19 +42,24 @@ class _ContactSectionState extends State<ContactSection> {
       SectionTitle(
         title: content.sectionContact,
         subtitle: content.sectionContactSubtitle,
+        indexTag: '07',
       ),
       div(classes: 'contact-center-wrap', [
-        // Availability Badge
-        div(classes: 'availability-badge', [
-          div(classes: 'avail-dot', []),
-          Component.text(content.contactAvailableLabel),
+        // Availability Label with flat 7px dot
+        div(classes: 'contact-availability', [
+          span(
+            classes: 'contact-avail-dot',
+            attributes: {'aria-hidden': 'true'},
+            [],
+          ),
+          span([Component.text(content.contactAvailableLabel)]),
         ]),
 
-        // Contact Buttons
-        div(classes: 'contact-buttons-wrap', [
+        // Contact Ledger
+        div(classes: 'contact-ledger', [
           button(
             classes:
-                'contact-btn contact-btn-copy${_emailCopied ? ' copied' : ''}',
+                'contact-row contact-row-copy${_emailCopied ? ' copied' : ''}',
             attributes: {
               'type': 'button',
               'aria-label': '${content.contactCopyEmail}: $kEmail',
@@ -62,93 +67,112 @@ class _ContactSectionState extends State<ContactSection> {
             events: {'click': (_) => _handleCopyEmail()},
             [
               span(
-                classes: 'material-symbols-outlined icon',
-                attributes: {'aria-hidden': 'true'},
-                [Component.text(_emailCopied ? 'check' : 'content_copy')],
+                classes: 'contact-row-label',
+                [Component.text(content.contactCopyEmail)],
               ),
-              span(
-                classes: 'contact-label',
-                [
-                  Component.text(
-                    _emailCopied
-                        ? content.contactCopied
-                        : content.contactCopyEmail,
+              span(classes: 'contact-row-value', [Component.text(kEmail)]),
+              span(classes: 'contact-row-action', [
+                if (_emailCopied)
+                  span(
+                    classes: 'contact-copied-text',
+                    [
+                      Component.text(
+                        component.lang == 'pt' ? 'Copiado' : 'Copied',
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              span(classes: 'contact-sublabel', [Component.text(kEmail)]),
+                span(
+                  classes: 'material-symbols-outlined icon',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text(_emailCopied ? 'check' : 'content_copy')],
+                ),
+              ]),
             ],
           ),
           a(
             href: 'mailto:$kEmail',
-            classes: 'contact-btn',
+            classes: 'contact-row',
             [
               span(
-                classes: 'material-symbols-outlined icon',
-                attributes: {'aria-hidden': 'true'},
-                [Component.text('mail')],
-              ),
-              span(
-                classes: 'contact-label',
+                classes: 'contact-row-label',
                 [Component.text(content.contactSendEmail)],
               ),
-              span(classes: 'contact-sublabel', [Component.text(kEmail)]),
+              span(classes: 'contact-row-value', [Component.text(kEmail)]),
+              span(classes: 'contact-row-action', [
+                span(
+                  classes: 'material-symbols-outlined icon',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('mail')],
+                ),
+              ]),
             ],
           ),
           a(
             href: kGitHub,
             target: Target.blank,
             attributes: {'rel': 'noopener noreferrer'},
-            classes: 'contact-btn',
+            classes: 'contact-row',
             [
               span(
-                classes: 'material-symbols-outlined icon',
-                attributes: {'aria-hidden': 'true'},
-                [Component.text('code')],
+                classes: 'contact-row-label',
+                [Component.text('GitHub')],
               ),
-              span(classes: 'contact-label', [Component.text('GitHub')]),
               span(
-                classes: 'contact-sublabel',
+                classes: 'contact-row-value',
                 [Component.text('github.com/desodre')],
               ),
+              span(classes: 'contact-row-action', [
+                span(
+                  classes: 'material-symbols-outlined icon',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('open_in_new')],
+                ),
+              ]),
             ],
           ),
           a(
             href: kLinkedIn,
             target: Target.blank,
             attributes: {'rel': 'noopener noreferrer'},
-            classes: 'contact-btn',
+            classes: 'contact-row',
             [
               span(
-                classes: 'material-symbols-outlined icon',
-                attributes: {'aria-hidden': 'true'},
-                [Component.text('work')],
+                classes: 'contact-row-label',
+                [Component.text('LinkedIn')],
               ),
-              span(classes: 'contact-label', [Component.text('LinkedIn')]),
               span(
-                classes: 'contact-sublabel',
-                [Component.text('in/jhonsodre')],
+                classes: 'contact-row-value',
+                [Component.text('linkedin.com/in/jhonsodre')],
               ),
+              span(classes: 'contact-row-action', [
+                span(
+                  classes: 'material-symbols-outlined icon',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('open_in_new')],
+                ),
+              ]),
             ],
           ),
           a(
             href: 'tel:${kPhone.replaceAll(RegExp(r"[^\d+]"), "")}',
-            classes: 'contact-btn',
+            classes: 'contact-row',
             [
               span(
-                classes: 'material-symbols-outlined icon',
-                attributes: {'aria-hidden': 'true'},
-                [Component.text('phone')],
-              ),
-              span(
-                classes: 'contact-label',
+                classes: 'contact-row-label',
                 [
                   Component.text(
                     component.lang == 'pt' ? 'Telefone' : 'Phone',
                   ),
                 ],
               ),
-              span(classes: 'contact-sublabel', [Component.text(kPhone)]),
+              span(classes: 'contact-row-value', [Component.text(kPhone)]),
+              span(classes: 'contact-row-action', [
+                span(
+                  classes: 'material-symbols-outlined icon',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('phone')],
+                ),
+              ]),
             ],
           ),
         ]),
@@ -162,19 +186,32 @@ class _ContactSectionState extends State<ContactSection> {
         // Footer
         footer(classes: 'site-footer', [
           div(classes: 'footer-line', []),
-          div(classes: 'footer-text-row', [
-            Component.text('© 2026 Jhonatha Sodre · '),
-            span(
-              classes: 'material-symbols-outlined icon',
-              attributes: {'aria-hidden': 'true'},
-              [Component.text('favorite')],
-            ),
-            a(
-              classes: 'footer-link',
-              href: 'https://docs.jaspr.site/',
-              target: Target.blank,
-              attributes: {'rel': 'noopener noreferrer'},
-              [Component.text(' ${content.contactBuiltWith}')],
+          div(classes: 'footer-bottom-row', [
+            div(classes: 'footer-text-row', [
+              Component.text('© ${DateTime.now().year} Jhonatha Sodre · '),
+              a(
+                classes: 'footer-link',
+                href: 'https://docs.jaspr.site/',
+                target: Target.blank,
+                attributes: {'rel': 'noopener noreferrer'},
+                [Component.text(content.contactBuiltWith)],
+              ),
+            ]),
+            button(
+              classes: 'back-to-top-btn',
+              attributes: {
+                'type': 'button',
+                'aria-label': content.backToTopLabel,
+              },
+              events: {'click': (_) => scrollToSection('home')},
+              [
+                span([Component.text(content.backToTopLabel)]),
+                span(
+                  classes: 'material-symbols-outlined icon',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('arrow_upward')],
+                ),
+              ],
             ),
           ]),
         ]),

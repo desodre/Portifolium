@@ -20,3 +20,18 @@ Set<String> getRevealedSectionIds() => const {};
 void refreshRevealOnScroll() {}
 
 Unsubscribe initRevealOnScroll() => () {};
+
+void setBodyScrollLocked(bool locked) {}
+
+void saveActiveFocus() {}
+
+void focusElementBySelector(String selector) {}
+
+void restoreSavedFocus() {}
+
+Unsubscribe subscribeDialogFocusTrap(String dialogSelector) => () {};
+
+bool prefersReducedMotion() => false;
+
+Unsubscribe subscribeVisibilityChange(void Function(bool isHidden) onChanged) =>
+    () {};

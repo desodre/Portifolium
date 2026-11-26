@@ -17,6 +17,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
   String _selectedFilter = 'all';
   String? _activeCaseStudyName;
   Unsubscribe? _unsubEsc;
+  Unsubscribe? _unsubFocusTrap;
 
   @override
   void initState() {
@@ -26,17 +27,32 @@ class _ProjectsSectionState extends State<ProjectsSection> {
 
   @override
   void dispose() {
+    if (_activeCaseStudyName != null) {
+      setBodyScrollLocked(false);
+    }
+    _unsubFocusTrap?.call();
     _unsubEsc?.call();
     super.dispose();
   }
 
   void _openCaseStudy(String projectName) {
+    saveActiveFocus();
+    setBodyScrollLocked(true);
+    _unsubFocusTrap?.call();
+    _unsubFocusTrap = subscribeDialogFocusTrap('.case-study-dialog');
     setState(() => _activeCaseStudyName = projectName);
+    focusElementBySelector('.case-study-dialog');
   }
 
   void _closeCaseStudy() {
-    if (_activeCaseStudyName != null && mounted) {
-      setState(() => _activeCaseStudyName = null);
+    if (_activeCaseStudyName != null) {
+      _unsubFocusTrap?.call();
+      _unsubFocusTrap = null;
+      setBodyScrollLocked(false);
+      if (mounted) {
+        setState(() => _activeCaseStudyName = null);
+      }
+      restoreSavedFocus();
     }
   }
 
@@ -68,15 +84,16 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     final cs = activeProject.caseStudy!;
     return div(
       classes: 'case-study-backdrop',
-      attributes: {
-        'role': 'dialog',
-        'aria-modal': 'true',
-        'aria-labelledby': 'case-study-title',
-      },
       events: {'click': (_) => _closeCaseStudy()},
       [
         div(
           classes: 'case-study-dialog',
+          attributes: {
+            'role': 'dialog',
+            'aria-modal': 'true',
+            'aria-labelledby': 'case-study-title',
+            'tabindex': '-1',
+          },
           events: {'click': (e) => e.stopPropagation()},
           [
             div(classes: 'case-study-header', [
@@ -215,11 +232,12 @@ class _ProjectsSectionState extends State<ProjectsSection> {
       }
     }
 
-    return div(classes: 'surface-bg', [
+    return div([
       div(classes: 'section-padding container-box', [
         SectionTitle(
           title: content.sectionProjects,
           subtitle: content.sectionProjectsSubtitle,
+          indexTag: '02',
         ),
         div(
           classes: 'filter-pills-row',
@@ -246,93 +264,106 @@ class _ProjectsSectionState extends State<ProjectsSection> {
               }(),
           ],
         ),
-        div(classes: 'projects-grid', [
-          for (final proj in filteredProjects)
-            article(
-              classes: 'project-card${proj.isFeatured ? ' featured' : ''}',
-              [
-                // Card Header (Category icon, featured badge, and link-out indicator)
-                div(classes: 'proj-header', [
-                  div(classes: 'proj-icon-wrapper', [
-                    span(
-                      classes: 'material-symbols-outlined icon',
-                      attributes: {'aria-hidden': 'true'},
-                      [Component.text(proj.icon)],
-                    ),
-                  ]),
-                  if (proj.isFeatured)
-                    span(
-                      classes: 'proj-featured-badge',
-                      [Component.text(content.projectsFeaturedBadge)],
-                    ),
-                  div(classes: 'nav-spacer', []),
-                  a(
-                    href: proj.url,
-                    target: Target.blank,
-                    classes: 'proj-open-icon',
-                    attributes: {
-                      'rel': 'noopener noreferrer',
-                      'aria-label': '${proj.name} — ${content.projOpenRepo}',
-                    },
-                    [
-                      span(
-                        classes: 'material-symbols-outlined icon',
-                        attributes: {'aria-hidden': 'true'},
-                        [Component.text('open_in_new')],
-                      ),
-                    ],
-                  ),
-                ]),
-
-                // Project Title
-                h3(classes: 'proj-title', [Component.text(proj.name)]),
-
-                // Description
-                p(classes: 'proj-desc', [Component.text(proj.description)]),
-
-                // Tech tags
-                div(classes: 'tech-chips-wrap', [
-                  for (final tech in proj.techs)
-                    div(classes: 'small-chip', [Component.text(tech)]),
-                ]),
-
-                // Card Actions (Case Study modal trigger & Repository link)
-                div(classes: 'proj-card-actions', [
-                  if (proj.caseStudy != null)
-                    button(
-                      classes: 'proj-case-btn',
-                      attributes: {
-                        'type': 'button',
-                        'aria-label': '${content.projViewCaseStudy}: ${proj.name}',
-                      },
-                      events: {'click': (_) => _openCaseStudy(proj.name)},
-                      [
+        div(
+          classes: 'projects-grid',
+          [
+            for (final proj in filteredProjects)
+              () {
+                final sourceLabel = proj.url.contains('pub.dev')
+                    ? 'pub.dev'
+                    : (proj.url.contains('pypi.org') ? 'PyPI' : 'GitHub');
+                return article(
+                  classes: 'project-card${proj.isFeatured ? ' featured' : ''}',
+                  [
+                    // Card Header (Category icon, featured badge, source badge, link-out)
+                    div(classes: 'proj-header', [
+                      div(classes: 'proj-icon-wrapper', [
                         span(
                           classes: 'material-symbols-outlined icon',
                           attributes: {'aria-hidden': 'true'},
-                          [Component.text('architecture')],
+                          [Component.text(proj.icon)],
                         ),
-                        Component.text(content.projViewCaseStudy),
-                      ],
-                    ),
-                  a(
-                    href: proj.url,
-                    target: Target.blank,
-                    classes: 'proj-repo-link',
-                    attributes: {'rel': 'noopener noreferrer'},
-                    [
-                      Component.text(content.projOpenRepo),
+                      ]),
+                      if (proj.isFeatured)
+                        span(
+                          classes: 'proj-featured-badge',
+                          [Component.text(content.projectsFeaturedBadge)],
+                        ),
                       span(
-                        classes: 'material-symbols-outlined icon',
-                        attributes: {'aria-hidden': 'true'},
-                        [Component.text('open_in_new')],
+                        classes: 'proj-source-badge',
+                        [Component.text(sourceLabel)],
                       ),
-                    ],
-                  ),
-                ]),
-              ],
-            ),
-        ]),
+                      div(classes: 'nav-spacer', []),
+                      a(
+                        href: proj.url,
+                        target: Target.blank,
+                        classes: 'proj-open-icon',
+                        attributes: {
+                          'rel': 'noopener noreferrer',
+                          'aria-label': '${proj.name} — ${content.projOpenRepo}',
+                        },
+                        [
+                          span(
+                            classes: 'material-symbols-outlined icon',
+                            attributes: {'aria-hidden': 'true'},
+                            [Component.text('open_in_new')],
+                          ),
+                        ],
+                      ),
+                    ]),
+
+                    // Project Title
+                    h3(classes: 'proj-title', [Component.text(proj.name)]),
+
+                    // Description
+                    p(classes: 'proj-desc', [Component.text(proj.description)]),
+
+                    // Tech tags
+                    div(classes: 'tech-chips-wrap', [
+                      for (final tech in proj.techs)
+                        div(classes: 'small-chip', [Component.text(tech)]),
+                    ]),
+
+                    // Card Actions (Case Study modal trigger & Repository link)
+                    div(classes: 'proj-card-actions', [
+                      if (proj.caseStudy != null)
+                        button(
+                          classes: 'proj-case-btn',
+                          attributes: {
+                            'type': 'button',
+                            'aria-label':
+                                '${content.projViewCaseStudy}: ${proj.name}',
+                          },
+                          events: {'click': (_) => _openCaseStudy(proj.name)},
+                          [
+                            span(
+                              classes: 'material-symbols-outlined icon',
+                              attributes: {'aria-hidden': 'true'},
+                              [Component.text('architecture')],
+                            ),
+                            Component.text(content.projViewCaseStudy),
+                          ],
+                        ),
+                      a(
+                        href: proj.url,
+                        target: Target.blank,
+                        classes: 'proj-repo-link',
+                        attributes: {'rel': 'noopener noreferrer'},
+                        [
+                          Component.text(content.projOpenRepo),
+                          span(
+                            classes: 'material-symbols-outlined icon',
+                            attributes: {'aria-hidden': 'true'},
+                            [Component.text('open_in_new')],
+                          ),
+                        ],
+                      ),
+                    ]),
+                  ],
+                );
+              }(),
+          ],
+        ),
       ]),
       if (activeProject != null) _buildCaseStudyModal(activeProject, content),
     ]);

@@ -31,7 +31,7 @@ class HomePage extends StatelessComponent {
   Component build(BuildContext context) {
     final content = kContent[lang]!;
 
-    return div([
+    return div(classes: 'page-shell', [
       a(
         href: '#main-content',
         classes: 'skip-link',
@@ -49,9 +49,7 @@ class HomePage extends StatelessComponent {
       // Main container with offset for fixed navigation bar
       main_(
         id: 'main-content',
-        styles: Styles(raw: {
-          'margin-top': '64px',
-        }),
+        classes: 'main-content',
         [
           div(
             classes: 'print-contact-header',

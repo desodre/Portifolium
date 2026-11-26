@@ -37,6 +37,7 @@ class _ExperienceSectionState extends State<ExperienceSection> {
       SectionTitle(
         title: content.sectionExperience,
         subtitle: content.sectionExperienceSubtitle,
+        indexTag: '01',
       ),
       div(classes: 'timeline-container', [
         for (var i = 0; i < experiences.length; i++)
@@ -44,7 +45,6 @@ class _ExperienceSectionState extends State<ExperienceSection> {
             content: content,
             entry: experiences[i],
             index: i,
-            isLast: i == experiences.length - 1,
           ),
       ]),
     ]);
@@ -54,7 +54,6 @@ class _ExperienceSectionState extends State<ExperienceSection> {
     required PortfolioContent content,
     required ExperienceEntry entry,
     required int index,
-    required bool isLast,
   }) {
     final hasHiddenBullets = entry.bullets.length > _kCollapsedBullets;
     final hasHiddenTechs = entry.techs.length > _kCollapsedTechs;
@@ -63,61 +62,65 @@ class _ExperienceSectionState extends State<ExperienceSection> {
     final hideCollapsed = isExpandable && !isExpanded;
     final hiddenBulletCount = entry.bullets.length - _kCollapsedBullets;
     final hiddenTechCount = entry.techs.length - _kCollapsedTechs;
+    final detailsId = 'exp-details-$index';
 
     return div(classes: 'timeline-item', [
-      // Marker Column (Dot and vertical connecting line)
-      div(classes: 'timeline-marker', [
-        div(classes: 'timeline-dot${entry.isCurrent ? ' current' : ''}', []),
-        if (!isLast) div(classes: 'timeline-line', []),
+      // Left Ledger Column: Period, Company, Explicit Current Status
+      div(classes: 'exp-aside-col', [
+        span(classes: 'exp-period', [Component.text(entry.period)]),
+        span(classes: 'exp-company', [Component.text(entry.company)]),
+        if (entry.isCurrent)
+          span(
+            classes: 'exp-badge',
+            [
+              Component.text(
+                component.lang == 'pt' ? 'Atual' : 'Current',
+              ),
+            ],
+          ),
       ]),
-      // Content Card Column
+      // Right Ledger Column: Role, Details (Bullets + Tech), Expand Toggle
       div(classes: 'timeline-content', [
         div(classes: 'experience-card', [
-          // Header (Role + Optional Current Badge)
           div(classes: 'exp-header-wrap', [
             h3(classes: 'exp-role', [Component.text(entry.role)]),
-            if (entry.isCurrent)
-              span(
-                classes: 'exp-badge',
-                [
-                  Component.text(
-                    component.lang == 'pt' ? 'Atual' : 'Current',
+          ]),
+          div(
+            id: detailsId,
+            classes: 'exp-details',
+            [
+              // Bullet points
+              ul(classes: 'exp-bullet-list', [
+                for (var idx = 0; idx < entry.bullets.length; idx++)
+                  li(
+                    classes:
+                        'exp-bullet-item${hideCollapsed && idx >= _kCollapsedBullets ? ' exp-collapsed-hidden' : ''}',
+                    [
+                      span(
+                        classes: 'exp-bullet-dot',
+                        attributes: {'aria-hidden': 'true'},
+                        [],
+                      ),
+                      span([Component.text(entry.bullets[idx])]),
+                    ],
                   ),
-                ],
-              ),
-          ]),
-          // Company & Period
-          div(classes: 'exp-meta-row', [
-            span(classes: 'exp-company', [Component.text(entry.company)]),
-            Component.text(' · '),
-            span(classes: 'exp-period', [Component.text(entry.period)]),
-          ]),
-          // Bullet points
-          ul(classes: 'exp-bullet-list', [
-            for (var idx = 0; idx < entry.bullets.length; idx++)
-              li(
-                classes:
-                    'exp-bullet-item${hideCollapsed && idx >= _kCollapsedBullets ? ' exp-collapsed-hidden' : ''}',
-                [
-                  div(classes: 'exp-bullet-dot', []),
-                  span([Component.text(entry.bullets[idx])]),
-                ],
-              ),
-          ]),
-          // Tech chips
-          div(classes: 'tech-chips-wrap', [
-            for (var idx = 0; idx < entry.techs.length; idx++)
-              div(
-                classes:
-                    'tech-chip${hideCollapsed && idx >= _kCollapsedTechs ? ' exp-collapsed-hidden' : ''}',
-                [Component.text(entry.techs[idx])],
-              ),
-            if (!isExpanded && hasHiddenTechs)
-              div(
-                classes: 'tech-chip tech-chip-more',
-                [Component.text('+$hiddenTechCount')],
-              ),
-          ]),
+              ]),
+              // Tech chips
+              div(classes: 'tech-chips-wrap', [
+                for (var idx = 0; idx < entry.techs.length; idx++)
+                  span(
+                    classes:
+                        'tech-chip${hideCollapsed && idx >= _kCollapsedTechs ? ' exp-collapsed-hidden' : ''}',
+                    [Component.text(entry.techs[idx])],
+                  ),
+                if (!isExpanded && hasHiddenTechs)
+                  span(
+                    classes: 'tech-chip tech-chip-more',
+                    [Component.text('+$hiddenTechCount')],
+                  ),
+              ]),
+            ],
+          ),
           // Expand / Collapse toggle
           if (isExpandable)
             button(
@@ -125,6 +128,7 @@ class _ExperienceSectionState extends State<ExperienceSection> {
               attributes: {
                 'type': 'button',
                 'aria-expanded': '$isExpanded',
+                'aria-controls': detailsId,
               },
               events: {'click': (e) => _toggleExpanded(index)},
               [

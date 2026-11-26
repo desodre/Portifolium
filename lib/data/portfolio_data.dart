@@ -84,10 +84,11 @@ class HeroHighlight {
 class OpenSourceLibrary {
   final String name;
   final String description;
-  final String registry; // 'pub.dev', 'PyPI', 'GitHub'
+  final String registry; // 'pub.dev', 'PyPI', 'GitHub', 'Maven Central'
   final String url;
   final List<String> techStack;
   final String? badgeText;
+  final String? installCommand;
 
   const OpenSourceLibrary({
     required this.name,
@@ -96,6 +97,7 @@ class OpenSourceLibrary {
     required this.url,
     required this.techStack,
     this.badgeText,
+    this.installCommand,
   });
 }
 
@@ -103,11 +105,13 @@ class SkillCategory {
   final String label;
   final String domain;
   final List<String> skills;
+  final String icon;
 
   const SkillCategory({
     required this.label,
     required this.domain,
     required this.skills,
+    this.icon = 'code',
   });
 }
 
@@ -192,6 +196,8 @@ class PortfolioContent {
   final String appCloseLightbox;
   final String sectionOpenSourceTitle;
   final String sectionOpenSourceSubtitle;
+  final String pkgCopyCommand;
+  final String pkgCommandCopied;
   final String sectionSkills;
   final String sectionSkillsSubtitle;
   final String skillsCoreTitle;
@@ -201,6 +207,9 @@ class PortfolioContent {
   final String skillsFilterBackend;
   final String skillsFilterQuality;
   final String skillsFilterWeb;
+  final String skillsSearchPlaceholder;
+  final String skillsNoMatch;
+  final String skillsResetFilter;
   final String sectionEducation;
   final String sectionEducationSubtitle;
   final String coursesHeading;
@@ -212,6 +221,7 @@ class PortfolioContent {
   final String contactCopyEmail;
   final String contactCopied;
   final String contactSendEmail;
+  final String backToTopLabel;
   final String sectionContributions;
   final String sectionContributionsSubtitle;
   final String contributionsInLastYear;
@@ -277,6 +287,8 @@ class PortfolioContent {
     required this.appCloseLightbox,
     required this.sectionOpenSourceTitle,
     required this.sectionOpenSourceSubtitle,
+    required this.pkgCopyCommand,
+    required this.pkgCommandCopied,
     required this.sectionSkills,
     required this.sectionSkillsSubtitle,
     required this.skillsCoreTitle,
@@ -286,6 +298,9 @@ class PortfolioContent {
     required this.skillsFilterBackend,
     required this.skillsFilterQuality,
     required this.skillsFilterWeb,
+    required this.skillsSearchPlaceholder,
+    required this.skillsNoMatch,
+    required this.skillsResetFilter,
     required this.sectionEducation,
     required this.sectionEducationSubtitle,
     required this.coursesHeading,
@@ -297,6 +312,7 @@ class PortfolioContent {
     required this.contactCopyEmail,
     required this.contactCopied,
     required this.contactSendEmail,
+    required this.backToTopLabel,
     required this.sectionContributions,
     required this.sectionContributionsSubtitle,
     required this.contributionsInLastYear,
@@ -525,7 +541,7 @@ const Map<String, PortfolioContent> kContent = {
     themeToLightLabel: 'Switch to light theme',
     themeToDarkLabel: 'Switch to dark theme',
     langSwitchLabel: 'Switch language to Portuguese',
-    heroGreeting: '👋  Hello, World!',
+    heroGreeting: 'Hello, World!',
     heroViewWork: 'View my work',
     heroPrimaryCta: 'Explore projects',
     heroPrintCv: 'Print / Save CV',
@@ -563,6 +579,8 @@ const Map<String, PortfolioContent> kContent = {
     appCloseLightbox: 'Close preview',
     sectionOpenSourceTitle: 'Devs4Devs',
     sectionOpenSourceSubtitle: 'Free & open-source packages created for developers',
+    pkgCopyCommand: 'Copy command',
+    pkgCommandCopied: 'Copied!',
     sectionSkills: 'Skills',
     sectionSkillsSubtitle: 'Technologies and tools I work with',
     skillsCoreTitle: 'Core Stack',
@@ -572,6 +590,9 @@ const Map<String, PortfolioContent> kContent = {
     skillsFilterBackend: 'Backend & Data',
     skillsFilterQuality: 'QA & DevOps',
     skillsFilterWeb: 'Web',
+    skillsSearchPlaceholder: 'Search 130+ skills (e.g. Rust, Koin, ADB)...',
+    skillsNoMatch: 'No matching technologies found.',
+    skillsResetFilter: 'Clear search',
     sectionEducation: 'Education',
     sectionEducationSubtitle: 'Academic background & certifications',
     coursesHeading: 'Courses & Certifications',
@@ -583,6 +604,7 @@ const Map<String, PortfolioContent> kContent = {
     contactCopyEmail: 'Copy email',
     contactCopied: 'Email copied!',
     contactSendEmail: 'Send email',
+    backToTopLabel: 'Back to top',
     sectionContributions: 'GitHub Activity',
     sectionContributionsSubtitle: 'Open source contributions',
     contributionsInLastYear: 'contributions in the last year',
@@ -864,6 +886,7 @@ const Map<String, PortfolioContent> kContent = {
         url: 'https://pub.dev/packages/adb_utils',
         techStack: ['Dart', 'ADB', 'Pub.dev'],
         badgeText: 'pub.dev package',
+        installCommand: 'flutter pub add adb_utils',
       ),
       OpenSourceLibrary(
         name: 'geppetto-android',
@@ -873,6 +896,7 @@ const Map<String, PortfolioContent> kContent = {
         url: 'https://pypi.org/project/geppetto-android/',
         techStack: ['Python', 'PyPI', 'UIAutomator2', 'ADB'],
         badgeText: 'PyPI package',
+        installCommand: 'pip install geppetto-android',
       ),
       OpenSourceLibrary(
         name: 'fast_bridge',
@@ -882,6 +906,7 @@ const Map<String, PortfolioContent> kContent = {
         url: 'https://github.com/desodre/fast_bridge',
         techStack: ['Python', 'FastAPI', 'Flutter', 'ADB'],
         badgeText: 'Open Source Repo',
+        installCommand: 'git clone https://github.com/desodre/fast_bridge',
       ),
       OpenSourceLibrary(
         name: 'adb-utils-gradle-package',
@@ -891,6 +916,8 @@ const Map<String, PortfolioContent> kContent = {
         url: 'https://github.com/desodre/adb-utils-gradle-package',
         techStack: ['Kotlin', 'Java', 'ADB', 'Maven Central'],
         badgeText: 'Maven Central',
+        installCommand:
+            'git clone https://github.com/desodre/adb-utils-gradle-package',
       ),
     ],
     skills: [
@@ -898,51 +925,61 @@ const Map<String, PortfolioContent> kContent = {
         label: 'Languages',
         domain: 'languages',
         skills: kLanguageSkills,
+        icon: 'code',
       ),
       SkillCategory(
         label: 'Mobile & Multiplatform',
         domain: 'mobile',
         skills: kMobileSkills,
+        icon: 'smartphone',
       ),
       SkillCategory(
         label: 'Backend & Messaging',
         domain: 'backend',
         skills: kBackendSkills,
+        icon: 'dns',
       ),
       SkillCategory(
         label: 'Web',
         domain: 'web',
         skills: kWebSkills,
+        icon: 'public',
       ),
       SkillCategory(
         label: 'Databases & Cache',
         domain: 'backend',
         skills: kDatabaseSkills,
+        icon: 'database',
       ),
       SkillCategory(
         label: 'APIs & Architecture',
         domain: 'backend',
         skills: kArchitectureSkills,
+        icon: 'account_tree',
       ),
       SkillCategory(
         label: 'Android & Native',
         domain: 'mobile',
         skills: kNativeSkills,
+        icon: 'memory',
       ),
       SkillCategory(
         label: 'Testing & Quality',
         domain: 'quality',
         skills: kTestingSkills,
+        icon: 'fact_check',
       ),
       SkillCategory(
         label: 'Data, AI & Documents',
         domain: 'backend',
         skills: kDataSkills,
+        icon: 'auto_awesome',
       ),
       SkillCategory(
         label: 'Tools & DevOps',
         domain: 'quality',
         skills: kToolSkills,
+        icon: 'deployed_code',
       ),
     ],
     education: [
@@ -992,7 +1029,7 @@ const Map<String, PortfolioContent> kContent = {
     themeToLightLabel: 'Alternar para tema claro',
     themeToDarkLabel: 'Alternar para tema escuro',
     langSwitchLabel: 'Alterar idioma para inglês',
-    heroGreeting: '👋  Olá, Mundo!',
+    heroGreeting: 'Olá, Mundo!',
     heroViewWork: 'Ver meu trabalho',
     heroPrimaryCta: 'Explorar projetos',
     heroPrintCv: 'Imprimir / Salvar CV',
@@ -1030,6 +1067,8 @@ const Map<String, PortfolioContent> kContent = {
     appCloseLightbox: 'Fechar visualização',
     sectionOpenSourceTitle: 'Devs4Devs',
     sectionOpenSourceSubtitle: 'Bibliotecas e pacotes gratuitos desenvolvidos para a comunidade',
+    pkgCopyCommand: 'Copiar comando',
+    pkgCommandCopied: 'Copiado!',
     sectionSkills: 'Habilidades',
     sectionSkillsSubtitle: 'Tecnologias e ferramentas com que trabalho',
     skillsCoreTitle: 'Stack Principal',
@@ -1039,6 +1078,9 @@ const Map<String, PortfolioContent> kContent = {
     skillsFilterBackend: 'Backend & Dados',
     skillsFilterQuality: 'QA & DevOps',
     skillsFilterWeb: 'Web',
+    skillsSearchPlaceholder: 'Buscar entre 130+ tecnologias (ex: Rust, Koin, ADB)...',
+    skillsNoMatch: 'Nenhuma tecnologia encontrada.',
+    skillsResetFilter: 'Limpar busca',
     sectionEducation: 'Formação',
     sectionEducationSubtitle: 'Formação acadêmica e certificações',
     coursesHeading: 'Cursos e Certificações',
@@ -1050,6 +1092,7 @@ const Map<String, PortfolioContent> kContent = {
     contactCopyEmail: 'Copiar e-mail',
     contactCopied: 'E-mail copiado!',
     contactSendEmail: 'Enviar e-mail',
+    backToTopLabel: 'Voltar ao topo',
     sectionContributions: 'Atividade no GitHub',
     sectionContributionsSubtitle: 'Contribuições open source',
     contributionsInLastYear: 'contribuições no último ano',
@@ -1121,7 +1164,7 @@ const Map<String, PortfolioContent> kContent = {
         techs: ['Kotlin Multiplatform', 'Ktor', 'Linux Kernel', 'QEMU'],
       ),
       ExperienceEntry(
-        role: 'Android Developer',
+        role: 'Desenvolvedor Android',
         company: 'Eldorado',
         period: 'Mai 2024 – Ago 2026',
         bullets: [
@@ -1158,7 +1201,7 @@ const Map<String, PortfolioContent> kContent = {
         techs: ['Android Kernel', 'OTA', 'Firmware'],
       ),
       ExperienceEntry(
-        role: 'Estagiário de Desenvolvimento Android',
+        role: 'Estagiário Android',
         company: 'SEDUC',
         period: 'Out 2021 – Ago 2022',
         bullets: [
@@ -1331,6 +1374,7 @@ const Map<String, PortfolioContent> kContent = {
         url: 'https://pub.dev/packages/adb_utils',
         techStack: ['Dart', 'ADB', 'Pub.dev'],
         badgeText: 'Pacote pub.dev',
+        installCommand: 'flutter pub add adb_utils',
       ),
       OpenSourceLibrary(
         name: 'geppetto-android',
@@ -1340,6 +1384,7 @@ const Map<String, PortfolioContent> kContent = {
         url: 'https://pypi.org/project/geppetto-android/',
         techStack: ['Python', 'PyPI', 'UIAutomator2', 'ADB'],
         badgeText: 'Pacote PyPI',
+        installCommand: 'pip install geppetto-android',
       ),
       OpenSourceLibrary(
         name: 'fast_bridge',
@@ -1349,6 +1394,7 @@ const Map<String, PortfolioContent> kContent = {
         url: 'https://github.com/desodre/fast_bridge',
         techStack: ['Python', 'FastAPI', 'Flutter', 'ADB'],
         badgeText: 'Repositório Open Source',
+        installCommand: 'git clone https://github.com/desodre/fast_bridge',
       ),
       OpenSourceLibrary(
         name: 'adb-utils-gradle-package',
@@ -1358,6 +1404,8 @@ const Map<String, PortfolioContent> kContent = {
         url: 'https://github.com/desodre/adb-utils-gradle-package',
         techStack: ['Kotlin', 'Java', 'ADB', 'Maven Central'],
         badgeText: 'Maven Central',
+        installCommand:
+            'git clone https://github.com/desodre/adb-utils-gradle-package',
       ),
     ],
     skills: [
@@ -1365,51 +1413,61 @@ const Map<String, PortfolioContent> kContent = {
         label: 'Linguagens',
         domain: 'languages',
         skills: kLanguageSkills,
+        icon: 'code',
       ),
       SkillCategory(
         label: 'Mobile & Multiplataforma',
         domain: 'mobile',
         skills: kMobileSkills,
+        icon: 'smartphone',
       ),
       SkillCategory(
         label: 'Backend & Mensageria',
         domain: 'backend',
         skills: kBackendSkills,
+        icon: 'dns',
       ),
       SkillCategory(
         label: 'Web',
         domain: 'web',
         skills: kWebSkills,
+        icon: 'public',
       ),
       SkillCategory(
         label: 'Bancos de Dados & Cache',
         domain: 'backend',
         skills: kDatabaseSkills,
+        icon: 'database',
       ),
       SkillCategory(
         label: 'APIs & Arquitetura',
         domain: 'backend',
         skills: kArchitectureSkills,
+        icon: 'account_tree',
       ),
       SkillCategory(
         label: 'Android & Nativo',
         domain: 'mobile',
         skills: kNativeSkills,
+        icon: 'memory',
       ),
       SkillCategory(
         label: 'Testes & Qualidade',
         domain: 'quality',
         skills: kTestingSkills,
+        icon: 'fact_check',
       ),
       SkillCategory(
         label: 'Dados, IA & Documentos',
         domain: 'backend',
         skills: kDataSkills,
+        icon: 'auto_awesome',
       ),
       SkillCategory(
         label: 'Ferramentas & DevOps',
         domain: 'quality',
         skills: kToolSkills,
+        icon: 'deployed_code',
       ),
     ],
     education: [

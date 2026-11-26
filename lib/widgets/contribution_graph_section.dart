@@ -138,32 +138,59 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
     return '$count ${content.contribPluralOn} $formattedDate';
   }
 
+  String _legendLevelLabel(int level) {
+    final isPt = component.lang == 'pt';
+    return switch (level) {
+      0 => isPt
+          ? 'Nível 0: nenhuma contribuição'
+          : 'Level 0: no contributions',
+      1 => isPt ? 'Nível 1: poucas contribuições' : 'Level 1: low activity',
+      2 => isPt
+          ? 'Nível 2: contribuições moderadas'
+          : 'Level 2: moderate activity',
+      3 => isPt ? 'Nível 3: muitas contribuições' : 'Level 3: high activity',
+      _ => isPt
+          ? 'Nível 4: atividade máxima'
+          : 'Level 4: highest activity',
+    };
+  }
+
   @override
   Component build(BuildContext context) {
     final content = kContent[component.lang]!;
+    final loadingLabel = component.lang == 'pt'
+        ? 'Carregando contribuições do GitHub...'
+        : 'Loading GitHub contributions...';
 
     return div(classes: 'section-padding container-box', [
       SectionTitle(
         title: content.sectionContributions,
         subtitle: content.sectionContributionsSubtitle,
+        indexTag: '05',
       ),
       div(classes: 'graph-card', [
         if (_loading)
           div(
-            classes: 'graph-skeleton',
+            classes: 'graph-loading',
             attributes: {
+              'role': 'status',
+              'aria-live': 'polite',
               'aria-busy': 'true',
-              'aria-label': content.sectionContributions,
+              'aria-label': loadingLabel,
             },
             [
-              div(classes: 'skeleton-line skeleton-title', []),
-              div(classes: 'skeleton-grid', [
-                for (var col = 0; col < 26; col++)
-                  div(classes: 'skeleton-col', [
-                    for (var row = 0; row < 7; row++)
-                      div(classes: 'skeleton-cell', []),
-                  ]),
-              ]),
+              p(classes: 'graph-loading-label', [Component.text(loadingLabel)]),
+              div(
+                classes: 'graph-placeholder-grid',
+                attributes: {'aria-hidden': 'true'},
+                [
+                  for (var col = 0; col < 26; col++)
+                    div(classes: 'graph-placeholder-col', [
+                      for (var row = 0; row < 7; row++)
+                        div(classes: 'graph-placeholder-cell', []),
+                    ]),
+                ],
+              ),
             ],
           )
         else if (_error != null)
@@ -213,8 +240,24 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
     final weeks = _buildWeeks(startDate, today, contributionMap);
 
     return [
-      div(classes: 'graph-title', [
-        Component.text('$totalCount ${content.contributionsInLastYear}'),
+      div(classes: 'graph-header-row', [
+        div(classes: 'graph-title', [
+          Component.text('$totalCount ${content.contributionsInLastYear}'),
+        ]),
+        a(
+          href: kGitHub,
+          target: Target.blank,
+          classes: 'graph-profile-pill',
+          attributes: {'rel': 'noopener noreferrer'},
+          [
+            span(
+              classes: 'material-symbols-outlined icon',
+              attributes: {'aria-hidden': 'true'},
+              [Component.text('code')],
+            ),
+            Component.text('@desodre'),
+          ],
+        ),
       ]),
 
       div(classes: 'graph-scroll-container', [
@@ -278,11 +321,21 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
         div(classes: 'graph-legend-row', [
           Component.text(content.contributionsLess),
           for (var l = 0; l <= 4; l++)
-            div(
-              classes: 'legend-box',
-              attributes: {'data-level': '$l'},
-              [],
-            ),
+            () {
+              final levelLabel = _legendLevelLabel(l);
+              return div(
+                classes: 'legend-box',
+                attributes: {
+                  'data-level': '$l',
+                  'role': 'img',
+                  'title': levelLabel,
+                  'aria-label': levelLabel,
+                },
+                [
+                  span(classes: 'sr-only', [Component.text(levelLabel)]),
+                ],
+              );
+            }(),
           Component.text(content.contributionsMore),
         ]),
       ]),
@@ -304,11 +357,13 @@ class _ContributionGraphSectionState extends State<ContributionGraphSection> {
         'data-level': '${day['level']}',
         'tabindex': '0',
         'role': 'gridcell',
+        'title': summary,
         'aria-label': summary,
       },
       events: {
         'mouseenter': (_) => _setInspected(summary),
         'focus': (_) => _setInspected(summary),
+        'blur': (_) => _clearInspected(),
       },
       [],
     );

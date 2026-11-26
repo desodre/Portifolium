@@ -1,198 +1,56 @@
-/* ==========================================================================
-   Print / Save-as-PDF Resume Stylesheet
-   ========================================================================== */
-
-/* --------------------------------------------------------------------------
-   Screen Defaults & Print-Only Contact Header
-   -------------------------------------------------------------------------- */
-.print-contact-header {
-  display: none;
-}
-
-.exp-collapsed-hidden {
-  display: none;
-}
-
-.print-cv-btn {
-  font: inherit;
-}
-
-/* --------------------------------------------------------------------------
-   @media print Page Setup, Chrome Suppression & Typography
-   -------------------------------------------------------------------------- */
+.print-contact-header { display: none; }
 @media print {
-  @page {
-    size: A4;
-    margin: 13mm 15mm;
+  @page { size: A4; margin: 13mm 15mm; }
+  :root, [data-theme="dark"], [data-theme="light"] {
+    color-scheme: light !important;
+    --background: #FFFFFF !important; --bg-subtle: #FFFFFF !important; --surface: #FFFFFF !important; --card: #FFFFFF !important;
+    --border: #333333 !important; --border-strong: #000000 !important; --text-primary: #000000 !important;
+    --text-secondary: #333333 !important; --text-muted: #333333 !important; --accent: #000000 !important;
+    --on-accent: #FFFFFF !important; --on-accent-muted: #333333 !important; --status-ok: #000000 !important;
+    --contrib-level-0: #FFFFFF !important; --contrib-level-1: #FFFFFF !important;
+    --contrib-level-2: #333333 !important; --contrib-level-3: #333333 !important;
+    --contrib-level-4: #000000 !important;
   }
-
-  :root,
-  [data-theme="dark"],
-  [data-theme="light"] {
-    --background: #ffffff;
-    --surface: #ffffff;
-    --card: #f9fafb;
-    --text-primary: #111827;
-    --text-secondary: #374151;
-    --border: #d1d5db;
-    --accent: #00664e;
-    --accent-alpha-10: rgba(0, 102, 78, 0.08);
-    --accent-alpha-25: rgba(0, 102, 78, 0.25);
-    --shadow-color: transparent;
-    --shadow-color-hover: transparent;
-    --shadow-color-glow: transparent;
-    --timeline-dot-bg: #ffffff;
-  }
-
-  body {
-    background: #ffffff !important;
-    color: #111827 !important;
-    font-size: 9.5pt;
-    line-height: 1.45;
-  }
-
-  #main-content {
-    margin-top: 0 !important;
-  }
-
-  .print-contact-header {
-    display: block !important;
-    padding-bottom: 10px;
-    margin-bottom: 12px;
-    border-bottom: 2px solid #00664e;
-  }
-
-  .print-name {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 20pt;
-    font-weight: 800;
-    color: #111827;
-    margin: 0 0 2px 0;
-  }
-
-  .print-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 10.5pt;
-    font-weight: 600;
-    color: #00664e;
-    margin: 0 0 4px 0;
-  }
-
-  .print-meta {
-    font-size: 8.5pt;
-    color: #374151;
-    margin: 0;
-  }
-
-  .nav-root,
-  .skip-link,
-  .hero-avatar-container,
-  .hero-badge,
-  .hero-name,
-  .hero-title,
-  .hero-location,
-  .hero-actions-primary,
-  .hero-social-wrap,
-  .hero-section-bg::before,
-  .filter-pills-row,
-  .proj-card-actions,
-  .proj-open-icon,
-  .skills-filter-bar,
-  .exp-toggle-btn,
-  .tech-chip-more,
-  #apps,
-  #contributions,
-  #contact,
-  .lightbox-backdrop,
-  .case-study-backdrop {
-    display: none !important;
-  }
-
-  li.exp-bullet-item.exp-collapsed-hidden {
-    display: flex !important;
-  }
-
-  .tech-chip.exp-collapsed-hidden {
-    display: inline-block !important;
-  }
-
-  /* ------------------------------------------------------------------------
-     Print Section Layout, Cards & Page-Break Controls
-     ------------------------------------------------------------------------ */
-  .section-padding {
-    padding: 10px 0 !important;
-  }
-
-  .hero-wrapper {
-    min-height: auto !important;
-    padding: 4px 0 10px !important;
-  }
-
-  .hero-layout {
-    display: block !important;
-    text-align: left !important;
-  }
-
-  .hero-text-container {
-    align-items: flex-start !important;
-  }
-
-  .hero-bio {
-    max-width: 100% !important;
-    margin-bottom: 8px !important;
-    font-size: 9.5pt !important;
-    color: #1f2937 !important;
-  }
-
-  .hero-highlights {
-    margin-top: 8px !important;
-    padding-top: 8px !important;
-    max-width: 100% !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
-
-  .hero-highlight-item {
-    align-items: flex-start !important;
-  }
-
-  .surface-bg {
-    background: transparent !important;
-  }
-
-  .projects-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px !important;
-  }
-
-  .proj-desc {
-    -webkit-line-clamp: unset !important;
-    overflow: visible !important;
-  }
-
-  .section-header-block {
-    break-after: avoid;
-    page-break-after: avoid;
-    margin-bottom: 10px !important;
-  }
-
-  .section-title-text {
-    font-size: 14pt !important;
-  }
-
-  .experience-card,
-  .project-card,
-  .education-card,
-  .skill-category-card,
-  .core-skills-card {
-    break-inside: avoid;
-    page-break-inside: avoid;
-    box-shadow: none !important;
-    padding: 10px 12px !important;
-    background: #ffffff !important;
-    border-color: #d1d5db !important;
-  }
-
-  .timeline-content {
-    padding-bottom: 12px !important;
-  }
+  html, body { overflow: visible !important; background: #FFFFFF !important; color: #000000 !important; }
+  body { font-family: "Inter", Arial, sans-serif; font-size: 9.5pt; line-height: 1.4; }
+  .main-content, #main-content { margin: 0 !important; padding: 0 !important; }
+  .container-box { width: 100% !important; }
+  .print-contact-header { display: block !important; margin-bottom: 10px; padding-bottom: 9px; border-bottom: 2px solid #000000; }
+  .print-name { margin: 0 0 2px; font-family: "Inter", Arial, sans-serif; font-size: 20pt; font-weight: 600; }
+  .print-title { margin: 0 0 4px; font-size: 10.5pt; font-weight: 500; }
+  .print-meta { margin: 0; color: #333333; font-size: 8pt; overflow-wrap: anywhere; }
+  .nav-root, .skip-link, .hero-avatar-container, .hero-eyebrow-row, .hero-name, .hero-title,
+  .hero-actions-primary, .hero-social-wrap, .filter-pills-row, .proj-card-actions,
+  .proj-open-icon, .proj-source-badge, .skills-toolbar, .exp-toggle-btn, .tech-chip-more,
+  .back-to-top-btn, #apps, #contributions, #contact, .lightbox-backdrop, .case-study-backdrop { display: none !important; }
+  .section-padding { padding-block: 10px !important; }
+  .hero-wrapper { padding-block: 4px 10px !important; }
+  .hero-layout { display: block !important; }
+  .hero-bio { max-width: none !important; margin: 0 0 8px !important; color: #333333 !important; }
+  .hero-highlights { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; margin-top: 8px !important; padding-top: 8px !important; }
+  .hero-highlight-item { align-items: flex-start !important; }
+  .section-header-block { margin-bottom: 10px !important; break-after: avoid; page-break-after: avoid; }
+  .section-eyebrow { margin-bottom: 4px !important; }
+  .section-index-tag { color: #333333 !important; font-family: "JetBrains Mono", "Courier New", monospace; font-size: 8pt; }
+  .section-title-text { font-size: 14pt !important; }
+  .section-subtitle-text { margin-top: 3px !important; font-size: 8.5pt; }
+  .timeline-item { grid-template-columns: 120px minmax(0, 1fr) !important; gap: 12px !important; padding: 9px 0 !important; break-inside: avoid; }
+  .timeline-content { padding-bottom: 0 !important; }
+  .experience-card, .project-card, .education-card, .skill-category-card, .core-skills-card { break-inside: avoid; page-break-inside: avoid; background: #FFFFFF !important; box-shadow: none !important; }
+  .exp-role, .proj-title { font-size: 11pt !important; }
+  .exp-bullet-list { gap: 3px !important; margin-bottom: 6px !important; }
+  .exp-bullet-item { color: #333333 !important; font-size: 8.5pt !important; }
+  li.exp-bullet-item.exp-collapsed-hidden { display: flex !important; }
+  .tech-chip.exp-collapsed-hidden { display: inline-flex !important; }
+  .projects-grid, .projects-grid.bento-mode { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
+  .project-card, .project-card.featured { grid-column: auto !important; padding: 10px 12px !important; border: 1px solid #333333 !important; }
+  .proj-desc { overflow: visible !important; -webkit-line-clamp: unset !important; font-size: 8.5pt !important; }
+  .education-card { grid-template-columns: minmax(0, 1fr) auto !important; padding: 8px 0 !important; }
+  .edu-bottom-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 16px !important; margin-top: 12px !important; }
+  .core-skills-card { margin-bottom: 8px !important; padding-bottom: 8px !important; }
+  .skills-wrap { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .skill-category-card { padding: 8px !important; }
+  .skill-category-card:nth-child(even) { padding-left: 8px !important; }
+  .tech-chip, .small-chip, .skill-chip, .core-skill-chip { color: #333333 !important; border-color: #333333 !important; }
+  .surface-bg { background: #FFFFFF !important; }
 }

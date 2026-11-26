@@ -14,6 +14,7 @@ class SkillsSection extends StatefulComponent {
 
 class _SkillsSectionState extends State<SkillsSection> {
   String _activeDomain = 'all';
+  String _searchQuery = '';
 
   void _selectDomain(String domain) {
     if (_activeDomain != domain) {
@@ -21,6 +22,13 @@ class _SkillsSectionState extends State<SkillsSection> {
         _activeDomain = domain;
       });
     }
+  }
+
+  void _resetFilters() {
+    setState(() {
+      _activeDomain = 'all';
+      _searchQuery = '';
+    });
   }
 
   bool _matchesDomain(SkillCategory category) {
@@ -45,18 +53,38 @@ class _SkillsSectionState extends State<SkillsSection> {
       ('quality', content.skillsFilterQuality),
       ('web', content.skillsFilterWeb),
     ];
-    final filteredCategories = content.skills.where(_matchesDomain).toList();
+
+    final query = _searchQuery.trim().toLowerCase();
+    final filteredCategories = <SkillCategory>[];
+    for (final cat in content.skills) {
+      if (!_matchesDomain(cat)) continue;
+      if (query.isEmpty) {
+        filteredCategories.add(cat);
+      } else {
+        final matchingSkills = cat.skills
+            .where((s) => s.toLowerCase().contains(query))
+            .toList();
+        if (matchingSkills.isNotEmpty) {
+          filteredCategories.add(SkillCategory(
+            label: cat.label,
+            domain: cat.domain,
+            skills: matchingSkills,
+            icon: cat.icon,
+          ));
+        }
+      }
+    }
 
     return div(classes: 'section-padding container-box', [
       SectionTitle(
         title: content.sectionSkills,
         subtitle: content.sectionSkillsSubtitle,
+        indexTag: '04',
       ),
       // Highlighted Core Stack
       div(classes: 'core-skills-card', [
         div(classes: 'core-skills-header', [
           div(classes: 'core-skills-title-row', [
-            div(classes: 'skill-cat-indicator', []),
             h3(
               classes: 'core-skills-title',
               [Component.text(content.skillsCoreTitle)],
@@ -72,46 +100,114 @@ class _SkillsSectionState extends State<SkillsSection> {
             div(classes: 'core-skill-chip', [Component.text(skill)]),
         ]),
       ]),
-      // Domain filter bar
-      div(
-        classes: 'skills-filter-bar',
-        attributes: {
-          'role': 'group',
-          'aria-label': content.sectionSkills,
-        },
-        [
-          for (final (key, label) in filters)
+      // Search + Domain Filter Toolbar
+      div(classes: 'skills-toolbar', [
+        div(classes: 'skills-search-box', [
+          label(
+            htmlFor: 'skills-search-input',
+            classes: 'sr-only',
+            [
+              Component.text(
+                component.lang == 'pt'
+                    ? 'Buscar habilidades e tecnologias'
+                    : 'Search skills and technologies',
+              ),
+            ],
+          ),
+          span(
+            classes: 'material-symbols-outlined skills-search-icon',
+            attributes: {'aria-hidden': 'true'},
+            [Component.text('search')],
+          ),
+          input<String>(
+            id: 'skills-search-input',
+            type: InputType.text,
+            value: _searchQuery,
+            classes: 'skills-search-input',
+            attributes: {
+              'placeholder': content.skillsSearchPlaceholder,
+            },
+            onInput: (val) => setState(() => _searchQuery = val),
+          ),
+          if (_searchQuery.isNotEmpty)
             button(
-              classes:
-                  'skills-filter-pill${_activeDomain == key ? ' active' : ''}',
+              classes: 'skills-search-clear',
               attributes: {
                 'type': 'button',
-                'aria-pressed': '${_activeDomain == key}',
+                'aria-label': content.skillsResetFilter,
               },
-              events: {'click': (e) => _selectDomain(key)},
-              [Component.text(label)],
+              events: {'click': (_) => setState(() => _searchQuery = '')},
+              [
+                span(
+                  classes: 'material-symbols-outlined',
+                  attributes: {'aria-hidden': 'true'},
+                  [Component.text('close')],
+                ),
+              ],
             ),
-        ],
-      ),
-      // Filtered skill categories
-      div(classes: 'skills-wrap', [
-        for (final cat in filteredCategories)
-          div(classes: 'skill-category-card', [
-            div(classes: 'skill-cat-header', [
-              div(classes: 'skill-cat-indicator', []),
-              h3(classes: 'skill-cat-label', [Component.text(cat.label)]),
-              div(classes: 'nav-spacer', []),
-              span(
-                classes: 'skill-cat-count',
-                [Component.text('${cat.skills.length}')],
+        ]),
+        div(
+          classes: 'skills-filter-bar',
+          attributes: {
+            'role': 'group',
+            'aria-label': content.sectionSkills,
+          },
+          [
+            for (final (key, label) in filters)
+              button(
+                classes:
+                    'skills-filter-pill${_activeDomain == key ? ' active' : ''}',
+                attributes: {
+                  'type': 'button',
+                  'aria-pressed': '${_activeDomain == key}',
+                },
+                events: {'click': (e) => _selectDomain(key)},
+                [Component.text(label)],
               ),
-            ]),
-            div(classes: 'skill-chips-wrap', [
-              for (final skill in cat.skills)
-                div(classes: 'skill-chip', [Component.text(skill)]),
-            ]),
-          ]),
+          ],
+        ),
       ]),
+      // Filtered skill categories or Empty State
+      if (filteredCategories.isEmpty)
+        div(
+          classes: 'skills-empty-state',
+          attributes: {'role': 'status', 'aria-live': 'polite'},
+          [
+          span(
+            classes: 'material-symbols-outlined skills-empty-icon',
+            attributes: {'aria-hidden': 'true'},
+            [Component.text('search_off')],
+          ),
+          p(
+            classes: 'skills-empty-text',
+            [Component.text(content.skillsNoMatch)],
+          ),
+          button(
+            classes: 'btn-secondary',
+            attributes: {'type': 'button'},
+            events: {'click': (_) => _resetFilters()},
+            [Component.text(content.skillsResetFilter)],
+          ),
+        ])
+      else
+        div(classes: 'skills-wrap', [
+          for (final cat in filteredCategories)
+            div(classes: 'skill-category-card', [
+              div(classes: 'skill-cat-header', [
+                div(classes: 'skill-cat-title-group', [
+                  h3(classes: 'skill-cat-label', [Component.text(cat.label)]),
+                ]),
+                span(
+                  classes: 'skill-cat-count',
+                  [Component.text('${cat.skills.length}')],
+                ),
+              ]),
+              div(classes: 'skill-chips-wrap', [
+                for (final skill in cat.skills)
+                  div(classes: 'skill-chip', [Component.text(skill)]),
+              ]),
+            ]),
+        ]),
     ]);
   }
 }

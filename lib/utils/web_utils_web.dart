@@ -132,3 +132,108 @@ Unsubscribe initRevealOnScroll() {
     resizeSub.cancel();
   };
 }
+
+String? _savedBodyOverflow;
+int _scrollLockCount = 0;
+Element? _savedFocusElement;
+
+const String _kFocusableSelector =
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+void setBodyScrollLocked(bool locked) {
+  final body = document.body;
+  if (body == null) return;
+  if (locked) {
+    if (_scrollLockCount == 0) {
+      _savedBodyOverflow = body.style.overflow;
+      body.style.overflow = 'hidden';
+    }
+    _scrollLockCount++;
+  } else {
+    if (_scrollLockCount > 0) {
+      _scrollLockCount--;
+      if (_scrollLockCount == 0) {
+        body.style.overflow = _savedBodyOverflow ?? '';
+        _savedBodyOverflow = null;
+      }
+    }
+  }
+}
+
+void saveActiveFocus() {
+  final active = document.activeElement;
+  if (active != null && active != document.body) {
+    _savedFocusElement = active;
+  }
+}
+
+void focusElementBySelector(String selector) {
+  Timer.run(() {
+    final el = document.querySelector(selector);
+    if (el != null) {
+      el.focus();
+    }
+  });
+}
+
+void restoreSavedFocus() {
+  final el = _savedFocusElement;
+  _savedFocusElement = null;
+  if (el != null && el.isConnected == true) {
+    Timer.run(() {
+      if (el.isConnected == true) {
+        el.focus();
+      }
+    });
+  }
+}
+
+Unsubscribe subscribeDialogFocusTrap(String dialogSelector) {
+  final sub = window.onKeyDown.listen((KeyboardEvent e) {
+    if (e.key != 'Tab') return;
+    final dialog = document.querySelector(dialogSelector);
+    if (dialog == null) return;
+
+    final focusables = dialog
+        .querySelectorAll(_kFocusableSelector)
+        .where((el) {
+          final rect = el.getBoundingClientRect();
+          return rect.width > 0 || rect.height > 0;
+        })
+        .toList();
+
+    if (focusables.isEmpty) {
+      e.preventDefault();
+      dialog.focus();
+      return;
+    }
+
+    final first = focusables.first;
+    final last = focusables.last;
+    final active = document.activeElement;
+
+    if (e.shiftKey) {
+      if (active == first || active == dialog || !dialog.contains(active)) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (active == last || !dialog.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  });
+  return () => sub.cancel();
+}
+
+bool prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+Unsubscribe subscribeVisibilityChange(void Function(bool isHidden) onChanged) {
+  final sub = document.onVisibilityChange.listen((_) {
+    onChanged(document.hidden ?? false);
+  });
+  return () => sub.cancel();
+}

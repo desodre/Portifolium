@@ -19,15 +19,44 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
   int _activeSlideIndex = 0;
   int _activeImageIndex = 0;
   Timer? _slideshowTimer;
-  bool _isPaused = false;
+  bool _isHovered = false;
+  bool _isFocusedWithin = false;
+  bool _isPageHidden = false;
   bool _lightboxOpen = false;
   Unsubscribe? _unsubEsc;
+  Unsubscribe? _unsubFocusTrap;
+  Unsubscribe? _unsubVisibility;
+  String? _copiedPkgName;
+  Timer? _copyPkgTimer;
+
+  bool get _shouldPause =>
+      _isHovered ||
+      _isFocusedWithin ||
+      _lightboxOpen ||
+      _isPageHidden ||
+      prefersReducedMotion();
 
   @override
   void initState() {
     super.initState();
     _startSlideshow();
     _unsubEsc = subscribeEscapeKey(_closeLightbox);
+    if (kIsWeb) {
+      _unsubVisibility = subscribeVisibilityChange((isHidden) {
+        if (!mounted) return;
+        setState(() => _isPageHidden = isHidden);
+      });
+    }
+  }
+
+  Future<void> _handleCopyPackageCmd(String pkgName, String cmd) async {
+    final ok = await copyToClipboard(cmd);
+    if (!mounted || !ok) return;
+    _copyPkgTimer?.cancel();
+    setState(() => _copiedPkgName = pkgName);
+    _copyPkgTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _copiedPkgName = null);
+    });
   }
 
   List<PublishedApp> _filteredApps() => kContent[component.lang]!
@@ -41,15 +70,15 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
 
   void _startSlideshow() {
     _slideshowTimer?.cancel();
-    if (!kIsWeb) return;
+    if (!kIsWeb || prefersReducedMotion()) return;
     final filteredApps = _filteredApps();
     final safeIndex = filteredApps.isEmpty
         ? 0
         : (_activeSlideIndex >= filteredApps.length ? 0 : _activeSlideIndex);
     if (filteredApps.isNotEmpty &&
         filteredApps[safeIndex].screenshotAssets.length > 1) {
-      _slideshowTimer = Timer.periodic(const Duration(seconds: 2), (_) {
-        if (!mounted || _isPaused || _lightboxOpen) return;
+      _slideshowTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+        if (!mounted || _shouldPause) return;
         final apps = _filteredApps();
         final idx = apps.isEmpty
             ? 0
@@ -68,11 +97,11 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
 
   void _selectCategory(AppCategory category) {
     if (_activeCategory != category) {
+      if (_lightboxOpen) _closeLightbox();
       setState(() {
         _activeCategory = category;
         _activeSlideIndex = 0;
         _activeImageIndex = 0;
-        _lightboxOpen = false;
       });
       _startSlideshow();
     }
@@ -80,52 +109,69 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
 
   void _prevSlide(int total) {
     if (total <= 1) return;
+    if (_lightboxOpen) _closeLightbox();
     setState(() {
       _activeSlideIndex = (_activeSlideIndex - 1 + total) % total;
       _activeImageIndex = 0;
-      _lightboxOpen = false;
     });
     _startSlideshow();
   }
 
   void _nextSlide(int total) {
     if (total <= 1) return;
+    if (_lightboxOpen) _closeLightbox();
     setState(() {
       _activeSlideIndex = (_activeSlideIndex + 1) % total;
       _activeImageIndex = 0;
-      _lightboxOpen = false;
     });
     _startSlideshow();
   }
 
   void _goToSlide(int index) {
+    if (_lightboxOpen) _closeLightbox();
     setState(() {
       _activeSlideIndex = index;
       _activeImageIndex = 0;
-      _lightboxOpen = false;
     });
     _startSlideshow();
   }
 
   void _openLightbox() {
     if (!_lightboxOpen) {
+      saveActiveFocus();
+      setBodyScrollLocked(true);
+      _unsubFocusTrap?.call();
+      _unsubFocusTrap = subscribeDialogFocusTrap('.lightbox-dialog');
       setState(() {
         _lightboxOpen = true;
       });
+      focusElementBySelector('.lightbox-dialog');
     }
   }
 
   void _closeLightbox() {
-    if (_lightboxOpen && mounted) {
-      setState(() {
-        _lightboxOpen = false;
-      });
+    if (_lightboxOpen) {
+      _unsubFocusTrap?.call();
+      _unsubFocusTrap = null;
+      setBodyScrollLocked(false);
+      if (mounted) {
+        setState(() {
+          _lightboxOpen = false;
+        });
+      }
+      restoreSavedFocus();
     }
   }
 
   @override
   void dispose() {
     _slideshowTimer?.cancel();
+    _copyPkgTimer?.cancel();
+    if (_lightboxOpen) {
+      setBodyScrollLocked(false);
+    }
+    _unsubFocusTrap?.call();
+    _unsubVisibility?.call();
     _unsubEsc?.call();
     super.dispose();
   }
@@ -155,6 +201,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
       SectionTitle(
         title: content.sectionPublishedApps,
         subtitle: content.sectionPublishedAppsSubtitle,
+        indexTag: '03',
       ),
 
       // ── Category Selector Tabs ─────────────────────────────────────────────
@@ -166,50 +213,61 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
         },
         [
           for (final (cat, iconName, label) in categories)
-            button(
-              classes: 'category-tab${_activeCategory == cat ? ' active' : ''}',
-              attributes: {
-                'type': 'button',
-                'role': 'tab',
-                'aria-selected': '${_activeCategory == cat}',
-              },
-              events: {'click': (e) => _selectCategory(cat)},
-              [
-                span(
-                  classes: 'material-symbols-outlined icon',
-                  attributes: {'aria-hidden': 'true'},
-                  [Component.text(iconName)],
-                ),
-                span([Component.text(label)]),
-              ],
-            ),
+            () {
+              final catCount = content.publishedApps
+                  .where((app) => app.category == cat)
+                  .length;
+              return button(
+                classes:
+                    'category-tab${_activeCategory == cat ? ' active' : ''}',
+                attributes: {
+                  'type': 'button',
+                  'role': 'tab',
+                  'aria-selected': '${_activeCategory == cat}',
+                },
+                events: {'click': (e) => _selectCategory(cat)},
+                [
+                  span(
+                    classes: 'material-symbols-outlined icon',
+                    attributes: {'aria-hidden': 'true'},
+                    [Component.text(iconName)],
+                  ),
+                  span([Component.text(label)]),
+                  span(
+                    classes: 'category-count',
+                    [Component.text('$catCount')],
+                  ),
+                ],
+              );
+            }(),
         ],
       ),
 
       // ── Carousel Container ──────────────────────────────────────────────────
       if (currentApp != null)
-        div(classes: 'carousel-wrapper', [
-          // Left Navigation Arrow
-          if (filteredApps.length > 1)
-            button(
-              classes: 'carousel-nav-btn prev-btn',
-              attributes: {
-                'type': 'button',
-                'aria-label': content.appPrevLabel,
-              },
-              events: {'click': (e) => _prevSlide(filteredApps.length)},
-              [
-                span(
-                  classes: 'material-symbols-outlined',
-                  attributes: {'aria-hidden': 'true'},
-                  [Component.text('chevron_left')],
-                ),
-              ],
-            ),
+        div(classes: 'app-stage-card', [
+          div(classes: 'carousel-wrapper', [
+            // Left Navigation Arrow
+            if (filteredApps.length > 1)
+              button(
+                classes: 'carousel-nav-btn prev-btn',
+                attributes: {
+                  'type': 'button',
+                  'aria-label': content.appPrevLabel,
+                },
+                events: {'click': (e) => _prevSlide(filteredApps.length)},
+                [
+                  span(
+                    classes: 'material-symbols-outlined',
+                    attributes: {'aria-hidden': 'true'},
+                    [Component.text('chevron_left')],
+                  ),
+                ],
+              ),
 
-          // Active Slide Item
-          div(classes: 'carousel-slide-content', [
-            div(classes: 'app-row', [
+            // Active Slide Item
+            div(classes: 'carousel-slide-content', [
+              div(classes: 'app-row', [
               // Info Column
               div(classes: 'app-info-col', [
                 div(classes: 'app-title-header', [
@@ -275,16 +333,26 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
                 ]),
               ]),
 
-              // Dynamic 3D Device Mockup Column
+              // Device Mockup Column
               div(classes: 'app-mockup-col', [
                 div(
                   classes: 'mockup-interactive-wrap',
                   events: {
                     'mouseenter': (_) {
-                      if (!_isPaused) setState(() => _isPaused = true);
+                      if (!_isHovered) setState(() => _isHovered = true);
                     },
                     'mouseleave': (_) {
-                      if (_isPaused) setState(() => _isPaused = false);
+                      if (_isHovered) setState(() => _isHovered = false);
+                    },
+                    'focusin': (_) {
+                      if (!_isFocusedWithin) {
+                        setState(() => _isFocusedWithin = true);
+                      }
+                    },
+                    'focusout': (_) {
+                      if (_isFocusedWithin) {
+                        setState(() => _isFocusedWithin = false);
+                      }
                     },
                   },
                   [
@@ -359,6 +427,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
                 ),
               ],
             ),
+          ]),
         ]),
 
       // ── Carousel Dots ─────────────────────────────────────────────────────
@@ -382,30 +451,31 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
       if (_lightboxOpen && currentApp != null && assets.isNotEmpty)
         div(
           classes: 'lightbox-backdrop',
-          attributes: {
-            'role': 'dialog',
-            'aria-modal': 'true',
-            'aria-label': currentApp.name,
-          },
           events: {'click': (_) => _closeLightbox()},
           [
             div(
               classes: 'lightbox-dialog',
+              attributes: {
+                'role': 'dialog',
+                'aria-modal': 'true',
+                'aria-labelledby': 'lightbox-title',
+                'tabindex': '-1',
+              },
               events: {'click': (e) => e.stopPropagation()},
               [
                 div(classes: 'lightbox-header', [
                   div(classes: 'lightbox-title-group', [
                     h3(
+                      id: 'lightbox-title',
                       classes: 'lightbox-title',
                       [Component.text(currentApp.name)],
                     ),
-                    if (assets.length > 1)
-                      span(
-                        classes: 'lightbox-counter',
-                        [
-                          Component.text('${safeImgIdx + 1} / ${assets.length}')
-                        ],
-                      ),
+                    span(
+                      classes: 'lightbox-counter',
+                      [
+                        Component.text('${safeImgIdx + 1} / ${assets.length}')
+                      ],
+                    ),
                   ]),
                   button(
                     classes: 'lightbox-close-btn',
@@ -484,8 +554,18 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
       // ───────────────────────────────────────────────────────────────────────
       div(classes: 'opensource-section-block', [
         div(classes: 'section-header-block sub-header', [
+          div(
+            classes: 'section-eyebrow',
+            attributes: {'aria-hidden': 'true'},
+            [
+              span(
+                classes: 'section-index-tag',
+                [Component.text('03.1')],
+              ),
+              div(classes: 'section-eyebrow-rule', []),
+            ],
+          ),
           div(classes: 'section-title-row', [
-            div(classes: 'section-title-bar', []),
             h3(
                 classes: 'section-title-text',
                 [Component.text(content.sectionOpenSourceTitle)]),
@@ -499,8 +579,7 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
             div(classes: 'library-card', [
               div(classes: 'lib-card-header', [
                 span(
-                  classes:
-                      'registry-badge ${lib.registry.toLowerCase().replaceAll('.', '').replaceAll(' ', '')}',
+                  classes: 'registry-badge',
                   [Component.text(lib.badgeText ?? lib.registry)],
                 ),
                 a(
@@ -522,12 +601,71 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
               ]),
               h4(classes: 'lib-name', [Component.text(lib.name)]),
               p(classes: 'lib-desc', [Component.text(lib.description)]),
+              if (lib.installCommand != null)
+                () {
+                  final isCopied = _copiedPkgName == lib.name;
+                  return div(classes: 'lib-cmd-bar', [
+                    span(
+                      classes: 'lib-cmd-prompt',
+                      attributes: {'aria-hidden': 'true'},
+                      [Component.text(r'$')],
+                    ),
+                    code(
+                      classes: 'lib-cmd-text',
+                      [Component.text(lib.installCommand!)],
+                    ),
+                    button(
+                      classes: 'lib-cmd-copy-btn${isCopied ? ' copied' : ''}',
+                      attributes: {
+                        'type': 'button',
+                        'aria-label':
+                            '${content.pkgCopyCommand}: ${lib.installCommand!}',
+                        'title': isCopied
+                            ? content.pkgCommandCopied
+                            : content.pkgCopyCommand,
+                      },
+                      events: {
+                        'click': (_) => _handleCopyPackageCmd(
+                              lib.name,
+                              lib.installCommand!,
+                            ),
+                      },
+                      [
+                        span(
+                          classes: 'material-symbols-outlined icon',
+                          attributes: {'aria-hidden': 'true'},
+                          [Component.text(isCopied ? 'check' : 'content_copy')],
+                        ),
+                        if (isCopied)
+                          span(
+                            classes: 'lib-cmd-copied-text',
+                            [
+                              Component.text(
+                                component.lang == 'pt' ? 'Copiado' : 'Copied',
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
+                  ]);
+                }(),
               div(classes: 'tech-chips-wrap lib-techs', [
                 for (final tech in lib.techStack)
                   div(classes: 'small-chip', [Component.text(tech)]),
               ]),
             ]),
         ]),
+        span(
+          classes: 'sr-only',
+          attributes: {'aria-live': 'polite'},
+          [
+            Component.text(
+              _copiedPkgName != null
+                  ? '${_copiedPkgName!}: ${content.pkgCommandCopied}'
+                  : '',
+            ),
+          ],
+        ),
       ]),
     ]);
   }
@@ -548,56 +686,47 @@ class _PublishedAppsSectionState extends State<PublishedAppsSection> {
   Component _buildDeviceMockup(PublishedApp app, int activeImageIndex) {
     switch (app.category) {
       case AppCategory.mobile:
-        return div(classes: 'phone-perspective', [
-          div(classes: 'phone-device', [
-            div(classes: 'phone-notch', []),
-            div(classes: 'phone-volume-up', []),
-            div(classes: 'phone-volume-down', []),
-            div(classes: 'phone-power-button', []),
-            div(
-              classes: 'phone-screen',
-              _buildScreenImages(app, activeImageIndex),
-            ),
-          ]),
+        return div(classes: 'phone-device', [
+          div(classes: 'phone-notch', []),
+          div(classes: 'phone-volume-up', []),
+          div(classes: 'phone-volume-down', []),
+          div(classes: 'phone-power-button', []),
+          div(
+            classes: 'phone-screen media-stage',
+            _buildScreenImages(app, activeImageIndex),
+          ),
         ]);
 
       case AppCategory.desktop:
-        return div(classes: 'laptop-perspective', [
-          div(classes: 'laptop-device', [
-            div(classes: 'laptop-topbar', [
-              div(classes: 'laptop-camera-dot', []),
-            ]),
-            div(
-              classes: 'laptop-screen',
-              _buildScreenImages(app, activeImageIndex),
-            ),
-            div(classes: 'laptop-keyboard-base', [
-              div(classes: 'laptop-notch-indent', []),
-            ]),
+        return div(classes: 'laptop-device', [
+          div(classes: 'laptop-topbar', [
+            div(classes: 'laptop-camera-dot', []),
           ]),
+          div(
+            classes: 'laptop-screen media-stage',
+            _buildScreenImages(app, activeImageIndex),
+          ),
         ]);
 
       case AppCategory.web:
-        return div(classes: 'browser-perspective', [
-          div(classes: 'browser-device', [
-            div(classes: 'browser-topbar', [
-              div(classes: 'browser-traffic-lights', [
-                div(classes: 'browser-dot red', []),
-                div(classes: 'browser-dot yellow', []),
-                div(classes: 'browser-dot green', []),
-              ]),
-              div(classes: 'browser-addressbar', [
-                span(
-                  classes: 'browser-url-text',
-                  [Component.text(app.storeUrl ?? app.repoUrl ?? '')],
-                ),
-              ]),
+        return div(classes: 'browser-device', [
+          div(classes: 'browser-topbar', [
+            div(classes: 'browser-traffic-lights', [
+              div(classes: 'browser-dot', []),
+              div(classes: 'browser-dot', []),
+              div(classes: 'browser-dot', []),
             ]),
-            div(
-              classes: 'browser-screen',
-              _buildScreenImages(app, activeImageIndex),
-            ),
+            div(classes: 'browser-addressbar', [
+              span(
+                classes: 'browser-url-text',
+                [Component.text(app.storeUrl ?? app.repoUrl ?? '')],
+              ),
+            ]),
           ]),
+          div(
+            classes: 'browser-screen media-stage',
+            _buildScreenImages(app, activeImageIndex),
+          ),
         ]);
     }
   }

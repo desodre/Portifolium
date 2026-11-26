@@ -15,6 +15,7 @@ const List<Map<String, String>> _kNavItems = [
   {'label_en': 'Projects', 'label_pt': 'Projetos', 'section': 'projects'},
   {'label_en': 'Apps', 'label_pt': 'Apps', 'section': 'apps'},
   {'label_en': 'Skills', 'label_pt': 'Habilidades', 'section': 'skills'},
+  {'label_en': 'Education', 'label_pt': 'Formação', 'section': 'education'},
   {'label_en': 'Contact', 'label_pt': 'Contato', 'section': 'contact'},
 ];
 
@@ -38,6 +39,7 @@ class NavBar extends StatefulComponent {
 
 class _NavBarState extends State<NavBar> {
   bool _menuOpen = false;
+  bool _isScrolled = false;
   String _activeSection = 'home';
   double _scrollProgress = 0.0;
   Unsubscribe? _unsubScroll;
@@ -47,13 +49,24 @@ class _NavBarState extends State<NavBar> {
   void initState() {
     super.initState();
     _unsubScroll = subscribeScrollSpy(
-      ['home', 'experience', 'projects', 'apps', 'skills', 'contact'],
+      [
+        'home',
+        'experience',
+        'projects',
+        'apps',
+        'skills',
+        'education',
+        'contact',
+      ],
       (activeId, progress) {
         if (!mounted) return;
+        final nextScrolled = progress > 0.01;
         if (_activeSection != activeId ||
+            _isScrolled != nextScrolled ||
             (_scrollProgress - progress).abs() > 0.005) {
           setState(() {
             _activeSection = activeId;
+            _isScrolled = nextScrolled;
             _scrollProgress = progress;
           });
         }
@@ -92,10 +105,14 @@ class _NavBarState extends State<NavBar> {
     final sectionId = item['section']!;
     final isActive = _activeSection == sectionId;
     final baseClass = mobile ? 'nav-link-mobile' : 'nav-link';
+    final attrs = <String, String>{
+      if (isActive) 'aria-current': 'location',
+      if (mobile && !_menuOpen) 'tabindex': '-1',
+    };
     return a(
       href: '#$sectionId',
       classes: '$baseClass${isActive ? ' active' : ''}',
-      attributes: isActive ? {'aria-current': 'location'} : null,
+      attributes: attrs.isEmpty ? null : attrs,
       events: {
         'click': (e) {
           e.preventDefault();
@@ -113,21 +130,23 @@ class _NavBarState extends State<NavBar> {
     final content = kContent[component.lang]!;
 
     return div(classes: 'nav-root', [
-      header(classes: 'nav-header', [
+      header(classes: 'nav-header${_isScrolled ? ' scrolled' : ''}', [
         div(classes: 'nav-container', [
-          // Logo
-          a(
-            href: '#home',
-            classes: 'nav-logo',
-            events: {
-              'click': (e) {
-                e.preventDefault();
-                _closeMenu();
-                scrollToSection('home');
-              }
-            },
-            [Component.text('JCS')],
-          ),
+          // Wordmark
+          div(classes: 'nav-brand', [
+            a(
+              href: '#home',
+              classes: 'brand-link',
+              events: {
+                'click': (e) {
+                  e.preventDefault();
+                  _closeMenu();
+                  scrollToSection('home');
+                }
+              },
+              [Component.text('Jhonatha Sodre')],
+            ),
+          ]),
           div(classes: 'nav-spacer', []),
 
           // Desktop nav items
@@ -184,7 +203,7 @@ class _NavBarState extends State<NavBar> {
 
         // Reading progress indicator
         div(
-          classes: 'nav-progress-track',
+          classes: 'nav-progress nav-progress-track',
           attributes: {'aria-hidden': 'true'},
           [
             div(
@@ -213,6 +232,7 @@ class _NavBarState extends State<NavBar> {
         attributes: {
           'aria-label': content.navAriaLabel,
           'aria-hidden': '${!_menuOpen}',
+          if (!_menuOpen) 'inert': '',
         },
         [
           for (final item in _kNavItems)
